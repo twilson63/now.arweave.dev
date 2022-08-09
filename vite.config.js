@@ -21,5 +21,12 @@ export default defineConfig({
       plugins: [tailwind(tailwindConfig), autoprefixer],
     }
 
+  },
+  test: {
+    deps: {
+      inline: [
+        'warp-contracts'
+      ]
+    }
   }
 })

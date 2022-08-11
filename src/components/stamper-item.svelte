@@ -1,17 +1,5 @@
 <script>
-  import ArweaveIcon from "./arweave-icon.svelte";
-  import PermapagesIcon from "./permapages-icon.svelte";
-  import { createEventDispatcher } from "svelte";
-  import { getTitle } from "../lib/app.js";
-
-  export let stamp;
-
-  const dispatch = createEventDispatcher();
-
-  function handleSell() {
-    console.log("sell");
-    dispatch("sell");
-  }
+  export let stamp = { count: 10 };
 </script>
 
 <li
@@ -33,11 +21,7 @@
           </div>
         </div>
         <h2 class="text-6xl font-medium">
-          <a href="#">
-            {#await getTitle(stamp.asset) then title}
-              {title}
-            {/await}
-          </a>
+          <a href="#"> Rakis </a>
         </h2>
       </div>
     </div>
@@ -59,8 +43,7 @@
     </div>
     <div class="hidden sm:flex flex-col flex-shrink-0 items-start space-y-3">
       <div class="flex space-x-4">
-        <a href="/assets/1" class="btn btn-secondary">Details</a>
-        <button class="btn">View</button>
+        <a href="/stampers/1" class="btn btn-secondary">Details</a>
         <button class="btn btn-info">Share</button>
       </div>
     </div>

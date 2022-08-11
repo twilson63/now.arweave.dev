@@ -1,7 +1,7 @@
 import crocks from 'crocks'
 import * as R from 'ramda'
 
-const { groupBy, reduce, values, keys } = R
+const { groupBy, reduce, values, keys, reverse } = R
 
 const { Async, ReaderT } = crocks
 const { of, ask, lift } = ReaderT(Async)
@@ -15,6 +15,7 @@ export const listAssets = (contract) =>
         .chain(pst => Async.fromPromise(pst.readState.bind(pst))())
         .map(({ state }) => state.stamps)
         .map(values)
+        .map(reverse)
         .map(groupBy((s) => s.asset))
         .map(assets => reduce((a, x) => [
           ...a,

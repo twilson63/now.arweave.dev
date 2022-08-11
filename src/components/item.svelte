@@ -1,7 +1,17 @@
 <script>
   import ArweaveIcon from "./arweave-icon.svelte";
   import PermapagesIcon from "./permapages-icon.svelte";
+  import { createEventDispatcher } from "svelte";
+  import { getTitle } from "../lib/app.js";
+
   export let stamp;
+
+  const dispatch = createEventDispatcher();
+
+  function handleSell() {
+    console.log("sell");
+    dispatch("sell");
+  }
 </script>
 
 <li
@@ -16,8 +26,11 @@
         </figure>
         <h2 class="text-sm font-medium">
           <a href="#">
-            <span class="absolute inset-0" aria-hidden="true" />
-            Page Name - (25 Stamps) - <a href="#" class="link">PREVIEW</a>
+            {#await getTitle(stamp.asset) then title}
+              {title}
+            {/await}
+            - ({stamp.count} Stamps) -
+            <a href="#" class="link">PREVIEW</a>
             <span class="sr-only">Running</span>
           </a>
         </h2>
@@ -55,7 +68,7 @@
       class="hidden sm:flex flex-col flex-shrink-0 items-start w-[200px] space-y-3"
     >
       <button class="btn btn-small w-full">Buy</button>
-      <button class="btn btn-small w-full">Sell</button>
+      <button class="btn btn-primary w-full" on:click={handleSell}>Sell</button>
     </div>
   </div>
 </li>

@@ -5,84 +5,18 @@
   import SideNav from "../components/side-nav.svelte";
   import NavBar from "../components/navbar.svelte";
   import SortButton from "../components/sort-button.svelte";
-  import { keys, groupBy, reduce } from "ramda";
+
   import { listAssets } from "../lib/app.js";
+  import { assets } from "../store.js";
 
-  let sellDialog = false;
-  let buyDialog = false;
-
-  const arweave = Arweave.init({
-    host: "arweave.net",
-    port: 443,
-    protocol: "https",
-  });
-  const { WarpWebFactory, LoggerFactory } = window.warp;
-  LoggerFactory.INST.logLevel("error");
-
-  const STAMPCOIN = "9nDWI3eHrMQbrfs9j8_YPfLbYJmBodgn7cBCG8bii4o";
-  const warp = WarpWebFactory.memCached(arweave);
   let defaultAvatarUrl =
     "https://tgbcqufuppegmlhigt2zosiv2q55qty4t4rg2gebmfm4vpvf.arweave.net/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0";
 
   async function getStamps() {
-    return listAssets();
-  }
-
-  async function getTitle(contractId) {
-    const query = (txId) => `query {
-  transaction(id: "${txId}") {
-    tags {
-      name
-      value
+    if ($assets.length === 0) {
+      $assets = await listAssets();
     }
-  }
-}
-`;
-    const result = await arweave.api.post("graphql", {
-      query: query(contractId),
-    });
-    const tags = result?.data?.data?.transaction?.tags;
-    return tags.find((t) => t.name === "Page-Title")?.value || "unknown";
-  }
-
-  async function getProfile(addr) {
-    const query = (addr) => `query {
-  transactions(
-    first : 1,
-    owners: ["${addr}"],
-    tags: [
-      { name: "Protocol", values: ["PermaProfile-v0.1"]}
-    ]
-  ) {
-    edges {
-      node {
-        id
-        owner {
-          address
-        },
-        tags {
-          name
-          value
-        }
-      }
-    }
-  }
-}  
-`;
-    const result = await arweave.api.post("graphql", { query: query(addr) });
-    const edges = result?.data?.data?.transactions?.edges;
-    if (edges.length === 0)
-      return {
-        name: `${addr.substring(0, 2)}-${addr.substring(40)}`,
-        avatar: defaultAvatarUrl,
-      };
-    const { node } = edges[0];
-    const name =
-      node.tags.find((t) => t.name === "Profile-Name")?.value || "unknown";
-    const avatar =
-      node.tags.find((t) => t.name === "Profile-Avatar")?.value ||
-      defaultAvatarUrl;
-    return { name, avatar };
+    return Promise.resolve($assets);
   }
 </script>
 
@@ -110,7 +44,7 @@
         <li class="alert alert-info mx-16 my-8 w-11/12">Loading stamps</li>
       {:then stamps}
         {#each stamps as stamp}
-          <Item {stamp} on:sell={() => (sellDialog = true)} />
+          <Item {stamp} />
         {/each}
       {/await}
 
@@ -118,6 +52,3 @@
     </ul>
   </div>
 </div>
-<Modal open={sellDialog} on:click={() => (sellDialog = false)}>
-  <h3 class="modal-title">Sell Meme</h3>
-</Modal>

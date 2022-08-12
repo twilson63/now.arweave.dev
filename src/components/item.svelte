@@ -1,6 +1,5 @@
 <script>
-  import ArweaveIcon from "./arweave-icon.svelte";
-  import PermapagesIcon from "./permapages-icon.svelte";
+  import { router } from "tinro";
   import { createEventDispatcher } from "svelte";
   import { getTitle } from "../lib/app.js";
 
@@ -8,37 +7,35 @@
 
   const dispatch = createEventDispatcher();
 
-  function handleSell() {
-    console.log("sell");
-    dispatch("sell");
+  function navTo(id) {
+    router.goto("/assets/" + id);
   }
 </script>
 
 <li
   class="relative pl-4 pr-6 py-5 hover:bg-gray-50 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6"
 >
-  <div class="flex items-center justify-between space-x-4">
+  <div
+    class="flex items-center justify-between space-x-4"
+    on:click|preventDefault={navTo(stamp.asset)}
+  >
     <!-- Repo name and link -->
     <div class="min-w-0 space-y-3">
       <div class="flex items-center space-x-3">
-        <div class="stats shadow bg-primary text-primary-content">
-          <div class="stat place-items-center">
-            <div class="stat-figure">
-              <img class="w-[80px]" src="stamp-logo.webp" alt="stamp logo" />
-            </div>
-
-            <div class="stat-title">Stamps</div>
-            <div class="stat-value">{stamp.count}</div>
-            <div class="stat-desc">+5 stamps today</div>
+        <img class="w-[32px]" src="stamp-logo.webp" alt="stamp logo" />
+        <div class="flex flex-col">
+          <h2 class="text-xl font-medium">
+            <a href="#">
+              {#await getTitle(stamp.asset) then title}
+                {title}
+              {/await}
+            </a>
+          </h2>
+          <div class="flex space-x-2">
+            <div>({stamp.count})</div>
+            <div>stamps</div>
           </div>
         </div>
-        <h2 class="text-6xl font-medium">
-          <a href="#">
-            {#await getTitle(stamp.asset) then title}
-              {title}
-            {/await}
-          </a>
-        </h2>
       </div>
     </div>
     <div class="sm:hidden">
@@ -59,7 +56,7 @@
     </div>
     <div class="hidden sm:flex flex-col flex-shrink-0 items-start space-y-3">
       <div class="flex space-x-4">
-        <a href="/assets/1" class="btn btn-secondary">Details</a>
+        <a href="/assets/{stamp.asset}" class="btn btn-secondary">Details</a>
         <button class="btn">View</button>
         <button class="btn btn-info">Share</button>
       </div>

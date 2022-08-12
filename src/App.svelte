@@ -18,11 +18,11 @@
   <Route path="/">
     <Home />
   </Route>
-  <Route path="/assets/:id">
-    <AssetDetail />
+  <Route path="/assets/:id" let:meta>
+    <AssetDetail id={meta.params.id} />
   </Route>
-  <Route path="/stampers/:id">
-    <StamperDetail />
+  <Route path="/stampers/:id" let:meta>
+    <StamperDetail id={meta.params.id} />
   </Route>
   <Route path="/stampers">
     <Stampers />

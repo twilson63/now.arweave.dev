@@ -1,5 +1,7 @@
 import * as Market from './market.js'
 import * as Asset from './asset.js'
+import * as Stamper from './stamper.js'
+
 
 const arweave = Arweave.init({
   host: "arweave.net",
@@ -14,3 +16,6 @@ const warp = WarpWebFactory.memCached(arweave);
 
 export const listAssets = () => Market.listAssets(STAMPCOIN).runWith({ warp, arweave }).toPromise()
 export const getTitle = (id) => Asset.getTitle(id).runWith({ arweave }).toPromise()
+export const listStampers = () => Market.listStampers(STAMPCOIN).runWith({ warp, arweave }).toPromise()
+export const getProfile = (id) => Stamper.getProfile(id).runWith({ arweave }).toPromise()
+export const getStampers = (assetId, assets) => Asset.getStampers(assetId).runWith({ arweave, assets }).toPromise()

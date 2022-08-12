@@ -3,6 +3,16 @@
   import SideNav from "../components/side-nav.svelte";
   import SortButton from "../components/sort-button.svelte";
   import StamperItem from "../components/stamper-item.svelte";
+
+  import { listStampers } from "../lib/app.js";
+  import { stampers } from "../store.js";
+
+  async function getStampers() {
+    if ($stampers.length === 0) {
+      $stampers = await listStampers();
+    }
+    return Promise.resolve($stampers);
+  }
 </script>
 
 <NavBar />
@@ -24,8 +34,13 @@
       role="list"
       class="relative divide-y divide-gray-200 border-b border-gray-200"
     >
-      <li class="alert alert-info mx-16 my-8 w-11/12">Loading stamps</li>
-      <StamperItem />
+      {#await listStampers()}
+        <li class="alert alert-info mx-16 my-8 w-11/12">Loading stampers...</li>
+      {:then stampers}
+        {#each stampers as stamper}
+          <StamperItem {stamper} />
+        {/each}
+      {/await}
     </ul>
   </div>
 </div>

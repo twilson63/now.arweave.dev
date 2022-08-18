@@ -33,7 +33,9 @@
     >
       <div class="flex items-center">
         <h1 class="flex-1 text-lg font-medium">🔥 Whats Hot</h1>
+        <!--
         <SortButton />
+        -->
       </div>
     </div>
     <ul
@@ -44,7 +46,7 @@
         <li class="alert alert-info mx-16 my-8 w-11/12">Loading stamps</li>
       {:then stamps}
         {#each stamps as stamp}
-          <Item {stamp} />
+          <Item {stamp} assets={$assets} />
         {/each}
       {/await}
 

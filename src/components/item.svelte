@@ -1,14 +1,20 @@
 <script>
   import { router } from "tinro";
   import { createEventDispatcher } from "svelte";
-  import { getTitle } from "../lib/app.js";
+  import { getTitle, getStampers } from "../lib/app.js";
+  import Avatar from "./avatar.svelte";
 
   export let stamp;
+  export let assets;
 
   const dispatch = createEventDispatcher();
 
   function navTo(id) {
-    router.goto("/assets/" + id);
+    window.location = "https://arweave.dev/" + id;
+    //router.goto("https://arweave.dev/" + id);
+  }
+  function handleStampersButton() {
+    dispatch("stampers", { asset: stamp.asset });
   }
 </script>
 
@@ -28,6 +34,7 @@
             <a href="#">
               {#await getTitle(stamp.asset) then title}
                 {title}
+                <span class="text-sm">{stamp.asset.substring(0, 5)}</span>
               {/await}
             </a>
           </h2>
@@ -56,9 +63,27 @@
     </div>
     <div class="hidden sm:flex flex-col flex-shrink-0 items-start space-y-3">
       <div class="flex space-x-4">
-        <a href="/assets/{stamp.asset}" class="btn btn-secondary">Details</a>
-        <button class="btn">View</button>
-        <button class="btn btn-info">Share</button>
+        <div class="avatar-group -space-x-6">
+          {#await getStampers(stamp.asset, assets)}
+            Loading...
+          {:then stampers}
+            {#each stampers as stamper}
+              {#if stamper.avatar}
+                <Avatar avatar={stamper.avatar} />
+              {/if}
+            {/each}
+          {/await}
+        </div>
+        <!--
+        <button on:click={handleStampersButton} class="btn btn-outline"
+          >Stampers</button
+        >
+        -->
+        <a
+          href="https://arweave.dev/{stamp.asset}"
+          target="_blank"
+          class="btn btn-outline">View Page</a
+        >
       </div>
     </div>
   </div>

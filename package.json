@@ -32,6 +32,7 @@
     "warp-contracts": "^1.1.14"
   },
   "dependencies": {
+    "arweave-wallet-connector": "^0.0.31",
     "crocks": "^0.12.4",
     "ramda": "^0.28.0"
   }

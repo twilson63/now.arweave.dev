@@ -76,7 +76,7 @@ export const listAssets = (contract) =>
           })
           // stampers name and avatar with one gql call?
           .chain(assets => {
-            const stampers = uniq(concat(...pluck('stampers', assets)))
+            const stampers = uniq(reduce(concat, [], pluck('stampers', assets)))
             const query = buildProfileQuery(stampers)
             return Async.fromPromise(arweave.api.post.bind(arweave.api))('graphql', { query })
               .map(compose(
@@ -89,6 +89,7 @@ export const listAssets = (contract) =>
                 path(['data', 'data', 'transactions', 'edges'])
               ))
               .map(profiles => {
+
                 return map(asset => {
                   return ({
                     ...asset, stampers: map(stamper => {
@@ -102,9 +103,6 @@ export const listAssets = (contract) =>
                   })
                 }, assets)
               })
-            // .map(x => (console.log(x), x))
-            // .map(_ => assets)
-
           })
       ).chain(lift)
     )

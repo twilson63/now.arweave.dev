@@ -1,6 +1,8 @@
 <script>
   import { createEventDispatcher } from "svelte";
 
+  export let profile = {};
+
   let text =
     "Check out whats hot with the Stamp Protocol: https://stamps.arweave.dev 🐘 @permapages";
 
@@ -8,6 +10,10 @@
 
   function connect() {
     dispatch("connect");
+  }
+
+  function disconnect() {
+    dispatch("disconnect");
   }
 </script>
 
@@ -19,12 +25,7 @@
     </a>
   </div>
   <div class="flex-none">
-    <ul class="menu menu-horizontal p-0">
-      <li>
-        <button class="btn btn-outline" on:click={connect}
-          >Connect Wallet</button
-        >
-      </li>
+    <ul class="menu menu-horizontal p-0 items-center">
       <li>
         <a
           class="h-[48px] w-[64px]"
@@ -64,6 +65,19 @@
             /></svg
           >
         </a>
+      </li>
+      <li>
+        {#if profile.owner}
+          <div class="avatar">
+            <div class="w-8 rounded-full" on:click={disconnect}>
+              <img src={profile.avatar} />
+            </div>
+          </div>
+        {:else}
+          <button class="btn btn-outline" on:click={connect}
+            >Connect Wallet</button
+          >
+        {/if}
       </li>
     </ul>
     <!--

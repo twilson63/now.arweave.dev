@@ -1,7 +1,7 @@
 import crocks from 'crocks'
 import * as R from 'ramda'
 
-const { groupBy, reduce, values, keys, reverse, prop, identity } = R
+const { compose, groupBy, reduce, values, keys, reverse, prop, identity, pluck, path, map, find, propEq, uniq, concat } = R
 
 const { Async, ReaderT } = crocks
 const { of, ask, lift } = ReaderT(Async)
@@ -39,7 +39,7 @@ export const listStampers = (contract) =>
 export const listAssets = (contract) =>
   of(contract)
     .chain(contract =>
-      ask(({ warp, wallet }) =>
+      ask(({ warp, wallet, arweave }) =>
         getState(contract)
           .bichain(
             _ => connect(warp, wallet)(contract)
@@ -60,5 +60,90 @@ export const listAssets = (contract) =>
             },
           ], [], keys(assets)
           ))
+          .chain(assets => {
+            const ids = pluck('asset', assets)
+            const query = buildQuery(ids)
+            return Async.fromPromise(arweave.api.post.bind(arweave.api))('graphql', { query })
+              .map(compose(
+                map(n => ({ id: n.id, title: prop('value', find(propEq('name', 'Page-Title'), n.tags)) })),
+                pluck('node'),
+                path(['data', 'data', 'transactions', 'edges'])
+              ))
+              .map(nodes => {
+                const getTitle = id => compose(prop('title'), find(propEq('id', id)))(nodes)
+                return map(a => ({ ...a, title: getTitle(a.asset) }), assets)
+              })
+          })
+          // stampers name and avatar with one gql call?
+          .chain(assets => {
+            const stampers = uniq(concat(...pluck('stampers', assets)))
+            const query = buildProfileQuery(stampers)
+            return Async.fromPromise(arweave.api.post.bind(arweave.api))('graphql', { query })
+              .map(compose(
+                map(profile => ({
+                  id: profile.owner.address,
+                  name: prop('value', find(propEq('name', 'Profile-Name'), profile.tags)),
+                  avatar: prop('value', find(propEq('name', 'Profile-Avatar'), profile.tags))
+                })),
+                pluck('node'),
+                path(['data', 'data', 'transactions', 'edges'])
+              ))
+              .map(profiles => {
+                return map(asset => {
+                  return ({
+                    ...asset, stampers: map(stamper => {
+                      const profile = find(propEq('id', stamper), profiles)
+                      return {
+                        id: stamper,
+                        name: profile?.name || 'unknown',
+                        avatar: profile?.avatar
+                      }
+                    }, asset.stampers)
+                  })
+                }, assets)
+              })
+            // .map(x => (console.log(x), x))
+            // .map(_ => assets)
+
+          })
       ).chain(lift)
     )
+
+// get asset Page-Title and asset stampers in batches to avoid so many gql calls.
+
+const buildQuery = (ids) => `
+  query {
+    transactions(first: 100, ids: ${JSON.stringify(ids)}) {
+      edges {
+        node {
+          id
+          tags {
+            name 
+            value
+          }
+        }
+      }
+    }
+  }
+`
+
+const buildProfileQuery = (owners) => `
+  query {
+    transactions(first: 100, owners: ${JSON.stringify(owners)}, tags: [
+      {name: "Protocol", values: ["PermaProfile-v0.1"]}
+    ]) {
+      edges {
+        node {
+          id
+          owner {
+            address
+          }
+          tags {
+            name
+            value
+          }
+        }
+      }
+    }
+  }
+`

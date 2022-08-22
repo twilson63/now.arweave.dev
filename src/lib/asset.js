@@ -8,6 +8,18 @@ const { Async, ReaderT } = crocks
 const { of, ask, lift } = ReaderT(Async)
 
 const runQuery = arweave => query => Async.fromPromise(arweave.api.post.bind(arweave.api))('graphql', { query })
+const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet).setEvaluationOptions({ allowUnsafeClient: true })
+
+export const stamp = (id) => ask(({ warp, contract }) =>
+  Async.of(contract)
+    .map(connect(warp, 'use_wallet'))
+    .chain(pst => Async.fromPromise(pst.bundleInteraction.bind(pst))({
+      function: 'stamp',
+      transactionId: id,
+      timestamp: Date.now()
+    }))
+    .toPromise()
+)
 
 export const getTitle = (id) => ask(({ arweave }) =>
   Async.of(id)

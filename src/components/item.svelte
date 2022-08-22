@@ -1,11 +1,9 @@
 <script>
   import { router } from "tinro";
   import { createEventDispatcher } from "svelte";
-  import { getTitle, getStampers } from "../lib/app.js";
   import Avatar from "./avatar.svelte";
 
   export let stamp;
-  export let assets;
 
   const dispatch = createEventDispatcher();
 
@@ -13,8 +11,9 @@
     window.location = "https://arweave.dev/" + id;
     //router.goto("https://arweave.dev/" + id);
   }
-  function handleStampersButton() {
-    dispatch("stampers", { asset: stamp.asset });
+
+  function handleStamp() {
+    dispatch("stamp", { asset: stamp.asset });
   }
 </script>
 
@@ -32,10 +31,8 @@
         <div class="flex flex-col">
           <h2 class="text-xl font-medium">
             <a href="#">
-              {#await getTitle(stamp.asset) then title}
-                {title}
-                <span class="text-sm">{stamp.asset.substring(0, 5)}</span>
-              {/await}
+              {stamp.title}
+              <span class="text-sm">{stamp.asset.substring(0, 5)}</span>
             </a>
           </h2>
           <div class="flex space-x-2">
@@ -64,26 +61,18 @@
     <div class="hidden sm:flex flex-col flex-shrink-0 items-start space-y-3">
       <div class="flex space-x-4">
         <div class="avatar-group -space-x-6">
-          {#await getStampers(stamp.asset, assets)}
-            Loading...
-          {:then stampers}
-            {#each stampers as stamper}
-              {#if stamper.avatar}
-                <Avatar avatar={stamper.avatar} />
-              {/if}
-            {/each}
-          {/await}
+          {#each stamp.stampers as stamper}
+            {#if stamper.avatar}
+              <Avatar avatar={stamper.avatar} />
+            {/if}
+          {/each}
         </div>
-        <!--
-        <button on:click={handleStampersButton} class="btn btn-outline"
-          >Stampers</button
+
+        <button on:click|stopPropagation={handleStamp} class="btn btn-outline"
+          >Stamp</button
         >
-        -->
-        <a
-          href="https://arweave.dev/{stamp.asset}"
-          target="_blank"
-          class="btn btn-outline">View Page</a
-        >
+        <button class="btn btn-outline">Buy</button>
+        <button class="btn btn-outline">Sell</button>
       </div>
     </div>
   </div>

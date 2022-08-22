@@ -1,13 +1,15 @@
 <script>
   //import { formatDistanceToNow } from "date-fns";
-  import Item from "../components/item.svelte";
   import Modal from "../components/modal.svelte";
+  import Item from "../components/item.svelte";
   import SideNav from "../components/side-nav.svelte";
   import NavBar from "../components/navbar.svelte";
   import SortButton from "../components/sort-button.svelte";
 
   import { listAssets } from "../lib/app.js";
   import { assets } from "../store.js";
+
+  let connectDialog = false;
 
   let defaultAvatarUrl =
     "https://tgbcqufuppegmlhigt2zosiv2q55qty4t4rg2gebmfm4vpvf.arweave.net/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0";
@@ -18,9 +20,31 @@
     }
     return Promise.resolve($assets);
   }
+
+  function handleStamp(e) {
+    if (window.arweaveWallet) {
+      // connect wallet
+    } else {
+      // prompt model select wallet
+    }
+    // get wallet address
+    // check is vouched
+    // do stamp
+    // reload cache
+  }
+
+  function handleConnect() {
+    connectDialog = true;
+  }
+
+  function doConnect(type) {
+    return async function () {
+      connectDialog = false;
+    };
+  }
 </script>
 
-<NavBar />
+<NavBar on:connect={handleConnect} />
 <!-- three column wrapper -->
 <div class="flex-grow w-full max-w-7xl mx-auto xl:px-8 lg:flex" />
 <!-- left column -->
@@ -46,7 +70,7 @@
         <li class="alert alert-info mx-16 my-8 w-11/12">Loading stamps</li>
       {:then stamps}
         {#each stamps as stamp}
-          <Item {stamp} assets={$assets} />
+          <Item {stamp} on:stamp={handleStamp} />
         {/each}
       {/await}
 
@@ -54,3 +78,24 @@
     </ul>
   </div>
 </div>
+<Modal open={connectDialog} ok={false}>
+  <h2 class="text-lg">Connect Wallet</h2>
+  <button
+    on:click={() => (connectDialog = false)}
+    class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
+  >
+  <div class="mt-8">
+    <ul>
+      <li>
+        <button on:click={doConnect("arconnect")} class="btn btn-ghost"
+          >ArConnect</button
+        >
+      </li>
+      <li>
+        <button on:click={doConnect("arweaveapp")} class="btn btn-ghost"
+          >Arweave.app</button
+        >
+      </li>
+    </ul>
+  </div>
+</Modal>

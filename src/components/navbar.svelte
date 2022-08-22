@@ -1,6 +1,14 @@
 <script>
+  import { createEventDispatcher } from "svelte";
+
   let text =
     "Check out whats hot with the Stamp Protocol: https://stamps.arweave.dev 🐘 @permapages";
+
+  const dispatch = createEventDispatcher();
+
+  function connect() {
+    dispatch("connect");
+  }
 </script>
 
 <div class="navbar bg-base-100">
@@ -13,8 +21,13 @@
   <div class="flex-none">
     <ul class="menu menu-horizontal p-0">
       <li>
+        <button class="btn btn-outline" on:click={connect}
+          >Connect Wallet</button
+        >
+      </li>
+      <li>
         <a
-          class="h-[48px]"
+          class="h-[48px] w-[64px]"
           target="_blank"
           href="https://twitter.com/intent/tweet?text={text}"
         >
@@ -35,7 +48,7 @@
       <li>
         <a
           target="_blank"
-          class="h-[48px]"
+          class="h-[48px] w-[64px]"
           href="https://discord.com/invite/jRTnwdrxg5"
         >
           <svg

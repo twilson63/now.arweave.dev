@@ -15,6 +15,13 @@
   function handleStamp() {
     dispatch("stamp", { asset: stamp.asset });
   }
+
+  function handleSell() {
+    dispatch("sell");
+  }
+  function handleBuy() {
+    dispatch("buy");
+  }
 </script>
 
 <li
@@ -71,8 +78,12 @@
         <button on:click|stopPropagation={handleStamp} class="btn btn-outline"
           >Stamp</button
         >
-        <button class="btn btn-outline">Buy</button>
-        <button class="btn btn-outline">Sell</button>
+        <button class="btn btn-outline" on:click|stopPropagation={handleBuy}
+          >Buy</button
+        >
+        <button class="btn btn-outline" on:click|stopPropagation={handleSell}
+          >Sell</button
+        >
       </div>
     </div>
   </div>

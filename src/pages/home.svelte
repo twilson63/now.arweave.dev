@@ -16,6 +16,19 @@
   let errorDialog = false;
   let errorMessage = "";
 
+  let buyDialog = false;
+  let buyItem = {
+    name: "Rakis Profile",
+    qty: 1000,
+    price: 0.1,
+  };
+  let sellDialog = false;
+  let sellItem = {
+    name: "Rakis Profile",
+    qty: 10000,
+    price: 0,
+  };
+
   let defaultAvatarUrl =
     "https://tgbcqufuppegmlhigt2zosiv2q55qty4t4rg2gebmfm4vpvf.arweave.net/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0";
 
@@ -126,7 +139,12 @@
         <li class="alert alert-info mx-16 my-8 w-11/12">Loading stamps</li>
       {:then stamps}
         {#each stamps as stamp}
-          <Item {stamp} on:stamp={handleStamp} />
+          <Item
+            {stamp}
+            on:stamp={handleStamp}
+            on:sell={() => (sellDialog = true)}
+            on:buy={() => (buyDialog = true)}
+          />
         {/each}
       {/await}
 
@@ -163,5 +181,48 @@
   >
   <div class="mt-8">
     {errorMessage}
+  </div>
+</Modal>
+
+<Modal open={sellDialog} ok={false}>
+  <h2 class="text-lg">Sell Asset</h2>
+  <button
+    on:click={() => (sellDialog = false)}
+    class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
+  >
+  <h3 class="my-8 text-2xl">{sellItem.name}</h3>
+  <p>Units you own: {sellItem.qty}</p>
+  <div class="mt-8 flex flex-col space-y-8">
+    <div class="form-control">
+      <label class="label" for="qty">Units you would like to sell?</label>
+      <input type="number" class="input input-bordered" />
+    </div>
+    <div class="form-control">
+      <label class="label" for="price">Sell Price in BAR</label>
+      <input id="price" type="number" class="input input-bordered" />
+    </div>
+    <div class="flex justify-end">
+      <button class="btn btn-outline">Sell Asset</button>
+    </div>
+  </div>
+</Modal>
+
+<Modal open={buyDialog} ok={false}>
+  <h2 class="text-lg">Buy Asset</h2>
+  <button
+    on:click={() => (buyDialog = false)}
+    class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
+  >
+  <h3 class="my-8 text-2xl">{buyItem.name}</h3>
+  <p>Units available: {buyItem.qty}</p>
+  <p>Price per unit: {buyItem.price}</p>
+  <div class="mt-8 flex flex-col space-y-8">
+    <div class="form-control">
+      <label class="label" for="price">Purchase Price in BAR</label>
+      <input id="price" type="number" class="input input-bordered" />
+    </div>
+    <div class="flex justify-end">
+      <button class="btn btn-outline">Buy Asset</button>
+    </div>
   </div>
 </Modal>

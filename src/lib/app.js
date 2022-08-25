@@ -1,6 +1,7 @@
 import * as Market from './market.js'
 import * as Asset from './asset.js'
 import * as Stamper from './stamper.js'
+import * as Flex from './flex.js'
 
 
 const arweave = Arweave.init({
@@ -11,6 +12,7 @@ const arweave = Arweave.init({
 const { WarpWebFactory, LoggerFactory } = window.warp;
 LoggerFactory.INST.logLevel("error");
 
+const BAR = "ywE43lMzhO69CJQtrWqxa3K2Ip8EfUanqUQULbGslpc";
 const STAMPCOIN = "aSMILD7cEJr93i7TAVzzMjtci_sGkXcWnqpDkG6UGcA";
 const warp = WarpWebFactory.memCached(arweave);
 
@@ -21,3 +23,11 @@ export const getProfile = (id) => Stamper.getProfile(id).runWith({ arweave }).to
 export const getStampers = (assetId, assets) => Asset.getStampers(assetId).runWith({ arweave, assets }).toPromise()
 export const stamp = (id) => Asset.stamp(id).runWith({ warp, contract: STAMPCOIN }).toPromise()
 export const isVouched = (addr) => Stamper.isVouched(addr).runWith({ arweave }).toPromise()
+
+export const addPair = (contract, pair) => Flex.addPair(contract, pair).runWith({ warp }).toPromise()
+export const createOrder = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
+export const allowOrder = (contract, target, qty) => Flex.allow(contract, target, qty).runWith({ warp }).toPromise()
+export const readState = (contract) => Flex.readState(contract).runWith({ warp }).toPromise()
+export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
+
+export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()

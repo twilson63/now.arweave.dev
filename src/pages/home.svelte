@@ -8,7 +8,14 @@
   import NavBar from "../components/navbar.svelte";
   import SortButton from "../components/sort-button.svelte";
 
-  import { listAssets, getProfile, isVouched, stamp } from "../lib/app.js";
+  import {
+    listAssets,
+    getProfile,
+    isVouched,
+    stamp,
+    sellAsset,
+    readState,
+  } from "../lib/app.js";
   import { assets, profile } from "../store.js";
   import { find, propEq } from "ramda";
 
@@ -24,7 +31,9 @@
   };
   let sellDialog = false;
   let sellItem = {
+    contract: "",
     name: "Rakis Profile",
+    balance: 0,
     qty: 10000,
     price: 0,
   };
@@ -106,6 +115,76 @@
     $profile = {};
   }
 
+  async function doSellAsset() {
+    sellDialog = false;
+    if (sellItem.qty > sellItem.balance) {
+      errorMessage = "You do not have enough tokens in your balance!";
+      errorDialog = true;
+    }
+    const result = await sellAsset(
+      sellItem.contract,
+      sellItem.qty,
+      sellItem.price
+    );
+    console.log(result);
+  }
+
+  async function handleSellClick(e) {
+    if (!window.arweaveWallet) {
+      handleConnect();
+      return;
+    }
+    if (!$profile.owner) {
+      handleConnect();
+      return;
+    }
+
+    sellItem = e.detail;
+    const state = await readState(sellItem.contract);
+
+    if (!state.settings.find((a) => a[0] === "isTradeable" && a[1] === true)) {
+      errorMessage = "Asset is not tradeable!";
+      errorDialog = true;
+      return;
+    }
+    if (!state.balances[$profile.owner]) {
+      errorMessage = "You do not own any " + sellItem.name + " to sell!";
+      errorDialog = true;
+      return;
+    }
+    sellItem.balance = state.balances[$profile.owner];
+    sellDialog = true;
+  }
+
+  function handleBuyClick(e) {
+    if (!window.arweaveWallet) {
+      handleConnect();
+      return;
+    }
+    if (!$profile.owner) {
+      handleConnect();
+      return;
+    }
+
+    buyItem = e.detail;
+    const state = await readState(buyItem.contract);
+    const bar = await readBar();
+
+    if (!state.settings.find((a) => a[0] === "isTradeable" && a[1] === true)) {
+      errorMessage = "Asset is not tradeable!";
+      errorDialog = true;
+      return;
+    }
+    // if no bar get bar
+
+    if (true) {
+      errorMessage = "In order to buy, you need some $BAR";
+      errorDialog = true;
+      return;
+    }
+    buyDialog = true
+  }
+
   let stampList = getStamps();
 </script>
 
@@ -142,8 +221,8 @@
           <Item
             {stamp}
             on:stamp={handleStamp}
-            on:sell={() => (sellDialog = true)}
-            on:buy={() => (buyDialog = true)}
+            on:sell={handleSellClick}
+            on:buy={handleBuyClick}
           />
         {/each}
       {/await}
@@ -191,20 +270,35 @@
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
   <h3 class="my-8 text-2xl">{sellItem.name}</h3>
-  <p>Units you own: {sellItem.qty}</p>
-  <div class="mt-8 flex flex-col space-y-8">
+  <p>Units you own: {sellItem.balance}</p>
+  <form
+    on:submit|preventDefault={doSellAsset}
+    class="form mt-8 flex flex-col space-y-8"
+  >
     <div class="form-control">
       <label class="label" for="qty">Units you would like to sell?</label>
-      <input type="number" class="input input-bordered" />
+      <input
+        type="number"
+        class="input input-bordered"
+        bind:value={sellItem.qty}
+      />
     </div>
     <div class="form-control">
       <label class="label" for="price">Sell Price in BAR</label>
-      <input id="price" type="number" class="input input-bordered" />
+      <input
+        id="price"
+        type="number"
+        class="input input-bordered"
+        bind:value={sellItem.price}
+      />
+      <label class="label">
+        <span class="label-text-alt">** Price is in $BAR</span>
+      </label>
     </div>
     <div class="flex justify-end">
       <button class="btn btn-outline">Sell Asset</button>
     </div>
-  </div>
+  </form>
 </Modal>
 
 <Modal open={buyDialog} ok={false}>

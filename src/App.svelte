@@ -9,6 +9,8 @@
   import AssetDetail from "./pages/asset-detail.svelte";
   import StamperDetail from "./pages/stamper-detail.svelte";
 
+  import Test from "./pages/test.svelte";
+
   router.mode.hash();
   router.subscribe((_) => window.scrollTo(0, 0));
 </script>
@@ -18,16 +20,10 @@
   <Route path="/">
     <Home />
   </Route>
-  <Route path="/assets/:id" let:meta>
-    <AssetDetail id={meta.params.id} />
-  </Route>
-  <Route path="/stampers/:id" let:meta>
-    <StamperDetail id={meta.params.id} />
-  </Route>
-  <Route path="/stampers">
-    <Stampers />
-  </Route>
   <Route path="/about">
     <About />
+  </Route>
+  <Route path="/test">
+    <Test />
   </Route>
 </Transition>

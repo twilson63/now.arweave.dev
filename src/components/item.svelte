@@ -2,6 +2,7 @@
   import { router } from "tinro";
   import { createEventDispatcher } from "svelte";
   import Avatar from "./avatar.svelte";
+  import { head, sort } from "ramda";
 
   export let stamp;
 
@@ -17,10 +18,38 @@
   }
 
   function handleSell() {
-    dispatch("sell");
+    dispatch("sell", { contract: stamp.asset, name: stamp.title });
   }
   function handleBuy() {
     dispatch("buy");
+  }
+  async function getContract() {
+    const info = await fetch(
+      "https://cache.permapages.app/" + stamp.asset
+    ).then((res) => res.json());
+    return info;
+  }
+
+  function showOrderTotal(state) {
+    if (state.pairs && state.pairs[0]) {
+      const total = Object.values(state.balances).reduce((a, b) => a + b, 0);
+      const purchasable = state.pairs[0].orders.reduce(
+        (a, o) => a + o.quantity,
+        0
+      );
+
+      const lowestprice = head(
+        sort(
+          (x, y) => (x > y ? 1 : -1),
+          state.pairs[0].orders.reduce(
+            (a, o) => [...a, o.price / o.quantity],
+            []
+          )
+        )
+      );
+      return `<div>${purchasable}/${total} available for sale as low as ${lowestprice} $BAR</div>`;
+    }
+    return "";
   }
 </script>
 
@@ -47,6 +76,14 @@
             <div>stamps</div>
           </div>
         </div>
+      </div>
+      <div class="flex flex-col">
+        {#await getContract() then state}
+          {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
+            <div class="badge badge-success">For Sale</div>
+          {/if}
+          {@html showOrderTotal(state)}
+        {/await}
       </div>
     </div>
     <div class="sm:hidden">

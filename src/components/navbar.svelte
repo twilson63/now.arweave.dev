@@ -27,6 +27,9 @@
   <div class="flex-none">
     <ul class="menu menu-horizontal p-0 items-center">
       <li>
+        <a href="#">About</a>
+      </li>
+      <li>
         <a
           class="h-[48px] w-[64px]"
           target="_blank"

@@ -15,6 +15,7 @@
     stamp,
     sellAsset,
     readState,
+    readBar,
   } from "../lib/app.js";
   import { assets, profile } from "../store.js";
   import { find, propEq } from "ramda";
@@ -156,7 +157,7 @@
     sellDialog = true;
   }
 
-  function handleBuyClick(e) {
+  async function handleBuyClick(e) {
     if (!window.arweaveWallet) {
       handleConnect();
       return;
@@ -177,12 +178,13 @@
     }
     // if no bar get bar
 
-    if (true) {
+    if (!bar.balances[$profile.owner] || bar.balances[$profile.owner] <= 0) {
       errorMessage = "In order to buy, you need some $BAR";
       errorDialog = true;
       return;
     }
-    buyDialog = true
+    buyItem.balance = bar.balances[$profile.owner];
+    buyDialog = true;
   }
 
   let stampList = getStamps();
@@ -284,7 +286,7 @@
       />
     </div>
     <div class="form-control">
-      <label class="label" for="price">Sell Price in BAR</label>
+      <label class="label" for="price">Sell Price per Unit in BAR</label>
       <input
         id="price"
         type="number"
@@ -312,8 +314,11 @@
   <p>Price per unit: {buyItem.price}</p>
   <div class="mt-8 flex flex-col space-y-8">
     <div class="form-control">
-      <label class="label" for="price">Purchase Price in BAR</label>
+      <label class="label" for="price"
+        >How much BAR are you willing to spend?</label
+      >
       <input id="price" type="number" class="input input-bordered" />
+      <a href="#" class="link">Calc Price</a>
     </div>
     <div class="flex justify-end">
       <button class="btn btn-outline">Buy Asset</button>

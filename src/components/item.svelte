@@ -21,7 +21,7 @@
     dispatch("sell", { contract: stamp.asset, name: stamp.title });
   }
   function handleBuy() {
-    dispatch("buy");
+    dispatch("buy", { contract: stamp.asset, name: stamp.title });
   }
   async function getContract() {
     const info = await fetch(

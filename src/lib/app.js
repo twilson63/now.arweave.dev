@@ -29,5 +29,6 @@ export const createOrder = (data) => Flex.createOrder(data).runWith({ warp }).to
 export const allowOrder = (contract, target, qty) => Flex.allow(contract, target, qty).runWith({ warp }).toPromise()
 export const readState = (contract) => Flex.readState(contract).runWith({ warp }).toPromise()
 export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
+export const readBar = () => Flex.readState(BAR).runWith({ warp }).toPromise()
 
 export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()

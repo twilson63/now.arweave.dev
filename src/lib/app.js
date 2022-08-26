@@ -32,4 +32,26 @@ export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise(
 export const readBar = () => Flex.readState(BAR).runWith({ warp }).toPromise()
 
 export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()
-export const buyAsset = (contract, qty) => Flex.buy({ contract, BAR, qty }).runWith({ warp }).toPromise()
+export const buyAsset = //(contract, qty) => Flex.buy({ contract, BAR, qty }).runWith({ warp }).toPromise()
+  async (contract, qty) => {
+    const bar = warp.contract(BAR).connect('use_wallet').setEvaluationOptions({
+      internalWrites: true,
+      allowUnsafeClient: true
+    })
+    const asset = warp.contract(contract).connect('use_wallet').setEvaluationOptions({
+      internalWrites: true,
+      allowUnsafeClient: true
+    })
+    const allowResult = await bar.bundleInteraction({ function: 'allow', target: contract, qty })
+    // wait 15 secs to allow claimable record to show
+    await new Promise(resolve => setTimeout(resolve, 30 * 1000))
+
+    const barState = await bar.readState()
+    console.log('claimables', JSON.stringify(barState.state.claimables))
+    console.log('txId', allowResult.originalTxId)
+    const orderResult = await asset.bundleInteraction({ function: 'createOrder', qty, pair: [BAR, contract], transaction: allowResult.originalTxId })
+    const contractState = await asset.readState()
+
+    return contractState.state
+
+  }

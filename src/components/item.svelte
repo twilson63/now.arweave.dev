@@ -3,12 +3,11 @@
   import { createEventDispatcher } from "svelte";
   import Avatar from "./avatar.svelte";
   import { head, sort, take } from "ramda";
-  import Arweave from "arweave";
   import { readState } from "../lib/app.js";
+  import { atomicToBar } from "../lib/utils.js";
 
   export let stamp;
 
-  const { ar } = Arweave.init();
   let unitsTotal = 0;
   let unitsAvailable = 0;
   let lowestPrice = 0;
@@ -49,17 +48,17 @@
         0
       );
 
-      lowestPrice = ar.winstonToAr(
-        head(
-          sort(
-            (x, y) => (x > y ? 1 : -1),
-            state.pairs[0].orders.reduce(
-              (a, o) => [...a, o.price / o.quantity],
-              []
-            )
+      lowestPrice = head(
+        sort(
+          (x, y) => (x > y ? 1 : -1),
+          state.pairs[0].orders.reduce(
+            (a, o) => [...a, atomicToBar(o.price) / o.quantity],
+            []
           )
         )
       );
+
+      console.log({ lowestPrice });
       return `<div>${unitsAvailable}/${unitsTotal} available <br />as low as ${lowestPrice} $BAR</div>`;
     }
     return "";

@@ -7,7 +7,8 @@
   import SideNav from "../components/side-nav.svelte";
   import NavBar from "../components/navbar.svelte";
   import SortButton from "../components/sort-button.svelte";
-  import Arweave from "arweave";
+
+  import { barToAtomic, atomicToBar } from "../lib/utils.js";
 
   import {
     listAssets,
@@ -133,11 +134,11 @@
       errorDialog = true;
       return;
     }
-    console.log("contract", sellItem.contract);
+
     const result = await sellAsset(
       sellItem.contract,
       sellItem.qty,
-      Number(ar.arToWinston(sellItem.price))
+      Number(barToAtomic(sellItem.price)) * sellItem.qty
     );
     processingDialog = false;
     errorMessage = "Successfully placed asset for sale.";
@@ -148,16 +149,28 @@
 
   async function doBuyAsset() {
     buyDialog = false;
-    let qty = Number(ar.arToWinston(buyItem.qty)); //* 100;
+    processingDialog = true;
+
+    //let qty = Number(ar.arToWinston(buyItem.qty)); //* 100;
+    let qty = Number(
+      Number(barToAtomic(buyItem.price)) * Number(buyItem.buyUnits)
+    );
     console.log("balance", buyItem.balance);
-    console.log("qty", qty);
+    console.log("qty", qty.toFixed(0));
+
     if (qty > buyItem.balance) {
+      processingDialog = false;
       errorMessage = "You do not have enough $BAR to make this purchase!";
       errorDialog = true;
       return;
     }
-    const result = await buyAsset(buyItem.contract, qty);
-    console.log(result);
+    const result = await buyAsset(buyItem.contract, qty.toFixed(0) * 20000);
+
+    processingDialog = false;
+    errorMessage = "Successfully purchased asset";
+    errorDialog = true;
+
+    stampList = refreshStampList();
   }
 
   async function handleSellClick(e) {
@@ -212,7 +225,7 @@
       errorDialog = true;
       return;
     }
-    buyItem.balance = bar.balances[$profile.owner];
+    buyItem.balance = atomicToBar(bar.balances[$profile.owner]);
     buyDialog = true;
   }
 
@@ -344,13 +357,15 @@
   <h3 class="my-8 text-2xl">{buyItem.name}</h3>
   <p>Units available: {buyItem.canPurchase}</p>
   <p>Price per unit: {buyItem.price} $BAR</p>
-  <p>Your $BAR Balance: {ar.winstonToAr(buyItem.balance)}</p>
+  <p>Your $BAR Balance: {buyItem.balance}</p>
   <!--
   <button href="#" class="link">Calc Price</button>
   -->
   <div class="mt-8 flex flex-col space-y-8">
     <div class="form-control">
-      <label class="label" for="price">How much may units do you want?</label>
+      <label class="label" for="price"
+        >How much many units do you want to purchase?</label
+      >
       <input
         id="price"
         type="number"
@@ -365,7 +380,7 @@
       >Calc Cost</button
     >
     {#if buyItem.qty}
-      <div class="text-2xl">{buyItem.qty}</div>
+      <div class="text-xl">Suggested Cost {buyItem.qty} Remaining Balance</div>
     {/if}
     <div class="flex justify-end">
       <button class="btn btn-outline" on:click={doBuyAsset}>Buy Asset</button>

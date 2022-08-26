@@ -2,8 +2,9 @@
   import { router } from "tinro";
   import { createEventDispatcher } from "svelte";
   import Avatar from "./avatar.svelte";
-  import { head, sort } from "ramda";
+  import { head, sort, take } from "ramda";
   import Arweave from "arweave";
+  import { readState } from "../lib/app.js";
 
   export let stamp;
 
@@ -36,9 +37,7 @@
     });
   }
   async function getContract() {
-    const info = await fetch(
-      "https://cache.permapages.app/" + stamp.asset
-    ).then((res) => res.json());
+    const info = await readState(stamp.asset);
     return info;
   }
 
@@ -61,7 +60,7 @@
           )
         )
       );
-      return `<div>${unitsAvailable}/${unitsTotal} available for sale as low as ${lowestPrice} $BAR</div>`;
+      return `<div>${unitsAvailable}/${unitsTotal} available <br />as low as ${lowestPrice} $BAR</div>`;
     }
     return "";
   }
@@ -76,12 +75,14 @@
   >
     <!-- Repo name and link -->
     <div class="min-w-0 space-y-3">
-      <div class="flex items-center space-x-3">
+      <div class="flex flex-col md:flex-row items-center space-x-3">
         <img class="w-[32px]" src="stamp-logo.webp" alt="stamp logo" />
-        <div class="flex flex-col">
+        <div class="flex flex-col max-w-[200px]">
           <h2 class="text-xl font-medium">
             <a href="#">
-              {stamp.title}
+              {stamp.title.length > 20
+                ? take(15, stamp.title) + "..."
+                : stamp.title}
               <span class="text-sm">{stamp.asset.substring(0, 5)}</span>
             </a>
           </h2>

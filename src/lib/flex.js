@@ -19,17 +19,21 @@ const _doWrite = (warp, contract) => {
   return fromPromise(c.bundleInteraction.bind(c))
 }
 const _doRead = (warp, contract) => {
-  return fromPromise(() =>
-    fetch(`https://cache.permapages.app/${contract}`)
-      //.then(_ => Promise.reject('foo'))
-      .then(res => res.ok ? res.json() : Promise.reject(Error('not found')))
-      .catch(() => warp.contract(contract).setEvaluationOptions({ internalWrites: true }).readState())
-  )
+  const c = warp.contract(contract).setEvaluationOptions({ internalWrites: true, allowUnsafeClient: true })
+  return fromPromise(c.readState.bind(c))
+  /*
+  fetch(`https://cache.permapages.app/${contract}`)
+    .then(_ => Promise.reject('foo'))
+    .then(res => res.ok ? res.json() : Promise.reject(Error('not found')))
+    .catch(() => warp.contract(contract).setEvaluationOptions({ internalWrites: true }).readState())
+    */
+
 }
 
 const _doDryRun = (warp, contract) => {
   const c = warp.contract(contract).connect('use_wallet').setEvaluationOptions({
-    internalWrites: true
+    internalWrites: true,
+    allowUnsafeClient: true
   })
   return fromPromise(c.dryWrite.bind(c))
 }
@@ -56,6 +60,7 @@ export const dry = ({ contract, qty, price, pair, transaction = '' }) =>
     .chain(dryWrite(contract))
 
 export const readState = (contract) => read(contract)
+  .map(prop('state'))
 
 export const sell = ({ contract, BAR, qty, price }) =>
   addPair(contract, BAR)
@@ -65,7 +70,7 @@ export const sell = ({ contract, BAR, qty, price }) =>
       price,
       pair: [contract, BAR]
     }))
-    .map(x => (console.log('call createorder ', x), x))
+    //.map(x => (console.log('call createorder ', x), x))
     .chain(createOrder).map(always(contract))
     .chain(readState)
 

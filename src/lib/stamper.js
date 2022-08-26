@@ -36,7 +36,7 @@ export const getProfile = (id) => ask(({ arweave }) =>
     .map(pathOr({ tags: [] }, ['data', 'data', 'transactions', 'edges']))
     .map(compose(propOr(unknown, 'id'), head, pluck('node')))
     .chain((id) => Async.fromPromise(arweave.api.get.bind(arweave.api))(id)).map(propOr({}, 'data'))
-
+  //.map(x => (console.log(x), x))
   //.map(({ tags }) => find(t => t.name === 'Page-Title', tags))
   //.map(propOr('Unknown', 'value'))
 ).chain(lift)

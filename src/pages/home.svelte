@@ -15,6 +15,7 @@
     isVouched,
     stamp,
     sellAsset,
+    buyAsset,
     readState,
     readBar,
   } from "../lib/app.js";
@@ -23,6 +24,7 @@
 
   const { ar } = Arweave.init();
 
+  let processingDialog = false;
   let connectDialog = false;
   let errorDialog = false;
   let errorMessage = "";
@@ -102,6 +104,8 @@
         ]);
         const address = await window.arweaveWallet.getActiveAddress();
         $profile = await getProfile(address);
+        // hack to fix unknown profile
+        $profile.owner = address;
       } else if (type === "arweaveapp") {
         const wallet = new ArweaveWebWallet({
           name: "stamps.arweave.dev",
@@ -110,6 +114,8 @@
         wallet.setUrl("arweave.app");
         await wallet.connect();
         $profile = await getProfile(wallet.address);
+        // hack to fix unknown profile
+        $profile.owner = wallet.address;
       }
     };
   }
@@ -121,22 +127,30 @@
 
   async function doSellAsset() {
     sellDialog = false;
+    processingDialog = true;
     if (sellItem.qty > sellItem.balance) {
       errorMessage = "You do not have enough tokens in your balance!";
       errorDialog = true;
       return;
     }
+    console.log("contract", sellItem.contract);
     const result = await sellAsset(
       sellItem.contract,
       sellItem.qty,
-      sellItem.price
+      Number(ar.arToWinston(sellItem.price))
     );
+    processingDialog = false;
+    errorMessage = "Successfully placed asset for sale.";
+    errorDialog = true;
     console.log(result);
+    stampList = refreshStampList();
   }
 
   async function doBuyAsset() {
     buyDialog = false;
-    let qty = Number(ar.arToWinston(buyItem.qty)) * 100;
+    let qty = Number(ar.arToWinston(buyItem.qty)); //* 100;
+    console.log("balance", buyItem.balance);
+    console.log("qty", qty);
     if (qty > buyItem.balance) {
       errorMessage = "You do not have enough $BAR to make this purchase!";
       errorDialog = true;
@@ -193,7 +207,6 @@
       return;
     }
     // if no bar get bar
-
     if (!bar.balances[$profile.owner] || bar.balances[$profile.owner] <= 0) {
       errorMessage = "In order to buy, you need some $BAR";
       errorDialog = true;
@@ -280,6 +293,9 @@
     {errorMessage}
   </div>
 </Modal>
+<Modal open={processingDialog} ok={false}>
+  <div class="text-xl">Processing Request...</div>
+</Modal>
 
 <Modal open={sellDialog} ok={false}>
   <h2 class="text-lg">Sell Asset</h2>
@@ -305,7 +321,7 @@
       <label class="label" for="price">Sell Price per Unit in BAR</label>
       <input
         id="price"
-        type="number"
+        type="text"
         class="input input-bordered"
         bind:value={sellItem.price}
       />

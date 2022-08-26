@@ -3,8 +3,14 @@
   import { createEventDispatcher } from "svelte";
   import Avatar from "./avatar.svelte";
   import { head, sort } from "ramda";
+  import Arweave from "arweave";
 
   export let stamp;
+
+  const { ar } = Arweave.init();
+  let unitsTotal = 0;
+  let unitsAvailable = 0;
+  let lowestPrice = 0;
 
   const dispatch = createEventDispatcher();
 
@@ -21,7 +27,13 @@
     dispatch("sell", { contract: stamp.asset, name: stamp.title });
   }
   function handleBuy() {
-    dispatch("buy", { contract: stamp.asset, name: stamp.title });
+    dispatch("buy", {
+      contract: stamp.asset,
+      name: stamp.title,
+      units: unitsTotal,
+      canPurchase: unitsAvailable,
+      price: lowestPrice,
+    });
   }
   async function getContract() {
     const info = await fetch(
@@ -32,22 +44,24 @@
 
   function showOrderTotal(state) {
     if (state.pairs && state.pairs[0]) {
-      const total = Object.values(state.balances).reduce((a, b) => a + b, 0);
-      const purchasable = state.pairs[0].orders.reduce(
+      unitsTotal = Object.values(state.balances).reduce((a, b) => a + b, 0);
+      unitsAvailable = state.pairs[0].orders.reduce(
         (a, o) => a + o.quantity,
         0
       );
 
-      const lowestprice = head(
-        sort(
-          (x, y) => (x > y ? 1 : -1),
-          state.pairs[0].orders.reduce(
-            (a, o) => [...a, o.price / o.quantity],
-            []
+      lowestPrice = ar.winstonToAr(
+        head(
+          sort(
+            (x, y) => (x > y ? 1 : -1),
+            state.pairs[0].orders.reduce(
+              (a, o) => [...a, o.price / o.quantity],
+              []
+            )
           )
         )
       );
-      return `<div>${purchasable}/${total} available for sale as low as ${lowestprice} $BAR</div>`;
+      return `<div>${unitsAvailable}/${unitsTotal} available for sale as low as ${lowestPrice} $BAR</div>`;
     }
     return "";
   }
@@ -77,14 +91,14 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col">
-        {#await getContract() then state}
-          {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
-            <div class="badge badge-success">For Sale</div>
-          {/if}
-          {@html showOrderTotal(state)}
-        {/await}
-      </div>
+    </div>
+    <div class="flex flex-col">
+      {#await getContract() then state}
+        {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
+          <div class="badge badge-success">For Sale</div>
+        {/if}
+        {@html showOrderTotal(state)}
+      {/await}
     </div>
     <div class="sm:hidden">
       <!-- Heroicon name: solid/chevron-right -->

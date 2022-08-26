@@ -7,6 +7,7 @@
   import SideNav from "../components/side-nav.svelte";
   import NavBar from "../components/navbar.svelte";
   import SortButton from "../components/sort-button.svelte";
+  import Arweave from "arweave";
 
   import {
     listAssets,
@@ -19,6 +20,8 @@
   } from "../lib/app.js";
   import { assets, profile } from "../store.js";
   import { find, propEq } from "ramda";
+
+  const { ar } = Arweave.init();
 
   let connectDialog = false;
   let errorDialog = false;
@@ -121,12 +124,25 @@
     if (sellItem.qty > sellItem.balance) {
       errorMessage = "You do not have enough tokens in your balance!";
       errorDialog = true;
+      return;
     }
     const result = await sellAsset(
       sellItem.contract,
       sellItem.qty,
       sellItem.price
     );
+    console.log(result);
+  }
+
+  async function doBuyAsset() {
+    buyDialog = false;
+    let qty = Number(ar.arToWinston(buyItem.qty)) * 100;
+    if (qty > buyItem.balance) {
+      errorMessage = "You do not have enough $BAR to make this purchase!";
+      errorDialog = true;
+      return;
+    }
+    const result = await buyAsset(buyItem.contract, qty);
     console.log(result);
   }
 
@@ -310,18 +326,33 @@
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
   <h3 class="my-8 text-2xl">{buyItem.name}</h3>
-  <p>Units available: {buyItem.qty}</p>
-  <p>Price per unit: {buyItem.price}</p>
+  <p>Units available: {buyItem.canPurchase}</p>
+  <p>Price per unit: {buyItem.price} $BAR</p>
+  <p>Your $BAR Balance: {ar.winstonToAr(buyItem.balance)}</p>
+  <!--
+  <button href="#" class="link">Calc Price</button>
+  -->
   <div class="mt-8 flex flex-col space-y-8">
     <div class="form-control">
-      <label class="label" for="price"
-        >How much BAR are you willing to spend?</label
-      >
-      <input id="price" type="number" class="input input-bordered" />
-      <a href="#" class="link">Calc Price</a>
+      <label class="label" for="price">How much may units do you want?</label>
+      <input
+        id="price"
+        type="number"
+        class="input input-bordered"
+        bind:value={buyItem.buyUnits}
+      />
     </div>
+    <button
+      class="link"
+      on:click={() =>
+        (buyItem.qty = Number(buyItem.price) * Number(buyItem.buyUnits))}
+      >Calc Cost</button
+    >
+    {#if buyItem.qty}
+      <div class="text-2xl">{buyItem.qty}</div>
+    {/if}
     <div class="flex justify-end">
-      <button class="btn btn-outline">Buy Asset</button>
+      <button class="btn btn-outline" on:click={doBuyAsset}>Buy Asset</button>
     </div>
   </div>
 </Modal>

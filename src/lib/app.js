@@ -32,3 +32,4 @@ export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise(
 export const readBar = () => Flex.readState(BAR).runWith({ warp }).toPromise()
 
 export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()
+export const buyAsset = (contract, qty) => Flex.buy({ contract, BAR, qty }).runWith({ warp }).toPromise()

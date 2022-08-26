@@ -1,4 +1,5 @@
 import { Async, ReaderT } from 'crocks'
+import { prop } from 'ramda'
 
 const { fromPromise } = Async
 const { of, ask, lift } = ReaderT(Async)
@@ -44,7 +45,7 @@ export const addPair = (contract, pair) =>
 
 export const allow = (contract, target, qty) =>
   of({ function: 'allow', target, qty })
-    .chain(writeInteraction(contract))
+    .chain(writeInteraction(contract)).map(prop('originalTxId'))
 
 export const createOrder = ({ contract, qty, price, pair, transaction = '' }) =>
   of({ function: 'createOrder', qty, price, pair, transaction })
@@ -68,13 +69,13 @@ export const sell = ({ contract, BAR, qty, price }) =>
     .chain(createOrder).map(always(contract))
     .chain(readState)
 
-export const buy = ({ contract, BAR, qty, transaction }) =>
+export const buy = ({ contract, BAR, qty }) =>
   allow(BAR, contract, qty)
-    .map(always({
+    .map(transaction => ({
       contract,
       qty,
       transaction,
       pair: [BAR, contract]
     }))
-    .chain(createOrdder).map(always(contract))
+    .chain(createOrder).map(always(contract))
     .chain(readState)

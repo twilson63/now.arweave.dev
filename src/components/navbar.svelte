@@ -77,9 +77,7 @@
             </div>
           </div>
         {:else}
-          <button class="btn btn-outline" on:click={connect}
-            >Connect Wallet</button
-          >
+          <button class="btn btn-outline" on:click={connect}>Connect</button>
         {/if}
       </li>
     </ul>

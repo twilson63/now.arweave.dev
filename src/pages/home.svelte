@@ -158,14 +158,14 @@
     console.log("balance", buyItem.balance);
     console.log("qty", qty.toFixed(0));
 
-    if (qty > buyItem.balance) {
+    if (qty > Number(barToAtomic(buyItem.balance))) {
       processingDialog = false;
       errorMessage = "You do not have enough $BAR to make this purchase!";
       errorDialog = true;
       return;
     }
-    const result = await buyAsset(buyItem.contract, qty.toFixed(0) * 20000);
-
+    //const result = await buyAsset(buyItem.contract, Number(qty.toFixed(0)));
+    const result = await buyAsset(buyItem.contract, 10000);
     processingDialog = false;
     errorMessage = "Successfully purchased asset";
     errorDialog = true;

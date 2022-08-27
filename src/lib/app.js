@@ -12,7 +12,8 @@ const arweave = Arweave.init({
 const { WarpWebFactory, LoggerFactory } = window.warp;
 LoggerFactory.INST.logLevel("error");
 
-const BAR = "ywE43lMzhO69CJQtrWqxa3K2Ip8EfUanqUQULbGslpc";
+//const BAR = "ywE43lMzhO69CJQtrWqxa3K2Ip8EfUanqUQULbGslpc";
+const BAR = 'LJbfMMltmCa_pwhA0QMY1XYK0e-xHtNQYcnHHhtCcNs';
 const STAMPCOIN = "aSMILD7cEJr93i7TAVzzMjtci_sGkXcWnqpDkG6UGcA";
 const warp = WarpWebFactory.memCached(arweave);
 

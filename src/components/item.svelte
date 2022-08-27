@@ -52,7 +52,7 @@
         sort(
           (x, y) => (x > y ? 1 : -1),
           state.pairs[0].orders.reduce(
-            (a, o) => [...a, atomicToBar(o.price) / o.quantity],
+            (a, o) => [...a, atomicToBar(o.price)],
             []
           )
         )

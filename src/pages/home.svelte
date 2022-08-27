@@ -48,6 +48,8 @@
   let defaultAvatarUrl =
     "https://tgbcqufuppegmlhigt2zosiv2q55qty4t4rg2gebmfm4vpvf.arweave.net/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0";
 
+  $: buyQty = Number(buyItem.price) * Number(buyItem.buyUnits);
+
   async function getStamps() {
     if ($assets.length === 0) {
       $assets = await listAssets();
@@ -138,12 +140,11 @@
     const result = await sellAsset(
       sellItem.contract,
       sellItem.qty,
-      Number(barToAtomic(sellItem.price)) * sellItem.qty
+      Number(barToAtomic(sellItem.price))
     );
     processingDialog = false;
     errorMessage = "Successfully placed asset for sale.";
     errorDialog = true;
-    console.log(result);
     stampList = refreshStampList();
   }
 
@@ -151,12 +152,8 @@
     buyDialog = false;
     processingDialog = true;
 
-    //let qty = Number(ar.arToWinston(buyItem.qty)); //* 100;
-    let qty = Number(
-      Number(barToAtomic(buyItem.price)) * Number(buyItem.buyUnits)
-    );
-    console.log("balance", buyItem.balance);
-    console.log("qty", qty.toFixed(0));
+    let qty = Number(barToAtomic(buyQty)).toFixed(0); //* 100;
+    console.log("Purchase Amount", qty);
 
     if (qty > Number(barToAtomic(buyItem.balance))) {
       processingDialog = false;
@@ -165,7 +162,8 @@
       return;
     }
     //const result = await buyAsset(buyItem.contract, Number(qty.toFixed(0)));
-    const result = await buyAsset(buyItem.contract, 10000);
+    const result = await buyAsset(buyItem.contract, qty);
+    console.log(result);
     processingDialog = false;
     errorMessage = "Successfully purchased asset";
     errorDialog = true;
@@ -373,14 +371,8 @@
         bind:value={buyItem.buyUnits}
       />
     </div>
-    <button
-      class="link"
-      on:click={() =>
-        (buyItem.qty = Number(buyItem.price) * Number(buyItem.buyUnits))}
-      >Calc Cost</button
-    >
-    {#if buyItem.qty}
-      <div class="text-xl">Suggested Cost {buyItem.qty} Remaining Balance</div>
+    {#if buyQty > 0}
+      <div class="text-xl">Suggested Cost {buyQty} $BAR</div>
     {/if}
     <div class="flex justify-end">
       <button class="btn btn-outline" on:click={doBuyAsset}>Buy Asset</button>

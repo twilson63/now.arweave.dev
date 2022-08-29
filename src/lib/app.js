@@ -13,10 +13,12 @@ const { WarpWebFactory, LoggerFactory } = window.warp;
 LoggerFactory.INST.logLevel("error");
 
 //const BAR = "ywE43lMzhO69CJQtrWqxa3K2Ip8EfUanqUQULbGslpc";
-const BAR = 'LJbfMMltmCa_pwhA0QMY1XYK0e-xHtNQYcnHHhtCcNs';
+//const BAR = 'LJbfMMltmCa_pwhA0QMY1XYK0e-xHtNQYcnHHhtCcNs';
+const BAR = 'lWHXv3QJ8daqxY61b0u-TpS92zkDej_c6lMUtnU34DQ';
 const STAMPCOIN = "aSMILD7cEJr93i7TAVzzMjtci_sGkXcWnqpDkG6UGcA";
 const warp = WarpWebFactory.memCached(arweave);
 
+export const whatsHot = () => Market.whatsHot(STAMPCOIN).runWith({ warp, wallet: 'use_wallet', arweave }).toPromise()
 export const listAssets = () => Market.listAssets(STAMPCOIN).runWith({ warp, arweave, wallet: 'use_wallet' }).toPromise()
 export const getTitle = (id) => Asset.getTitle(id).runWith({ arweave }).toPromise()
 export const listStampers = () => Market.listStampers(STAMPCOIN).runWith({ warp, arweave }).toPromise()

@@ -19,6 +19,7 @@
     buyAsset,
     readState,
     readBar,
+    whatsHot,
   } from "../lib/app.js";
   import { assets, profile } from "../store.js";
   import { find, propEq } from "ramda";
@@ -52,14 +53,14 @@
 
   async function getStamps() {
     if ($assets.length === 0) {
-      $assets = await listAssets();
+      $assets = await whatsHot();
     }
     return Promise.resolve($assets);
   }
 
   async function refreshStampList() {
     window.scrollTo(0, 0);
-    $assets = await listAssets();
+    $assets = await whatsHot();
     return Promise.resolve($assets);
   }
 
@@ -136,12 +137,18 @@
       errorDialog = true;
       return;
     }
-
-    const result = await sellAsset(
-      sellItem.contract,
-      sellItem.qty,
-      Number(barToAtomic(sellItem.price))
-    );
+    try {
+      const result = await sellAsset(
+        sellItem.contract,
+        sellItem.qty,
+        Number(barToAtomic(sellItem.price))
+      );
+    } catch (e) {
+      processingDialog = false;
+      errorMessage = e.message;
+      errorDialog = true;
+      return;
+    }
     processingDialog = false;
     errorMessage = "Successfully placed asset for sale.";
     errorDialog = true;

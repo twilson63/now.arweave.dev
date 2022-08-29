@@ -4,7 +4,7 @@
   export let profile = {};
 
   let text =
-    "Check out whats hot with the Stamp Protocol: https://stamps.arweave.dev 🐘 @permapages";
+    "Check out whats hot with the Stamp Protocol: https://now.arweave.dev 🐘 @permapages";
 
   const dispatch = createEventDispatcher();
 
@@ -21,14 +21,11 @@
   <div class="flex-1">
     <a class="btn btn-ghost normal-case text-xl">
       <img class="w-[20px] mr-2" src="stamp-logo.webp" alt="stamp-logo" />
-      stamps.arweave.dev
+      now.arweave.dev
     </a>
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal p-0 items-center">
-      <li>
-        <a href="#">About</a>
-      </li>
       <li>
         <a
           class="h-[48px] w-[64px]"

@@ -5,11 +5,6 @@
 
   import Home from "./pages/home.svelte";
   import About from "./pages/about.svelte";
-  import Stampers from "./pages/stampers.svelte";
-  import AssetDetail from "./pages/asset-detail.svelte";
-  import StamperDetail from "./pages/stamper-detail.svelte";
-
-  import Test from "./pages/test.svelte";
 
   router.mode.hash();
   router.subscribe((_) => window.scrollTo(0, 0));
@@ -19,11 +14,5 @@
 <Transition>
   <Route path="/">
     <Home />
-  </Route>
-  <Route path="/about">
-    <About />
-  </Route>
-  <Route path="/test">
-    <Test />
   </Route>
 </Transition>

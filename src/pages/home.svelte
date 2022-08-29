@@ -24,7 +24,7 @@
   import { assets, profile } from "../store.js";
   import { find, propEq } from "ramda";
 
-  const { ar } = Arweave.init();
+  let view = "whats-hot";
 
   let processingDialog = false;
   let connectDialog = false;
@@ -242,7 +242,6 @@
   }
 
   let stampList = getStamps();
-  let view = "whats-hot";
 </script>
 
 <NavBar

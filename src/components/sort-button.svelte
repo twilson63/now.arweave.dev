@@ -1,5 +1,20 @@
+<script>
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+  let hide = true;
+
+  function change(view) {
+    return () => {
+      dispatch("change", { view });
+      hide = true;
+    };
+  }
+</script>
+
 <div class="relative">
   <button
+    on:click={() => (hide = !hide)}
     type="button"
     class="w-full bg-white border border-gray-300 rounded-md shadow-sm px-4 py-2 inline-flex justify-center text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
     id="sort-menu-button"
@@ -18,7 +33,7 @@
         d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"
       />
     </svg>
-    Sort
+    View
     <!-- Heroicon name: solid/chevron-down -->
     <svg
       class="ml-2.5 -mr-1.5 h-5 w-5 text-gray-400"
@@ -36,7 +51,9 @@
   </button>
   <!-- Dropdown menu, show/hide based on menu state. -->
   <div
-    class="origin-top-right z-10 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+    class="origin-top-right z-10 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none {hide
+      ? 'hidden'
+      : ''}"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="sort-menu-button"
@@ -44,26 +61,19 @@
   >
     <div class="py-1" role="none">
       <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-      <a
-        href="#"
+      <button
+        on:click={change("whats-hot")}
         class="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
         tabindex="-1"
-        id="sort-menu-item-0">Recent</a
+        id="sort-menu-item-0">🔥 Whats Hot</button
       >
-      <a
-        href="#"
+      <button
+        on:click={change("whats-new")}
         class="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
         tabindex="-1"
-        id="sort-menu-item-1">Least Expensive</a
-      >
-      <a
-        href="#"
-        class="text-gray-700 block px-4 py-2 text-sm"
-        role="menuitem"
-        tabindex="-1"
-        id="sort-menu-item-2">Most Expensive</a
+        id="sort-menu-item-1">✨ Whats New</button
       >
     </div>
   </div>

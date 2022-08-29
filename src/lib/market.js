@@ -93,6 +93,7 @@ export const listStampers = (contract) =>
       .map(prop('stamps'))
       .map(values)
       .map(reverse)
+
       .map(groupBy((s) => s.address))
       .map(stampers => reduce((a, x) => [
         ...a,
@@ -106,7 +107,7 @@ export const listStampers = (contract) =>
   )
     .chain(lift)
 
-export const listAssets = (contract) =>
+export const whatsNew = (contract) =>
   of(contract)
     .chain(contract =>
       ask(({ warp, wallet, arweave }) =>
@@ -120,6 +121,7 @@ export const listAssets = (contract) =>
           .map(prop('stamps'))
           .map(values)
           .map(reverse)
+          .map(filter(compose(gt(__, Date.now() - DAY), prop('timestamp'))))
           .map(groupBy((s) => s.asset))
           .map(assets => reduce((a, x) => [
             ...a,

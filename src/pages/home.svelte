@@ -11,7 +11,7 @@
   import { barToAtomic, atomicToBar } from "../lib/utils.js";
 
   import {
-    listAssets,
+    whatsNew,
     getProfile,
     isVouched,
     stamp,
@@ -53,14 +53,14 @@
 
   async function getStamps() {
     if ($assets.length === 0) {
-      $assets = await whatsHot();
+      $assets = (await view) === "whats-hot" ? whatsHot() : whatsNew();
     }
     return Promise.resolve($assets);
   }
 
   async function refreshStampList() {
     window.scrollTo(0, 0);
-    $assets = await whatsHot();
+    $assets = (await view) === "whats-hot" ? whatsHot() : whatsNew();
     return Promise.resolve($assets);
   }
 
@@ -235,7 +235,14 @@
     buyDialog = true;
   }
 
+  function changeView(e) {
+    console.log(e.detail.view);
+    view = e.detail.view;
+    stampList = refreshStampList();
+  }
+
   let stampList = getStamps();
+  let view = "whats-hot";
 </script>
 
 <NavBar
@@ -254,10 +261,11 @@
       class="pl-4 pr-6 pt-4 pb-4 border-b border-t border-gray-200 sm:pl-6 lg:pl-8 xl:pl-6 xl:pt-6 xl:border-t-0"
     >
       <div class="flex items-center">
-        <h1 class="flex-1 text-lg font-medium">🔥 Whats Hot</h1>
-        <!--
-        <SortButton />
-        -->
+        <h1 class="flex-1 text-lg font-medium">
+          {view === "whats-hot" ? "🔥 Whats Hot" : "✨ Whats New"}
+        </h1>
+
+        <SortButton on:change={changeView} />
       </div>
     </div>
     <ul

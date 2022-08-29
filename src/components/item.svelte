@@ -122,10 +122,8 @@
           {#each stamp.stampers as stamper}
             {#if stamper.avatar}
               <Avatar avatar={stamper.avatar} />
-            {:else if stamper.name}
-              <Avatar
-                avatar={`https://ui-avatars.com/api/?name=${stamper.name}`}
-              />
+            {:else if stamper.name && stamper.name.toUpperCase() !== "UNKNOWN"}
+              <Avatar name={stamper.name} avatar="https://i.pravatar.cc/128" />
             {:else}
               <Avatar avatar="https://i.pravatar.cc/128" />
             {/if}

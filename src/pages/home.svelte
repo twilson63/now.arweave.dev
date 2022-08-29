@@ -144,6 +144,7 @@
         Number(barToAtomic(sellItem.price))
       );
     } catch (e) {
+      console.log(e);
       processingDialog = false;
       errorMessage = e.message;
       errorDialog = true;

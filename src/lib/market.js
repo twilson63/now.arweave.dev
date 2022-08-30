@@ -1,7 +1,7 @@
 import crocks from 'crocks'
 import * as R from 'ramda'
 
-const { sortWith, ascend, descend, __, filter, gt, compose, groupBy, reduce, values, keys, reverse, prop, identity, pluck, path, map, find, propEq, uniq, concat } = R
+const { pathOr, sortWith, ascend, descend, __, filter, gt, compose, groupBy, reduce, values, keys, reverse, prop, identity, pluck, path, map, find, propEq, uniq, concat } = R
 
 const { Async, ReaderT } = crocks
 const { of, ask, lift } = ReaderT(Async)
@@ -12,7 +12,7 @@ const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet)
 const getState = contract => Async.fromPromise(fetch)(`${CACHE}/${contract}`)
   .chain(res => Async.fromPromise(res.json.bind(res))())
 
-export const getMyRewards = (addr, contract) => ask(({ warp, wallet }) =>
+export const getBalance = (contract, addr) => ask(({ warp, wallet }) =>
   getState(contract)
     .bichain(
       _ => connect(warp, wallet)(contract)
@@ -20,7 +20,10 @@ export const getMyRewards = (addr, contract) => ask(({ warp, wallet }) =>
         .map(prop('state')),
       Async.Resolved
     )
-)
+    .map(pathOr(0, ['balances', addr]))
+    .map(x => (console.log(x), x))
+
+).chain(lift)
 
 export const whatsHot = (contract) => ask(({ warp, wallet, arweave }) =>
   getState(contract)

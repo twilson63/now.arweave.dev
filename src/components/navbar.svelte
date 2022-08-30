@@ -1,7 +1,9 @@
 <script>
   import { createEventDispatcher } from "svelte";
-
-  import { myRewards } from "../lib/app.js";
+  import Avatar from "./avatar.svelte";
+  import { atomicToStamp, atomicToBar } from "../lib/utils.js";
+  import { myRewards, myBar } from "../lib/app.js";
+  import { take, toUpper } from "ramda";
 
   export let profile = {};
   let bar = 0;
@@ -29,28 +31,34 @@
     </a>
   </div>
   <div class="flex-none">
-    <ul class="menu menu-horizontal p-0 items-center space-x-8">
-      {#await myRewards($profile.owner) then rewards}
+    <ul class="menu menu-horizontal p-0 items-center space-x-4">
+      {#if profile.owner}
+        {#await myRewards(profile.owner) then rewards}
+          <li>
+            My Rewards {Number(atomicToStamp(rewards)).toFixed(2)}
+          </li>
+        {/await}
+
         <li>
-          My Rewards {rewards}
+          <button class="btn btn-secondary btn-outline"
+            >Post Asset to Now.</button
+          >
         </li>
-      {/await}
-      <li>
-        <button class="btn btn-secondary btn-outline">Post Asset to Now.</button
-        >
-      </li>
-      <li>
-        $BAR {bar.toFixed(2)}
-      </li>
-      <li>
-        <a
-          target="_blank"
-          href="https://bar.arweave.dev"
-          class="btn btn-outline"
-        >
-          Get Bar
-        </a>
-      </li>
+        <li>
+          {#await myBar(profile.owner) then bar}
+            $BAR {Number(atomicToBar(bar)).toFixed(2)}
+          {/await}
+        </li>
+        <li>
+          <a
+            target="_blank"
+            href="https://bar.arweave.dev"
+            class="btn btn-outline"
+          >
+            Get Bar
+          </a>
+        </li>
+      {/if}
       <li>
         <a
           class="h-[48px] w-[64px]"
@@ -93,11 +101,25 @@
       </li>
       <li>
         {#if profile.owner}
-          <div class="avatar">
-            <div class="w-8 rounded-full" on:click={disconnect}>
-              <img src={profile.avatar} />
-            </div>
-          </div>
+          <figure class="w-[72px]" on:click={disconnect}>
+            {#if profile.avatar}
+              <div class="avatar mask mask-circle">
+                <img src={profile.avatar} alt={profile.name} />
+              </div>
+            {:else if profile.name && profile.name.toUpperCase() !== "UNKNOWN"}
+              <div class="avatar mask mask-circle">
+                <div
+                  class="bg-gray-400 p-2 h-full w-full flex items-center justify-center text-white"
+                >
+                  {toUpper(take(2, profile.name))}
+                </div>
+              </div>
+            {:else}
+              <div class="avatar mask mask-circle">
+                <img src="https://i.pravatar.cc/128" alt="avatar" />
+              </div>
+            {/if}
+          </figure>
         {:else}
           <button class="btn btn-primary text-white" on:click={connect}
             >Connect Wallet</button

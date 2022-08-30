@@ -18,6 +18,8 @@ const BAR = 'lWHXv3QJ8daqxY61b0u-TpS92zkDej_c6lMUtnU34DQ';
 const STAMPCOIN = "aSMILD7cEJr93i7TAVzzMjtci_sGkXcWnqpDkG6UGcA";
 const warp = WarpWebFactory.memCached(arweave);
 
+export const myBar = (addr) => Market.getBalance(BAR, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
+export const myRewards = (addr) => Market.getBalance(STAMPCOIN, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
 export const whatsHot = () => Market.whatsHot(STAMPCOIN).runWith({ warp, wallet: 'use_wallet', arweave }).toPromise()
 export const whatsNew = () => Market.whatsNew(STAMPCOIN).runWith({ warp, arweave, wallet: 'use_wallet' }).toPromise()
 export const getTitle = (id) => Asset.getTitle(id).runWith({ arweave }).toPromise()

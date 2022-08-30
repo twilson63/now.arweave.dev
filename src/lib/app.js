@@ -25,6 +25,7 @@ export const listStampers = () => Market.listStampers(STAMPCOIN).runWith({ warp,
 export const getProfile = (id) => Stamper.getProfile(id).runWith({ arweave }).toPromise()
 export const getStampers = (assetId, assets) => Asset.getStampers(assetId).runWith({ arweave, assets }).toPromise()
 export const stamp = (id) => Asset.stamp(id).runWith({ warp, contract: STAMPCOIN }).toPromise()
+export const getOwner = (id) => Asset.getOwner(id).runWith({ arweave }).toPromise()
 export const isVouched = (addr) => Stamper.isVouched(addr).runWith({ arweave }).toPromise()
 
 export const addPair = (contract, pair) => Flex.addPair(contract, pair).runWith({ warp }).toPromise()

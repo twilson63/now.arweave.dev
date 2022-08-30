@@ -12,6 +12,16 @@ const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet)
 const getState = contract => Async.fromPromise(fetch)(`${CACHE}/${contract}`)
   .chain(res => Async.fromPromise(res.json.bind(res))())
 
+export const getMyRewards = (addr, contract) => ask(({ warp, wallet }) =>
+  getState(contract)
+    .bichain(
+      _ => connect(warp, wallet)(contract)
+        .chain(pst => Async.fromPromise(pst.readState.bind(pst))())
+        .map(prop('state')),
+      Async.Resolved
+    )
+)
+
 export const whatsHot = (contract) => ask(({ warp, wallet, arweave }) =>
   getState(contract)
     .bichain(

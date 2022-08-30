@@ -2,8 +2,8 @@
   import { router } from "tinro";
   import { createEventDispatcher } from "svelte";
   import Avatar from "./avatar.svelte";
-  import { head, sort, take } from "ramda";
-  import { readState } from "../lib/app.js";
+  import { head, sort, take, takeLast } from "ramda";
+  import { readState, getOwner } from "../lib/app.js";
   import { atomicToBar } from "../lib/utils.js";
 
   export let stamp;
@@ -15,7 +15,7 @@
   const dispatch = createEventDispatcher();
 
   function navTo(id) {
-    window.location = "https://arweave.dev/" + id;
+    window.open("https://arweave.dev/" + id);
     //router.goto("https://arweave.dev/" + id);
   }
 
@@ -24,7 +24,12 @@
   }
 
   function handleSell() {
-    dispatch("sell", { contract: stamp.asset, name: stamp.title });
+    dispatch("sell", {
+      contract: stamp.asset,
+      name: stamp.title,
+      percent: 10,
+      price: "0.01",
+    });
   }
   function handleBuy() {
     dispatch("buy", {
@@ -33,6 +38,7 @@
       units: unitsTotal,
       canPurchase: unitsAvailable,
       price: lowestPrice,
+      percent: 10,
     });
   }
   async function getContract() {
@@ -59,7 +65,11 @@
       );
 
       console.log({ lowestPrice });
-      return `<div>${unitsAvailable}/${unitsTotal} available <br />as low as ${lowestPrice} $BAR</div>`;
+      return `<div>${Math.floor(
+        (unitsAvailable / unitsTotal) * 100
+      )} % available <br /><span class="text-sm">As low as ${Number(
+        lowestPrice
+      ).toFixed(2)} $BAR</span></div>`;
     }
     return "";
   }
@@ -68,34 +78,43 @@
 <li
   class="relative pl-4 pr-6 py-5 hover:bg-gray-50 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6"
 >
-  <div
-    class="flex items-center justify-between space-x-4"
-    on:click|preventDefault={navTo(stamp.asset)}
-  >
+  <div class="flex items-center justify-between space-x-4">
     <!-- Repo name and link -->
     <div class="min-w-0 space-y-3">
-      <div class="flex flex-col md:flex-row items-center space-x-3">
-        <img class="w-[32px]" src="stamp-logo.webp" alt="stamp logo" />
-        <div class="flex flex-col max-w-[200px]">
-          <h2 class="text-xl font-medium">
-            <a href="#">
+      <div class="flex-none flex flex-col md:flex-row items-center space-x-3">
+        <figure class="mask mask-circle">
+          {#await getOwner(stamp.asset) then owner}
+            {#if owner.avatar}
+              <Avatar avatar={owner.avatar} />
+            {:else if owner.name && owner.name.toUpperCase() !== "UNKNOWN"}
+              <Avatar name={owner.name} avatar="https://i.pravatar.cc/128" />
+            {:else}
+              <Avatar avatar="https://i.pravatar.cc/128" />
+            {/if}
+          {/await}
+        </figure>
+        <div class="flex-1 flex flex-col w-[350px]">
+          <h2 class="text-xl font-bold">
+            <a target="_blank" href="https://arweave.net/{stamp.asset}">
               {stamp.title.length > 20
-                ? take(15, stamp.title) + "..."
+                ? take(35, stamp.title) + "..."
                 : stamp.title}
-              <span class="text-sm">{stamp.asset.substring(0, 5)}</span>
+              <span class="text-sm font-normal"
+                >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)}}</span
+              >
             </a>
           </h2>
           <div class="flex space-x-2">
-            <div>({stamp.count})</div>
-            <div>stamps</div>
+            <div class="text-primary">{stamp.count}</div>
+            <div>🪧 Stamps</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="flex flex-col">
+    <div class="flex-1 flex flex-col">
       {#await getContract() then state}
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
-          <div class="badge badge-success">For Sale</div>
+          <div class="text-success italic">For Sale</div>
         {/if}
         {@html showOrderTotal(state)}
       {/await}
@@ -116,7 +135,9 @@
         />
       </svg>
     </div>
-    <div class="hidden sm:flex flex-col flex-shrink-0 items-start space-y-3">
+    <div
+      class="hidden flex-none sm:flex flex-col flex-shrink-0 items-start space-y-3"
+    >
       <div class="flex space-x-4">
         <div class="avatar-group -space-x-6">
           {#each stamp.stampers as stamper}
@@ -130,14 +151,17 @@
           {/each}
         </div>
 
-        <button on:click|stopPropagation={handleStamp} class="btn btn-outline"
-          >Stamp</button
+        <button
+          on:click|stopPropagation={handleStamp}
+          class="btn btn-outline btn-primary">Stamp</button
         >
-        <button class="btn btn-outline" on:click|stopPropagation={handleBuy}
-          >Buy</button
+        <button
+          class="btn btn-outline btn-success"
+          on:click|stopPropagation={handleBuy}>Buy</button
         >
-        <button class="btn btn-outline" on:click|stopPropagation={handleSell}
-          >Sell</button
+        <button
+          class="btn btn-outline btn-secondary"
+          on:click|stopPropagation={handleSell}>Sell</button
         >
       </div>
     </div>

@@ -1,7 +1,11 @@
 <script>
   import { createEventDispatcher } from "svelte";
 
+  import { myRewards } from "../lib/app.js";
+
   export let profile = {};
+  let bar = 0;
+  let rewards = 0;
 
   let text =
     "Check out whats hot with the Stamp Protocol: https://now.arweave.dev 🐘 @permapages";
@@ -21,11 +25,32 @@
   <div class="flex-1">
     <a class="btn btn-ghost normal-case text-xl">
       <img class="w-[20px] mr-2" src="stamp-logo.webp" alt="stamp-logo" />
-      now.arweave.dev
+      <span class="text-primary">now</span>.arweave.dev
     </a>
   </div>
   <div class="flex-none">
-    <ul class="menu menu-horizontal p-0 items-center">
+    <ul class="menu menu-horizontal p-0 items-center space-x-8">
+      {#await myRewards($profile.owner) then rewards}
+        <li>
+          My Rewards {rewards}
+        </li>
+      {/await}
+      <li>
+        <button class="btn btn-secondary btn-outline">Post Asset to Now.</button
+        >
+      </li>
+      <li>
+        $BAR {bar.toFixed(2)}
+      </li>
+      <li>
+        <a
+          target="_blank"
+          href="https://bar.arweave.dev"
+          class="btn btn-outline"
+        >
+          Get Bar
+        </a>
+      </li>
       <li>
         <a
           class="h-[48px] w-[64px]"
@@ -74,7 +99,9 @@
             </div>
           </div>
         {:else}
-          <button class="btn btn-outline" on:click={connect}>Connect</button>
+          <button class="btn btn-primary text-white" on:click={connect}
+            >Connect Wallet</button
+          >
         {/if}
       </li>
     </ul>

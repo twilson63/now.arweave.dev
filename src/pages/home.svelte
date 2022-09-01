@@ -9,6 +9,7 @@
 
   import { barToAtomic, atomicToBar } from "../lib/utils.js";
   import PostAsset from "../dialogs/post.svelte";
+  import Upload from "../dialogs/upload.svelte";
 
   import {
     whatsNew,
@@ -20,17 +21,19 @@
     readState,
     readBar,
     whatsHot,
+    uploadAsset,
   } from "../lib/app.js";
   import { assets, profile } from "../store.js";
-  import { find, propEq } from "ramda";
+  import { find, propEq, mergeRight } from "ramda";
 
   let view = "whats-hot";
-
+  let assetData = {};
   let processingDialog = false;
   let connectDialog = false;
   let errorDialog = false;
   let errorMessage = "";
   let postDialog = false;
+  let uploadDialog = false;
 
   let confirmStampDialog = false;
   let confirmPurchaseDialog = false;
@@ -254,6 +257,15 @@
     stampList = refreshStampList();
   }
 
+  const toArrayBuffer = (file) =>
+    new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.readAsArrayBuffer(file);
+      fr.addEventListener("loadend", (evt) => {
+        resolve(evt.target.result);
+      });
+    });
+
   let stampList = getStamps();
 </script>
 
@@ -270,17 +282,6 @@
   <!-- <SideNav /> -->
   <!-- Log List -->
   <div class="bg-white lg:min-w-0 lg:flex-1">
-    <div
-      class="pl-4 pr-6 pt-4 pb-4 border-b border-t border-gray-200 sm:pl-6 lg:pl-8 xl:pl-6 xl:pt-6 xl:border-t-0"
-    >
-      <div class="flex items-center">
-        <h1 class="flex-1 text-lg font-medium">
-          {view === "whats-hot" ? "🔥 Whats Hot" : "✨ Whats New"}
-        </h1>
-
-        <SortButton on:change={changeView} />
-      </div>
-    </div>
     <ul
       role="list"
       class="relative divide-y divide-gray-200 border-b border-gray-200"
@@ -527,4 +528,64 @@
     </a>
   </div>
 </Modal>
-<PostAsset open={postDialog} on:cancel={() => (postDialog = false)} />
+<PostAsset
+  open={postDialog}
+  on:cancel={() => (postDialog = false)}
+  on:submit={({ detail }) => {
+    postDialog = false;
+    assetData = detail;
+    console.log(assetData);
+    uploadDialog = true;
+  }}
+/>
+<Upload
+  open={uploadDialog}
+  on:cancel={() => (uploadDialog = false)}
+  on:submit={async ({ detail }) => {
+    uploadDialog = false;
+    assetData = mergeRight(assetData, {
+      file: await toArrayBuffer(detail.files[0]),
+    });
+    //console.log(assetData);
+    const tags = [
+      { name: "Title", value: assetData.title },
+      { name: "Description", value: assetData.description },
+      { name: "Type", value: assetData.type },
+      { name: "Content-Type", value: detail.files[0].type },
+      { name: "App-Name", value: "SmartWeaveContract" },
+      { name: "App-Version", value: "0.3.0" },
+      { name: "SDK", value: "RedStone" },
+      {
+        name: "Contract-Src",
+        value: "BzNLxND_nJEMfcLWShyhU4i9BnzEWaATo6FYFsfsO0Q",
+      },
+      {
+        name: "Init-State",
+        value: JSON.stringify({
+          ticker: "MEME-" + assetData.title,
+          title: assetData.title,
+          owner: $profile.owner,
+          contentType: detail.files[0].type,
+          balances: {
+            [$profile.owner]: 10000,
+          },
+          createdAt: Date.now(),
+          invocations: [],
+          halted: false,
+          pairs: [],
+          usedTransfers: [],
+          foreignCalls: [],
+          emergencyHaltWallet: $profile.owner,
+          claims: [],
+          claimable: [],
+          settings: [["isTradeable", true]],
+        }),
+      },
+    ];
+    //console.log(tags);
+    // uploadAsset
+    console.log(assetData.file);
+    const result = await uploadAsset(assetData.file, $profile.owner, tags);
+    console.log(result);
+  }}
+/>

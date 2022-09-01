@@ -1,11 +1,12 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import Avatar from "./avatar.svelte";
+  import SortButton from "./sort-button.svelte";
   import { atomicToStamp, atomicToBar } from "../lib/utils.js";
   import { myRewards, myBar } from "../lib/app.js";
   import { take, toUpper } from "ramda";
 
   export let profile = {};
+  let view = "whats-hot";
   let bar = 0;
   let rewards = 0;
 
@@ -28,42 +29,54 @@
 </script>
 
 <div class="navbar bg-base-100">
-  <div class="flex-1">
+  <div class="flex-none">
     <a class="btn btn-ghost normal-case text-xl">
       <img class="w-[20px] mr-2" src="stamp-logo.webp" alt="stamp-logo" />
       <span class="text-primary">now</span>.arweave.dev
     </a>
   </div>
+  <div class="flex-1 space-x-8">
+    <button class="btn btn-ghost">🔥 Hot</button>
+    <button class="btn btn-ghost" disabled={true}>✨ New</button>
+    <SortButton />
+  </div>
   <div class="flex-none">
-    <ul class="menu menu-horizontal p-0 items-center space-x-4">
+    <ul class="menu menu-horizontal p-0 items-center space-x-none">
       {#if profile.owner}
         {#await myRewards(profile.owner) then rewards}
           <li>
-            My Rewards {Number(atomicToStamp(rewards)).toFixed(2)}
+            <div class="text-[14px] text-primary">
+              My Rewards {Number(atomicToStamp(rewards)).toFixed(2)}
+            </div>
           </li>
         {/await}
-        <!--
-        <li>
-          <button class="btn btn-secondary btn-outline" on:click={post}
-            >Post Asset to Now.</button
-          >
-        </li>
-        -->
+
         <li>
           {#await myBar(profile.owner) then bar}
-            $BAR {Number(atomicToBar(bar)).toFixed(2)}
+            <div class="text-[14px] text-secondary">
+              $BAR {Number(atomicToBar(bar)).toFixed(2)}
+            </div>
           {/await}
         </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://bar.arweave.dev"
-            class="btn btn-outline"
-          >
-            Get Bar
-          </a>
-        </li>
       {/if}
+      <li>
+        <button class="btn btn-ghost">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+            />
+          </svg>
+        </button>
+      </li>
       <li>
         <a
           class="h-[48px] w-[64px]"

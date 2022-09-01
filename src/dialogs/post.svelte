@@ -4,6 +4,8 @@
 
   export let open;
 
+  let data = {};
+
   const dispatch = createEventDispatcher();
 </script>
 
@@ -13,10 +15,13 @@
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
   <h1 class="text-3xl mb-16">🪧 Post Asset to Now ⚡️</h1>
-  <form class="form space-y-8">
+  <form
+    class="form space-y-8"
+    on:submit|preventDefault={() => dispatch("submit", data)}
+  >
     <div class="form-control">
       <label class="label">Title</label>
-      <input class="input input-bordered" />
+      <input class="input input-bordered" bind:value={data.title} />
       <div class="label text-sm text-base-400">
         Title of your asset that should describe what your asset is in 150
         characters.
@@ -25,13 +30,14 @@
     <div class="form-control">
       <label class="label">Description</label>
       <textarea
+        bind:value={data.description}
         class="textarea textarea-bordered"
         placeholder="Enter a description of your asset in less than 300 characters."
       />
     </div>
     <div class="form-control">
       <label class="label">Type</label>
-      <select class="select select-bordered">
+      <select class="select select-bordered" bind:value={data.type}>
         <option value="choose">choose</option>
         <option value="meme">meme</option>
         <!--

@@ -4,7 +4,11 @@ import typography from '@tailwindcss/typography'
 export default {
   content: ['./index.html', './src/**/*.{svelte,js,ts}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'sans': ['Poppins']
+      },
+    },
   },
   plugins: [typography, daisyui],
 }

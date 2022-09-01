@@ -12,11 +12,11 @@ const fetchFromArweave = arweave => fromPromise(arweave.api.get.bind(arweave.api
 
 export const getPrice = (bytes) =>
   ask(({ arweave }) =>
-    fetchFromArweave(`price/${bytes + TEN_THOUSAND}`)
+    fetchFromArweave(arweave)(`price/${bytes + TEN_THOUSAND}`)
       .map(prop('data')))
     .chain(lift)
 
-export const uploadAsset = (file, addr, tags) => ask(({ arweave }) =>
+export const uploadAsset = ({ file, addr, tags }) => ask(({ arweave }) =>
   of({ file, addr, tags, arweave })
     .chain(getBalance)
     .chain(addPrice)
@@ -59,14 +59,14 @@ function getBalance(ctx) {
 }
 
 function addPrice(ctx) {
-  return fetchFromArweave(`price/${ctx.file.buffer.byteLength + TEN_THOUSAND}`)
+  return fetchFromArweave(`price/${ctx.file.byteLength + TEN_THOUSAND}`)
     .map(prop('data'))
     .map(assoc('price', __, ctx))
 }
 
 
 function canIupload(ctx) {
-  if ((ctx.file.buffer.byteLength + TEN_THOUSAND > ONE_HUNDRED_K)) {
+  if ((ctx.file.byteLength + TEN_THOUSAND > ONE_HUNDRED_K)) {
     if (ctx.balance > ctx.price) {
       return Resolved(assoc('upload', 'post'))
     } else {

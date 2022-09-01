@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* global defaults */
+h1 {
+  @apply font-poppins;
+}
+
+h2 {
+  @apply font-poppins;
+}
+
+h3 {
+  @apply font-poppins;
+}
+
+h4 {
+  @apply font-poppins;
+}
+
+h5 {
+  @apply font-poppins;
+}
+
+blockquote {
+  @apply font-poppins;
+}
+
+p {
+  @apply font-poppins;
+}

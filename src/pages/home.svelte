@@ -4,11 +4,11 @@
 
   import Modal from "../components/modal.svelte";
   import Item from "../components/item.svelte";
-  import SideNav from "../components/side-nav.svelte";
   import NavBar from "../components/navbar.svelte";
   import SortButton from "../components/sort-button.svelte";
 
   import { barToAtomic, atomicToBar } from "../lib/utils.js";
+  import PostAsset from "../dialogs/post.svelte";
 
   import {
     whatsNew,
@@ -30,6 +30,7 @@
   let connectDialog = false;
   let errorDialog = false;
   let errorMessage = "";
+  let postDialog = false;
 
   let confirmStampDialog = false;
   let confirmPurchaseDialog = false;
@@ -259,6 +260,7 @@
 <NavBar
   on:connect={handleConnect}
   on:disconnect={disconnect}
+  on:post={() => (postDialog = true)}
   profile={$profile}
 />
 <!-- three column wrapper -->
@@ -525,3 +527,4 @@
     </a>
   </div>
 </Modal>
+<PostAsset open={postDialog} on:cancel={() => (postDialog = false)} />

@@ -21,6 +21,10 @@
   function disconnect() {
     dispatch("disconnect");
   }
+
+  function post() {
+    dispatch("post");
+  }
 </script>
 
 <div class="navbar bg-base-100">
@@ -38,12 +42,13 @@
             My Rewards {Number(atomicToStamp(rewards)).toFixed(2)}
           </li>
         {/await}
-
+        <!--
         <li>
-          <button class="btn btn-secondary btn-outline"
+          <button class="btn btn-secondary btn-outline" on:click={post}
             >Post Asset to Now.</button
           >
         </li>
+        -->
         <li>
           {#await myBar(profile.owner) then bar}
             $BAR {Number(atomicToBar(bar)).toFixed(2)}

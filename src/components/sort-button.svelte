@@ -3,9 +3,11 @@
 
   const dispatch = createEventDispatcher();
   let hide = true;
+  let value = "Last 7 Days";
 
   function change(view) {
     return () => {
+      value = view;
       dispatch("change", { view });
       hide = true;
     };
@@ -33,7 +35,7 @@
         d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"
       />
     </svg>
-    7 Days
+    Range: {value}
     <!-- Heroicon name: solid/chevron-down -->
     <svg
       class="ml-2.5 -mr-1.5 h-5 w-5 text-gray-400"
@@ -62,25 +64,25 @@
     <div class="py-1" role="none">
       <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
       <button
-        on:click={change("whats-hot")}
+        on:click={change("Last 24 hours")}
         class="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
         tabindex="-1"
-        id="sort-menu-item-0">Today</button
+        id="sort-menu-item-0">Last 24 hours</button
       >
       <button
-        on:click={change("whats-new")}
+        on:click={change("Last 7 Days")}
         class="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
         tabindex="-1"
-        id="sort-menu-item-1">7 Days</button
+        id="sort-menu-item-1">Last 7 Days</button
       >
       <button
-        on:click={change("whats-new")}
+        on:click={change("Last 30 Days")}
         class="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
         tabindex="-1"
-        id="sort-menu-item-1">30 Days</button
+        id="sort-menu-item-1">Last 30 Days</button
       >
     </div>
   </div>

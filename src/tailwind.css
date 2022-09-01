@@ -30,3 +30,7 @@ blockquote {
 p {
   @apply font-poppins;
 }
+
+div {
+  @apply font-poppins;
+}

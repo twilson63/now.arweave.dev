@@ -5,7 +5,7 @@
 </script>
 
 <div class="avatar">
-  <div class="w-12 h-12">
+  <div class="w-10 h-10">
     {#if name}
       <div
         class="bg-gray-400 h-full flex items-center justify-center text-white"

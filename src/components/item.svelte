@@ -2,7 +2,16 @@
   import { router } from "tinro";
   import { createEventDispatcher } from "svelte";
   import Avatar from "./avatar.svelte";
-  import { head, sort, take, takeLast } from "ramda";
+  import {
+    head,
+    sort,
+    take,
+    takeLast,
+    split,
+    join,
+    compose,
+    append,
+  } from "ramda";
   import { readState, getOwner } from "../lib/app.js";
   import { atomicToBar } from "../lib/utils.js";
   import { spring, tweened } from "svelte/motion";
@@ -128,7 +137,7 @@
         <div class="flex-1 flex flex-col w-[400px]">
           <h2 class="text-xl font-bold">
             <a target="_blank" href="https://arweave.net/{stamp.asset}">
-              {stamp.title.length > 20
+              {stamp.title.length > 35
                 ? take(35, stamp.title) + "..."
                 : stamp.title}
               <span class="text-sm font-normal"
@@ -137,22 +146,45 @@
             </a>
           </h2>
           <p class="text-[12px]">
-            Asset Description here, could be 300 characters of text, so need to
-            make sure that a lot of text looks good here. Given the fact that I
-            am testing and it needs to be a long description.
+            {compose(
+              join(" "),
+              append("..."),
+              take(25),
+              split(" ")
+            )(
+              "Asset Description here, could be 300 characters of text, so need to make sure that a lot of text looks good here. Given the fact that I am testing and it needs to be a long description."
+            )}
           </p>
         </div>
       </div>
     </div>
-    <div class="flex-1 flex flex-col">
+    <div class="flex-none flex flex-col w-[300px] pl-[50px]">
       {#await getContract() then state}
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
+<<<<<<< HEAD
           <div class="badge bg-success text-white rounded-none border-none">
+=======
+          <div class="badge badge-success rounded-none text-white mb-2">
+>>>>>>> 501777f (updating design)
             For Sale
           </div>
         {/if}
         {@html showOrderTotal(state)}
       {/await}
+    </div>
+    <div class="flex-1 flex flex-col">
+      <div class="">Stampers</div>
+      <div class="avatar-group -space-x-6">
+        {#each take(10, stamp.stampers) as stamper}
+          {#if stamper.avatar}
+            <Avatar avatar={stamper.avatar} />
+          {:else if stamper.name && stamper.name.toUpperCase() !== "UNKNOWN"}
+            <Avatar name={stamper.name} avatar="https://i.pravatar.cc/128" />
+          {:else}
+            <Avatar avatar="https://i.pravatar.cc/128" />
+          {/if}
+        {/each}
+      </div>
     </div>
     <div class="sm:hidden">
       <!-- Heroicon name: solid/chevron-right -->
@@ -170,22 +202,9 @@
         />
       </svg>
     </div>
-    <div
-      class="hidden flex-none sm:flex flex-col flex-shrink-0 items-start space-y-3"
-    >
+    <div class="hidden flex-none sm:flex flex-col items-start space-y-3">
       <div class="flex space-x-4">
-        <div class="avatar-group -space-x-6">
-          {#each take(10, stamp.stampers) as stamper}
-            {#if stamper.avatar}
-              <Avatar avatar={stamper.avatar} />
-            {:else if stamper.name && stamper.name.toUpperCase() !== "UNKNOWN"}
-              <Avatar name={stamper.name} avatar="https://i.pravatar.cc/128" />
-            {:else}
-              <Avatar avatar="https://i.pravatar.cc/128" />
-            {/if}
-          {/each}
-        </div>
-        <div class="flex items-center justify-center">
+        <div class="flex-none flex items-center justify-center">
           <Pie size={50} {percent} />
         </div>
         <button
@@ -193,7 +212,7 @@
           on:click|stopPropagation={handleBuy}>Buy</button
         >
         <button
-          class="btn btn-outline btn-secondary rounded-none"
+          class="btn btn-outline btn-error rounded-none"
           on:click|stopPropagation={handleSell}>Sell</button
         >
       </div>

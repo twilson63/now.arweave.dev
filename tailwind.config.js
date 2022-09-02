@@ -14,7 +14,11 @@ export default {
   daisyui: {
     themes: [
       {
+<<<<<<< HEAD
         poppins: {
+=======
+        now: {
+>>>>>>> 501777f (updating design)
           primary: "#7189FF",
           "primary-content": "#ffffff",
           secondary: "#f000b8",
@@ -26,9 +30,18 @@ export default {
           "base-100": "#ffffff",
           "base-200": "#F2F2F2",
           "base-300": "#E5E6E6",
+<<<<<<< HEAD
           "base-content": "#1f2937",
         },
       }
     ],
+=======
+          "base-content": "#44444F",
+          "success": "#169260",
+          "error": "#FC5A5A",
+        }
+      }
+    ]
+>>>>>>> 501777f (updating design)
   }
 }

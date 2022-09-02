@@ -6,7 +6,7 @@
   import { take, toUpper } from "ramda";
 
   export let profile = {};
-  let view = "whats-hot";
+  let view = "hot";
   let bar = 0;
   let rewards = 0;
 
@@ -28,7 +28,7 @@
   }
 </script>
 
-<div class="navbar bg-base-100">
+<div class="navbar bg-base-100 border-2 border-b-slate space-x-8">
   <div class="flex-none">
     <a class="btn btn-ghost normal-case text-xl">
       <svg
@@ -105,37 +105,18 @@
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal p-0 items-center space-x-none">
-      {#if profile.owner}
-        {#await myRewards(profile.owner) then rewards}
-          <li>
-            <div class="text-[14px] text-primary">
-              My Rewards {Number(atomicToStamp(rewards)).toFixed(2)}
-            </div>
-          </li>
-        {/await}
-
-        <li>
-          {#await myBar(profile.owner) then bar}
-            <div class="text-[14px] text-secondary">
-              $BAR {Number(atomicToBar(bar)).toFixed(2)}
-            </div>
-          {/await}
-        </li>
-      {/if}
       <li>
         <button class="btn btn-ghost">
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="25"
+            viewBox="0 0 25 25"
             fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+              d="M12.5 0C5.5957 0 0 5.5957 0 12.5C0 19.4043 5.5957 25 12.5 25C19.4043 25 25 19.4043 25 12.5C25 5.5957 19.4043 0 12.5 0ZM12.5 6.25C13.3628 6.25 14.0625 6.94971 14.0625 7.8125C14.0625 8.67529 13.3628 9.375 12.5 9.375C11.6372 9.375 10.9375 8.67676 10.9375 7.8125C10.9375 6.94824 11.6357 6.25 12.5 6.25ZM14.4531 18.75H10.5469C9.90234 18.75 9.375 18.2275 9.375 17.5781C9.375 16.9287 9.8999 16.4062 10.5469 16.4062H11.3281V13.2812H10.9375C10.2905 13.2812 9.76562 12.7563 9.76562 12.1094C9.76562 11.4624 10.293 10.9375 10.9375 10.9375H12.5C13.147 10.9375 13.6719 11.4624 13.6719 12.1094V16.4062H14.4531C15.1001 16.4062 15.625 16.9312 15.625 17.5781C15.625 18.2251 15.1025 18.75 14.4531 18.75Z"
+              fill="#44444F"
             />
           </svg>
         </button>
@@ -207,6 +188,33 @@
           >
         {/if}
       </li>
+      {#if profile.owner}
+        <li>
+          <div class="flex flex-col justify-start items-start space-y-[0px]">
+            <div class="font-bold flex justify-start">
+              <span>Balances:</span>
+            </div>
+            <div class="flex space-x-4">
+              {#await myBar(profile.owner) then bar}
+                <div class="">
+                  <span class="text-primary"
+                    >{Number(atomicToBar(bar)).toFixed(2)}</span
+                  >
+                  <span>$bAR</span>
+                </div>
+              {/await}
+              {#await myRewards(profile.owner) then rewards}
+                <div>
+                  <span class="text-primary"
+                    >{Number(atomicToStamp(rewards)).toFixed(2)}</span
+                  >
+                  <span>$STAMP</span>
+                </div>
+              {/await}
+            </div>
+          </div>
+        </li>
+      {/if}
     </ul>
     <!--
     <ul class="menu menu-horizontal p-0">

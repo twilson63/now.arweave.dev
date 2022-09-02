@@ -161,11 +161,7 @@
     <div class="flex-none flex flex-col w-[300px] pl-[50px]">
       {#await getContract() then state}
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
-<<<<<<< HEAD
           <div class="badge bg-success text-white rounded-none border-none">
-=======
-          <div class="badge badge-success rounded-none text-white mb-2">
->>>>>>> 501777f (updating design)
             For Sale
           </div>
         {/if}

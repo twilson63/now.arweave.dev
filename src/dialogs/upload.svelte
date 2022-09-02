@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Modal from "../components/modal.svelte";
+  import Logo from "../assets/logo.svelte";
 
   import { compose, path } from "ramda";
 
@@ -15,7 +16,17 @@
     on:click={() => dispatch("cancel")}
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
-  <h1 class="text-3xl mb-16">⚡️ Upload Asset ⚡️</h1>
+  <h1 class="text-3xl mb-4 flex space-x-4">
+    <Logo /><span> Upload Asset</span>
+  </h1>
+  <div class="border-2 border-error p-8">
+    <p>
+      Currently, $AR is the only currency supported, but very soon, we will
+      support $MATIC, $SOL, and $NEAR. If your asset is under <span
+        class="font-bold">100K</span
+      > then the upload is free.
+    </p>
+  </div>
   <form
     class="form space-y-8"
     on:submit|preventDefault={() => {

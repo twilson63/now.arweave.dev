@@ -1,8 +1,8 @@
 <script>
   export let size = 200;
   export let percent = 0;
-  export let bgColor = "cornflowerblue";
-  export let fgColor = "orange";
+  export let bgColor = "#7189ff";
+  export let fgColor = "#ff974a";
 
   $: viewBox = `0 0 ${size} ${size}`;
 

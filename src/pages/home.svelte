@@ -10,6 +10,7 @@
   import { barToAtomic, atomicToBar } from "../lib/utils.js";
   import PostAsset from "../dialogs/post.svelte";
   import Upload from "../dialogs/upload.svelte";
+  import About from "../dialogs/about.svelte";
 
   import {
     whatsNew,
@@ -34,6 +35,7 @@
   let errorMessage = "";
   let postDialog = false;
   let uploadDialog = false;
+  let aboutDialog = false;
 
   let confirmStampDialog = false;
   let confirmPurchaseDialog = false;
@@ -273,6 +275,7 @@
   on:connect={handleConnect}
   on:disconnect={disconnect}
   on:post={() => (postDialog = true)}
+  on:about={() => (aboutDialog = true)}
   profile={$profile}
 />
 <!-- three column wrapper -->
@@ -589,3 +592,4 @@
     console.log(result);
   }}
 />
+<About open={aboutDialog} on:cancel={() => (aboutDialog = false)} />

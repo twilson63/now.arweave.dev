@@ -26,7 +26,7 @@ export const getTitle = (id) => ask(({ arweave }) =>
     .map(buildAssetQuery)
     .chain(runQuery(arweave))
     .map(pathOr({ tags: [] }, ['data', 'data', 'transaction']))
-    .map(({ tags }) => find(t => t.name === 'Page-Title', tags))
+    .map(({ tags }) => find(t => t.name === 'Title', tags) || find(t => t.name === 'Page-Title', tags))
     .map(propOr('Unknown', 'value'))
 ).chain(lift)
 

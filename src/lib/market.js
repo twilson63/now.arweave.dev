@@ -35,7 +35,7 @@ export const whatsHot = (contract) => ask(({ warp, wallet, arweave }) =>
     )
     .map(prop('stamps'))
     .map(values)
-    .map(filter(compose(gt(__, Date.now() - DAY), prop('timestamp'))))
+    //.map(filter(compose(gt(__, Date.now() - DAY), prop('timestamp'))))
     .map(groupBy(prop('asset')))
     .map(assets => reduce((a, x) => [
       ...a,
@@ -52,7 +52,7 @@ export const whatsHot = (contract) => ask(({ warp, wallet, arweave }) =>
       const query = buildQuery(ids)
       return Async.fromPromise(arweave.api.post.bind(arweave.api))('graphql', { query })
         .map(compose(
-          map(n => ({ id: n.id, title: prop('value', find(propEq('name', 'Page-Title'), n.tags)) })),
+          map(n => ({ id: n.id, title: prop('value', find(propEq('name', 'Title'), n.tags) || find(propEq('name', 'Page-Title'), n.tags)) })),
           pluck('node'),
           path(['data', 'data', 'transactions', 'edges'])
         ))

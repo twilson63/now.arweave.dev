@@ -151,9 +151,7 @@
               append("..."),
               take(25),
               split(" ")
-            )(
-              "Asset Description here, could be 300 characters of text, so need to make sure that a lot of text looks good here. Given the fact that I am testing and it needs to be a long description."
-            )}
+            )(stamp.description)}
           </p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import crocks from 'crocks'
 import * as R from 'ramda'
 
-const { pathOr, sortWith, ascend, descend, __, filter, gt, compose, groupBy, reduce, values, keys, reverse, prop, identity, pluck, path, map, find, propEq, uniq, concat } = R
+const { propOr, pathOr, sortWith, ascend, descend, __, filter, gt, compose, groupBy, reduce, values, keys, reverse, prop, identity, pluck, path, map, find, propEq, uniq, concat } = R
 
 const { Async, ReaderT } = crocks
 const { of, ask, lift } = ReaderT(Async)
@@ -52,14 +52,20 @@ export const whatsHot = (contract) => ask(({ warp, wallet, arweave }) =>
       const query = buildQuery(ids)
       return Async.fromPromise(arweave.api.post.bind(arweave.api))('graphql', { query })
         .map(compose(
-          map(n => ({ id: n.id, title: prop('value', find(propEq('name', 'Title'), n.tags) || find(propEq('name', 'Page-Title'), n.tags)) })),
+          map(n => ({
+            id: n.id,
+            title: prop('value', find(propEq('name', 'Title'), n.tags) || find(propEq('name', 'Page-Title'), n.tags)),
+            description: propOr('', 'value', find(propEq('name', 'Description', n.tags)))
+          })),
           pluck('node'),
           path(['data', 'data', 'transactions', 'edges'])
         ))
         .map(nodes => {
           const getTitle = id => compose(prop('title'), find(propEq('id', id)))(nodes)
-          return map(a => ({ ...a, title: getTitle(a.asset) }), assets)
+          const getDescription = id => compose(prop('description'), find(propEq('id', id)))(nodes)
+          return map(a => ({ ...a, title: getTitle(a.asset), description: getDescription(a.asset) }), assets)
         })
+        .map(x => (console.log(x), x))
     })
     // stampers name and avatar with one gql call?
     .chain(assets => {

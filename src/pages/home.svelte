@@ -11,6 +11,7 @@
   import PostAsset from "../dialogs/post.svelte";
   import Upload from "../dialogs/upload.svelte";
   import About from "../dialogs/about.svelte";
+  import Buy from "../dialogs/buy.svelte";
 
   import {
     whatsNew,
@@ -63,10 +64,8 @@
   let defaultAvatarUrl =
     "https://tgbcqufuppegmlhigt2zosiv2q55qty4t4rg2gebmfm4vpvf.arweave.net/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0";
 
-  $: buyItem.buyUnits = Math.floor(
-    Number(buyItem.percent / 100) * Number(buyItem.canPurchase)
-  );
-  $: buyQty = Number(buyItem.price) * Number(buyItem.buyUnits);
+  let buyQty = 0;
+
   $: sellItem.qty = Math.floor(
     (Number(sellItem.percent) / 100) * Number(sellItem.balance)
   );
@@ -234,8 +233,9 @@
       handleConnect();
       return;
     }
-
+    buyQty = 0;
     buyItem = e.detail;
+
     const state = await readState(buyItem.contract);
     const bar = await readBar();
 
@@ -250,7 +250,20 @@
       errorDialog = true;
       return;
     }
+    if (buyItem.canPurchase === 0) {
+      errorMessage = "There are no units on the market";
+      errorDialog = true;
+      return;
+    }
+    if (state.balances[$profile.owner]) {
+      buyItem.owned = state.balances[$profile.owner];
+    } else {
+      buyItem.owned = 0;
+    }
+    console.log(buyItem);
+
     buyItem.balance = atomicToBar(bar.balances[$profile.owner]);
+
     buyDialog = true;
   }
 
@@ -422,7 +435,7 @@
     </a>
   </div>
 </Modal>
-
+<!--
 <Modal open={buyDialog} ok={false}>
   <h2 class="text-lg">Buy Asset</h2>
   <button
@@ -433,9 +446,6 @@
   <p>Units available: {buyItem.canPurchase}</p>
   <p>Price per unit: {buyItem.price} $BAR</p>
   <p>Your $BAR Balance: {buyItem.balance}</p>
-  <!--
-  <button href="#" class="link">Calc Price</button>
-  -->
   <div class="mt-8 flex flex-col space-y-8">
     <div class="form-control">
       <label class="label" for="price"
@@ -457,6 +467,7 @@
     </div>
   </div>
 </Modal>
+-->
 <Modal open={confirmPurchaseDialog} ok={false}>
   <button
     on:click={() => (confirmPurchaseDialog = false)}
@@ -595,3 +606,9 @@
   }}
 />
 <About open={aboutDialog} on:cancel={() => (aboutDialog = false)} />
+<Buy
+  bind:open={buyDialog}
+  bind:data={buyItem}
+  bind:buyQty
+  on:submit={doBuyAsset}
+/>

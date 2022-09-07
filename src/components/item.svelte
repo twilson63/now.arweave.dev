@@ -16,6 +16,7 @@
   import { atomicToBar } from "../lib/utils.js";
   import { spring, tweened } from "svelte/motion";
   import Pie from "./pie.svelte";
+  import { profile } from "../store.js";
 
   let percent = 0;
   const store = tweened(0, { duration: 1000 });
@@ -27,6 +28,10 @@
   let unitsTotal = 0;
   let unitsAvailable = 0;
   let lowestPrice = 0;
+
+  let alreadyStamped = $profile
+    ? !!stamp.stampers.find((s) => s.id === $profile.owner)
+    : false;
 
   const dispatch = createEventDispatcher();
 
@@ -116,7 +121,7 @@
               <path d="M41 6H6V41H41V6Z" fill="white" />
               <path
                 d="M20.8333 24.5V24H20.3333H14.5V23.2151L23.5 14.6888L32.5 23.2151V24H26.6667H26.1667V24.5V34.5H20.8333V24.5Z"
-                fill="white"
+                fill={alreadyStamped ? "#3DD598" : "white"}
                 stroke="#7189FF"
               />
             </svg>

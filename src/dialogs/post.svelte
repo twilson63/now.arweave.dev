@@ -20,20 +20,10 @@
     <span>Post Asset to Now</span>
   </h1>
   <div class="border-2 border-primary p-8">
-    <p>
-      Create a meme from one of these fine meme creators and upload it to
-      Arweave!
-      <br />
-      <a
-        target="_blank"
-        class="link"
-        href="https://arweave.net/AUWJcMf9JtwTVXybvoH0GUlkETKC5CTqZodMOkprPUM"
-        >Meme Generator (arweave)</a
-      >
-      or
-      <a target="_blank" class="link" href="https://imgflip.com/memegenerator"
-        >ImgFlip</a
-      >
+    <p class="text-sm">
+      Posts on Now are Profit Sharing Tokens using Arweave+SmartWeave. That
+      means that when people stamp your posts, you will receive a reward, and
+      that flow of rewards itself can be bought or sold.
     </p>
   </div>
   <form

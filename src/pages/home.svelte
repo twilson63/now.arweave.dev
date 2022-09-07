@@ -12,6 +12,8 @@
   import Upload from "../dialogs/upload.svelte";
   import About from "../dialogs/about.svelte";
   import Buy from "../dialogs/buy.svelte";
+  import Sell from "../dialogs/sell.svelte";
+  import Connect from "../dialogs/connect.svelte";
 
   import {
     whatsNew,
@@ -116,33 +118,31 @@
     connectDialog = true;
   }
 
-  function doConnect(type) {
-    return async function () {
-      connectDialog = false;
-      if (type === "arconnect") {
-        if (!window.arweaveWallet) {
-          return window.open("https://arconnect.io");
-        }
-        await window.arweaveWallet.connect([
-          "ACCESS_ADDRESS",
-          "SIGN_TRANSACTION",
-        ]);
-        const address = await window.arweaveWallet.getActiveAddress();
-        $profile = await getProfile(address);
-        // hack to fix unknown profile
-        $profile.owner = address;
-      } else if (type === "arweaveapp") {
-        const wallet = new ArweaveWebWallet({
-          name: "stamps.arweave.dev",
-          logo: "https://stamps.arweave.dev/stamp-logo.webp",
-        });
-        wallet.setUrl("arweave.app");
-        await wallet.connect();
-        $profile = await getProfile(wallet.address);
-        // hack to fix unknown profile
-        $profile.owner = wallet.address;
+  async function doConnect(type) {
+    connectDialog = false;
+    if (type === "arconnect") {
+      if (!window.arweaveWallet) {
+        return window.open("https://arconnect.io");
       }
-    };
+      await window.arweaveWallet.connect([
+        "ACCESS_ADDRESS",
+        "SIGN_TRANSACTION",
+      ]);
+      const address = await window.arweaveWallet.getActiveAddress();
+      $profile = await getProfile(address);
+      // hack to fix unknown profile
+      $profile.owner = address;
+    } else if (type === "arweaveapp") {
+      const wallet = new ArweaveWebWallet({
+        name: "stamps.arweave.dev",
+        logo: "https://stamps.arweave.dev/stamp-logo.webp",
+      });
+      wallet.setUrl("arweave.app");
+      await wallet.connect();
+      $profile = await getProfile(wallet.address);
+      // hack to fix unknown profile
+      $profile.owner = wallet.address;
+    }
   }
 
   async function disconnect() {
@@ -158,6 +158,9 @@
       errorDialog = true;
       return;
     }
+
+    //console.log(sellItem);
+
     try {
       const result = await sellAsset(
         sellItem.contract,
@@ -220,6 +223,13 @@
       errorDialog = true;
       return;
     }
+
+    if (state.balances[$profile.owner]) {
+      sellItem.owned = state.balances[$profile.owner];
+    } else {
+      sellItem.owned = 0;
+    }
+
     sellItem.balance = state.balances[$profile.owner];
     sellDialog = true;
   }
@@ -260,7 +270,6 @@
     } else {
       buyItem.owned = 0;
     }
-    console.log(buyItem);
 
     buyItem.balance = atomicToBar(bar.balances[$profile.owner]);
 
@@ -321,27 +330,12 @@
     </ul>
   </div>
 </div>
-<Modal open={connectDialog} ok={false}>
-  <h2 class="text-lg">Connect Wallet</h2>
-  <button
-    on:click={() => (connectDialog = false)}
-    class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
-  >
-  <div class="mt-8">
-    <ul>
-      <li>
-        <button on:click={doConnect("arconnect")} class="btn btn-ghost"
-          >ArConnect</button
-        >
-      </li>
-      <li>
-        <button on:click={doConnect("arweaveapp")} class="btn btn-ghost"
-          >Arweave.app</button
-        >
-      </li>
-    </ul>
-  </div>
-</Modal>
+<Connect
+  bind:open={connectDialog}
+  on:connect={(e) => {
+    doConnect(e.detail.wallet);
+  }}
+/>
 <Modal open={errorDialog} ok={false}>
   <h2 class="text-lg">Alert</h2>
   <button
@@ -355,7 +349,7 @@
 <Modal open={processingDialog} ok={false}>
   <div class="text-xl">Processing Request...</div>
 </Modal>
-
+<!--
 <Modal open={sellDialog} ok={false}>
   <h2 class="text-lg">Sell Asset</h2>
   <button
@@ -396,6 +390,7 @@
     </div>
   </form>
 </Modal>
+-->
 <Modal open={confirmSaleDialog} ok={false}>
   <button
     on:click={() => (confirmSaleDialog = false)}
@@ -612,3 +607,4 @@
   bind:buyQty
   on:submit={doBuyAsset}
 />
+<Sell bind:open={sellDialog} bind:data={sellItem} on:submit={doSellAsset} />

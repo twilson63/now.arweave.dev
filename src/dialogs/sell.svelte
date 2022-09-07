@@ -1,30 +1,42 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Modal from "../components/modal.svelte";
-  import Pie from "../components/pie.svelte";
+  import Pie from "../components/pie2.svelte";
 
   export let open;
 
   export let data = {
     name: "Asset Title",
     percent: 0,
-    bar: 0,
+    totalBar: 0,
   };
 
   const dispatch = createEventDispatcher();
 
-  $: {
-    let purchase = Math.floor(Number(buyQty) / Number(data.price));
-    let remaining =
-      Number(data.units) - Math.floor(Number(buyQty) / Number(data.price));
-    let percent = Math.floor((purchase / remaining) * 100);
-    console.log("percent owned", percent);
-    data.percent = percent;
+  function handleSubmit() {
+    dispatch("submit");
   }
 
-  function handleSubmit() {
+  function handleCancel() {
     open = false;
   }
+
+  $: data.qty = data.units * (data.percent / 100);
+  $: data.price = Number(data.bar) / data.qty;
+  /*
+  $: {
+    
+    console.log("data", data);
+    console.log("sell", data.percent);
+    console.log("available", (data.canPurchase / data.units) * 100);
+    console.log(
+      "notAvailable",
+      ((data.units - data.canPurchase - data.owned) / data.units) * 100
+    );
+    console.log("owned", (data.owned / data.units) * 100 - data.percent);
+
+  }
+  */
 </script>
 
 <Modal {open} ok={false}>
@@ -36,8 +48,13 @@
     Sell Asset: <br /><span class="text-3xl font-normal">{data.name}</span>
   </h1>
   <div class="flex space-x-8">
-    <div>
-      <Pie size={200} percent={data.percent} />
+    <div class="w-[250px]">
+      <Pie
+        bind:purchase={data.percent}
+        available={(data.canPurchase / data.units) * 100}
+        notAvailable={((data.units - data.owned) / data.units) * 100}
+        owned={(data.owned / data.units) * 100 - data.percent}
+      />
     </div>
     <div>
       <form class="form" on:submit|preventDefault={handleSubmit}>
@@ -48,7 +65,7 @@
               id="percent"
               type="text"
               class="input input-bordered w-full"
-              bind:value={sellPercent}
+              bind:value={data.percent}
             />
             <div
               class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
@@ -64,7 +81,7 @@
               id="bar"
               type="text"
               class="input input-bordered w-full"
-              bind:value={bar}
+              bind:value={data.bar}
             />
             <div
               class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
@@ -75,8 +92,14 @@
         </div>
         <div class="mt-16">
           <button class="btn btn-outline rounded-none">Create Order</button>
+          <!--
           <button class="btn btn-outline rounded-none">Cancel Order</button>
-          <button class="btn btn-outline rounded-none">Close</button>
+          -->
+          <button
+            type="button"
+            on:click={handleCancel}
+            class="btn btn-outline rounded-none">Close</button
+          >
         </div>
       </form>
     </div>

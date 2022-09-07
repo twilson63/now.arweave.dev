@@ -43,8 +43,10 @@
     dispatch("sell", {
       contract: stamp.asset,
       name: stamp.title,
-      percent: 10,
+      percent: 0,
       price: "0.01",
+      units: unitsTotal,
+      canPurchase: unitsAvailable,
     });
   }
   function handleBuy() {
@@ -54,7 +56,7 @@
       units: unitsTotal,
       canPurchase: unitsAvailable,
       price: lowestPrice,
-      percent: 10,
+      percent: 0,
     });
   }
   async function getContract() {

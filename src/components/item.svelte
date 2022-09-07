@@ -70,8 +70,8 @@
   }
 
   function showOrderTotal(state) {
+    unitsTotal = Object.values(state.balances).reduce((a, b) => a + b, 0);
     if (state.pairs && state.pairs[0]) {
-      unitsTotal = Object.values(state.balances).reduce((a, b) => a + b, 0);
       unitsAvailable = state.pairs[0].orders.reduce(
         (a, o) => a + o.quantity,
         0
@@ -89,7 +89,10 @@
       percent = Math.floor((unitsAvailable / unitsTotal) * 100);
       return `<div>${percent} % available <br /><span class="text-sm">As low as ${Number(
         lowestPrice
-      ).toFixed(2)} $BAR</span></div>`;
+      ).toFixed(6)} $BAR</span></div>`;
+    } else {
+      unitsAvailable = 0;
+      return `<div>0 % available</div>`;
     }
     return "";
   }

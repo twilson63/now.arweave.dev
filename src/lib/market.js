@@ -57,11 +57,12 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
           map(n => ({
             id: n.id,
             title: prop('value', find(propEq('name', 'Title'), n.tags) || find(propEq('name', 'Page-Title'), n.tags)),
-            description: propOr('', 'value', find(propEq('name', 'Description', n.tags)))
+            description: propOr('', 'value', find(propEq('name', 'Description'), n.tags))
           })),
           pluck('node'),
           path(['data', 'data', 'transactions', 'edges'])
         ))
+
         .map(nodes => {
           const getTitle = id => compose(prop('title'), find(propEq('id', id)))(nodes)
           const getDescription = id => compose(prop('description'), find(propEq('id', id)))(nodes)
@@ -165,7 +166,7 @@ export const whatsNew = (contract, days) =>
                     find(propEq('name', 'Title'), n.tags) ||
                     find(propEq('name', 'Page-Title'), n.tags)
                   ),
-                  description: propOr('', 'value', find(propEq('name', 'Description', n.tags)))
+                  description: propOr('', 'value', find(propEq('name', 'Description'), n.tags))
                 })
 
                 ),

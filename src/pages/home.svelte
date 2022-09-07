@@ -159,7 +159,11 @@
       return;
     }
 
-    //console.log(sellItem);
+    console.log({
+      contract: sellItem.contract,
+      qty: sellItem.qty,
+      price: Number(barToAtomic(sellItem.price)),
+    });
 
     try {
       const result = await sellAsset(
@@ -212,7 +216,7 @@
 
     sellItem = e.detail;
     const state = await readState(sellItem.contract);
-
+    console.log(state);
     if (!state.settings.find((a) => a[0] === "isTradeable" && a[1] === true)) {
       errorMessage = "Asset is not tradeable!";
       errorDialog = true;

@@ -141,7 +141,7 @@
                 ? take(35, stamp.title) + "..."
                 : stamp.title}
               <span class="text-sm font-normal"
-                >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)}}</span
+                >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)})</span
               >
             </a>
           </h2>

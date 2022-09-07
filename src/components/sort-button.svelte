@@ -2,13 +2,21 @@
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
+  export let days = 1;
   let hide = true;
-  let value = "Last 7 Days";
+  let value = "Last 24 hours";
 
-  function change(view) {
+  function change(d) {
     return () => {
-      value = view;
-      dispatch("change", { view });
+      days = d;
+      if (days === 1) {
+        value = "Last 24 hours";
+      } else if (days === 7) {
+        value = "Last 7 days";
+      } else {
+        value = "Last 30 days";
+      }
+      dispatch("change", { days });
       hide = true;
     };
   }
@@ -64,21 +72,21 @@
     <div class="py-1" role="none">
       <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
       <button
-        on:click={change("Last 24 hours")}
+        on:click={change(1)}
         class="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
         tabindex="-1"
         id="sort-menu-item-0">Last 24 hours</button
       >
       <button
-        on:click={change("Last 7 Days")}
+        on:click={change(7)}
         class="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
         tabindex="-1"
         id="sort-menu-item-1">Last 7 Days</button
       >
       <button
-        on:click={change("Last 30 Days")}
+        on:click={change(30)}
         class="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
         tabindex="-1"

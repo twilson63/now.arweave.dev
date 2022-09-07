@@ -27,7 +27,8 @@
   import { assets, profile } from "../store.js";
   import { find, propEq, mergeRight } from "ramda";
 
-  let view = "whats-hot";
+  let view = "hot";
+  let days = 1;
   let assetData = {};
   let processingDialog = false;
   let connectDialog = false;
@@ -78,7 +79,7 @@
 
   async function refreshStampList() {
     window.scrollTo(0, 0);
-    $assets = view === "whats-hot" ? await whatsHot() : await whatsNew();
+    $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
     return Promise.resolve($assets);
   }
 
@@ -254,8 +255,8 @@
   }
 
   function changeView(e) {
-    console.log(e.detail.view);
     view = e.detail.view;
+    days = e.detail.days;
     stampList = refreshStampList();
   }
 
@@ -276,6 +277,7 @@
   on:disconnect={disconnect}
   on:post={() => (postDialog = true)}
   on:about={() => (aboutDialog = true)}
+  on:change={changeView}
   profile={$profile}
 />
 <!-- three column wrapper -->

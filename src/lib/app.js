@@ -25,8 +25,8 @@ export const uploadAsset = (file, addr, tags) => Upload.uploadAsset({ file, addr
 
 export const myBar = (addr) => Market.getBalance(BAR, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
 export const myRewards = (addr) => Market.getBalance(STAMPCOIN, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
-export const whatsHot = () => Market.whatsHot(STAMPCOIN).runWith({ warp, wallet: 'use_wallet', arweave }).toPromise()
-export const whatsNew = () => Market.whatsNew(STAMPCOIN).runWith({ warp, arweave, wallet: 'use_wallet' }).toPromise()
+export const whatsHot = (days) => Market.whatsHot(STAMPCOIN, days).runWith({ warp, wallet: 'use_wallet', arweave }).toPromise()
+export const whatsNew = (days) => Market.whatsNew(STAMPCOIN, days).runWith({ warp, arweave, wallet: 'use_wallet' }).toPromise()
 export const getTitle = (id) => Asset.getTitle(id).runWith({ arweave }).toPromise()
 export const listStampers = () => Market.listStampers(STAMPCOIN).runWith({ warp, arweave }).toPromise()
 export const getProfile = (id) => Stamper.getProfile(id).runWith({ arweave }).toPromise()

@@ -25,7 +25,7 @@ export const getBalance = (contract, addr) => ask(({ warp, wallet }) =>
 
 ).chain(lift)
 
-export const whatsHot = (contract) => ask(({ warp, wallet, arweave }) =>
+export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) =>
   getState(contract)
     .bichain(
       _ => connect(warp, wallet)(contract)
@@ -35,7 +35,7 @@ export const whatsHot = (contract) => ask(({ warp, wallet, arweave }) =>
     )
     .map(prop('stamps'))
     .map(values)
-    //.map(filter(compose(gt(__, Date.now() - DAY), prop('timestamp'))))
+    .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('timestamp'))))
     .map(groupBy(prop('asset')))
     .map(assets => reduce((a, x) => [
       ...a,
@@ -126,7 +126,7 @@ export const listStampers = (contract) =>
   )
     .chain(lift)
 
-export const whatsNew = (contract) =>
+export const whatsNew = (contract, days) =>
   of(contract)
     .chain(contract =>
       ask(({ warp, wallet, arweave }) =>
@@ -140,7 +140,7 @@ export const whatsNew = (contract) =>
           .map(prop('stamps'))
           .map(values)
           .map(reverse)
-          .map(filter(compose(gt(__, Date.now() - DAY), prop('timestamp'))))
+          .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('timestamp'))))
           .map(groupBy((s) => s.asset))
           .map(assets => reduce((a, x) => [
             ...a,
@@ -156,13 +156,24 @@ export const whatsNew = (contract) =>
             const query = buildQuery(ids)
             return Async.fromPromise(arweave.api.post.bind(arweave.api))('graphql', { query })
               .map(compose(
-                map(n => ({ id: n.id, title: prop('value', find(propEq('name', 'Page-Title'), n.tags)) })),
+                map(n => ({
+                  id: n.id,
+                  title: propOr('No Title', 'value',
+                    find(propEq('name', 'Title'), n.tags) ||
+                    find(propEq('name', 'Page-Title'), n.tags)
+                  ),
+                  description: propOr('', 'value', find(propEq('name', 'Description', n.tags)))
+                })
+
+                ),
                 pluck('node'),
                 path(['data', 'data', 'transactions', 'edges'])
               ))
+
               .map(nodes => {
                 const getTitle = id => compose(prop('title'), find(propEq('id', id)))(nodes)
-                return map(a => ({ ...a, title: getTitle(a.asset) }), assets)
+                const getDescription = id => compose(prop('description'), find(propEq('id', id)))(nodes)
+                return map(a => ({ ...a, title: getTitle(a.asset), description: getDescription(a.asset) }), assets)
               })
           })
           // stampers name and avatar with one gql call?
@@ -196,6 +207,7 @@ export const whatsNew = (contract) =>
               })
           })
       ).chain(lift)
+
     )
 
 // get asset Page-Title and asset stampers in batches to avoid so many gql calls.

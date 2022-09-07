@@ -8,6 +8,7 @@
 
   export let profile = {};
   let view = "hot";
+  let days = 1;
   let bar = 0;
   let rewards = 0;
 
@@ -31,6 +32,17 @@
   function about() {
     dispatch("about");
   }
+
+  function changeView(v) {
+    return (e) => {
+      view = v;
+      dispatch("change", { view, days });
+    };
+  }
+
+  function changeDays() {
+    dispatch("change", { view, days });
+  }
 </script>
 
 <div class="navbar bg-base-100 border-2 border-b-slate space-x-8">
@@ -44,7 +56,7 @@
   <div class="flex-1 space-x-8">
     <div class="tabs">
       <a
-        on:click={() => (view = "hot")}
+        on:click={changeView("hot")}
         class="tab tab-bordered {view === 'hot'
           ? 'tab-active'
           : ''} text-sm text-gray-400 text-primary flex justify-center pb-8"
@@ -67,7 +79,7 @@
         ></a
       >
       <a
-        on:click={() => (view = "new")}
+        on:click={changeView("new")}
         class="tab tab-bordered {view === 'new'
           ? 'tab-active'
           : ''} flex justify-center text-sm"
@@ -91,7 +103,7 @@
       >
     </div>
 
-    <SortButton />
+    <SortButton bind:days on:change={changeDays} />
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal p-0 items-center space-x-none">

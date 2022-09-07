@@ -35,7 +35,7 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
     )
     .map(prop('stamps'))
     .map(values)
-    .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('timestamp'))))
+    .map(reverse)
     .map(groupBy(prop('asset')))
     .map(assets => reduce((a, x) => [
       ...a,
@@ -43,10 +43,12 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
         asset: x,
         count: assets[x].length,
         stampers: assets[x].map((o) => o.address),
+        lastStamped: assets[x][0].timestamp
       },
     ], [], keys(assets)
     ))
     .map(sortWith([descend(prop('count'))]))
+    .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('lastStamped'))))
     .chain(assets => {
       const ids = pluck('asset', assets)
       const query = buildQuery(ids)
@@ -140,7 +142,6 @@ export const whatsNew = (contract, days) =>
           .map(prop('stamps'))
           .map(values)
           .map(reverse)
-          .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('timestamp'))))
           .map(groupBy((s) => s.asset))
           .map(assets => reduce((a, x) => [
             ...a,
@@ -148,9 +149,11 @@ export const whatsNew = (contract, days) =>
               asset: x,
               count: assets[x].length,
               stampers: assets[x].map((o) => o.address),
+              lastStamped: assets[x][0].timestamp
             },
           ], [], keys(assets)
           ))
+          .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('lastStamped'))))
           .chain(assets => {
             const ids = pluck('asset', assets)
             const query = buildQuery(ids)

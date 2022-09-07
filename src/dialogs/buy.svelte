@@ -53,7 +53,7 @@
     </div>
     <div>
       <form class="form" on:submit|preventDefault={handleSubmit}>
-        <div class="form-control w-1/2">
+        <div class="form-control w-2/3">
           <label class="label" for="spend">I will spend...</label>
           <div class="relative">
             <input
@@ -70,7 +70,7 @@
             </div>
           </div>
         </div>
-        <div class="form-control w-1/2">
+        <div class="form-control w-2/3">
           <label class="label" for="percent">I will receive...</label>
           <div class="relative">
             <input

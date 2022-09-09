@@ -73,7 +73,7 @@
   );
   async function getStamps() {
     if ($assets.length === 0) {
-      $assets = view === "whats-hot" ? await whatsHot() : await whatsNew();
+      $assets = view === "hot" ? await whatsHot() : await whatsNew();
     }
     return Promise.resolve($assets);
   }

@@ -146,22 +146,32 @@
         </figure>
         <div class="flex-1 flex flex-col w-[400px]">
           <h2 class="text-xl font-bold">
-            <a target="_blank" href="https://arweave.net/{stamp.asset}">
-              {stamp.title.length > 35
-                ? take(35, stamp.title) + "..."
-                : stamp.title}
-              <span class="text-sm font-normal"
-                >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)})</span
+            {#if stamp.type === "image"}
+              <a
+                target="_blank"
+                href="https://img.arweave.dev/#/show/{stamp.asset}"
               >
-            </a>
+                {stamp.title.length > 35
+                  ? take(35, stamp.title) + "..."
+                  : stamp.title}
+                <span class="text-sm font-normal"
+                  >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)})</span
+                >
+              </a>
+            {:else}
+              <a target="_blank" href="https://arweave.net/{stamp.asset}">
+                {stamp.title.length > 35
+                  ? take(35, stamp.title) + "..."
+                  : stamp.title}
+                <span class="text-sm font-normal"
+                  >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)})</span
+                >
+              </a>
+            {/if}
           </h2>
+
           <p class="text-[12px]">
-            {compose(
-              join(" "),
-              append("..."),
-              take(25),
-              split(" ")
-            )(stamp.description)}
+            {compose(join(" "), take(50), split(" "))(stamp.description)}
           </p>
         </div>
       </div>

@@ -107,6 +107,7 @@
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal p-0 items-center space-x-none">
+      <!--
       {#if profile.owner}
         <li on:click={post}>
           <div
@@ -129,6 +130,7 @@
           </div>
         </li>
       {/if}
+      -->
       <li on:click={() => about()}>
         <div
           class="tooltip tooltip-bottom tooltip-primary"

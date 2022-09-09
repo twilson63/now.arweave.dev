@@ -3,7 +3,10 @@
 
   import { onMount, afterUpdate } from "svelte";
 
-  export let owned, available, notAvailable, purchase;
+  export let owned = 0;
+  export let available = 0;
+  export let notAvailable = 0;
+  export let purchase = 0;
 
   let svgEl;
   let p = purchase;

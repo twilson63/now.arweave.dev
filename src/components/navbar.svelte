@@ -8,7 +8,7 @@
 
   export let profile = {};
   let view = "hot";
-  let days = 1;
+  let days = 7;
   let bar = 0;
   let rewards = 0;
 

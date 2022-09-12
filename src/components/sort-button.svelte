@@ -2,9 +2,9 @@
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
-  export let days = 1;
+  export let days = 7;
   let hide = true;
-  let value = "Last 24 hours";
+  let value = "Last 7 days";
 
   function change(d) {
     return () => {

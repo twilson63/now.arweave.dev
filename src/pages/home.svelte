@@ -31,7 +31,7 @@
   import { find, propEq, mergeRight } from "ramda";
 
   let view = "hot";
-  let days = 1;
+  let days = 7;
   let assetData = {};
   let processingDialog = false;
   let connectDialog = false;
@@ -73,7 +73,7 @@
   );
   async function getStamps() {
     if ($assets.length === 0) {
-      $assets = view === "hot" ? await whatsHot() : await whatsNew();
+      $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
     }
     return Promise.resolve($assets);
   }

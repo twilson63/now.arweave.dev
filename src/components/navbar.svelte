@@ -104,6 +104,10 @@
     </div>
 
     <SortButton bind:days on:change={changeDays} />
+    <a class="btn bg-[#3DD598] rounded-none">
+      <img src="arweave.svg" alt="arweave image" />
+      WIN $AR! <span>Click for Details</span>
+    </a>
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal p-0 items-center space-x-none">

@@ -5,6 +5,7 @@
 
   import Home from "./pages/home.svelte";
   import About from "./pages/about.svelte";
+  import Contest from "./pages/contest.svelte";
 
   router.mode.hash();
   router.subscribe((_) => window.scrollTo(0, 0));
@@ -14,5 +15,8 @@
 <Transition>
   <Route path="/">
     <Home />
+  </Route>
+  <Route path="/contest">
+    <Contest />
   </Route>
 </Transition>

@@ -220,39 +220,35 @@
           >
         {/if}
       </li>
-      {#if profile.owner}
-        <li>
-          <div class="flex flex-col justify-start items-start space-y-[0px]">
-            <div class="font-bold flex justify-start">
-              <span>Balances:</span>
-            </div>
-            <div class="flex space-x-4">
-              {#await myBar(profile.owner) then bar}
-                <div class="">
-                  <span class="text-primary"
-                    >{Number(atomicToBar(bar)).toFixed(2)}</span
-                  >
-                  <span>$bAR</span>
-                </div>
-              {/await}
-              {#await myRewards(profile.owner) then rewards}
-                <div>
-                  <span class="text-primary"
-                    >{Number(atomicToStamp(rewards)).toFixed(2)}</span
-                  >
-                  <span>$STAMP</span>
-                </div>
-              {/await}
-            </div>
+    </ul>
+  </div>
+  <div>
+    {#if profile.owner}
+      <div>
+        <div class="flex flex-col justify-start items-start space-y-[0px]">
+          <div class="font-bold flex justify-start">
+            <span>Balances:</span>
           </div>
-        </li>
-      {/if}
-    </ul>
-    <!--
-    <ul class="menu menu-horizontal p-0">
-      <li><a href="/">Assets</a></li>
-      <li><a href="/about">About</a></li>
-    </ul>
-    -->
+          <div class="flex space-x-4">
+            {#await myRewards(profile.owner) then rewards}
+              <div>
+                <span class="text-primary"
+                  >{Number(atomicToStamp(rewards)).toFixed(2)}</span
+                >
+                <span>$STAMP</span>
+              </div>
+            {/await}
+            {#await myBar(profile.owner) then bar}
+              <div on:click={() => dispatch("bar")} class="">
+                <span class="text-primary"
+                  >{Number(atomicToBar(bar)).toFixed(2)}</span
+                >
+                <span class="underline cursor-pointer">$bAR</span>
+              </div>
+            {/await}
+          </div>
+        </div>
+      </div>
+    {/if}
   </div>
 </div>

@@ -3,6 +3,7 @@ import * as Asset from './asset.js'
 import * as Stamper from './stamper.js'
 import * as Flex from './flex.js'
 import * as Upload from './upload.js'
+import * as Bar from './bar.js'
 
 
 const arweave = Arweave.init({
@@ -66,3 +67,6 @@ export const buyAsset = //(contract, qty) => Flex.buy({ contract, BAR, qty }).ru
     return contractState.state
 
   }
+
+export const mintBar = (ar) => Bar.mint(arweave, ar)
+export const arBalance = (addr) => Bar.arbalance(arweave, addr)

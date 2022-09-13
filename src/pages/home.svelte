@@ -14,8 +14,11 @@
   import Buy from "../dialogs/buy.svelte";
   import Sell from "../dialogs/sell.svelte";
   import Connect from "../dialogs/connect.svelte";
+  import Bar from "../dialogs/bar.svelte";
 
   import {
+    arBalance,
+    mintBar,
     whatsNew,
     getProfile,
     isVouched,
@@ -30,6 +33,7 @@
   import { assets, profile } from "../store.js";
   import { find, propEq, mergeRight } from "ramda";
 
+  let profileAR = 0;
   let view = "hot";
   let days = 7;
   let assetData = {};
@@ -40,6 +44,7 @@
   let postDialog = false;
   let uploadDialog = false;
   let aboutDialog = false;
+  let barDialog = false;
 
   let confirmStampDialog = false;
   let confirmPurchaseDialog = false;
@@ -280,6 +285,23 @@
     buyDialog = true;
   }
 
+  async function showBarDlg() {
+    profileAR = await arBalance($profile.owner);
+    barDialog = true;
+  }
+
+  async function doBurnAR(e) {
+    let amount = e.detail.amount;
+    if (Number(amount) > Number(profileAR)) {
+      alert("Not enough AR to burn");
+      return;
+    }
+    const result = await mintBar(amount);
+    // check balance
+    // prompt with dialog, successfully created mint transaction
+    // it may take 5 to 10 minutes to resolve.
+  }
+
   function changeView(e) {
     view = e.detail.view;
     days = e.detail.days;
@@ -304,6 +326,7 @@
   on:post={() => (postDialog = true)}
   on:about={() => (aboutDialog = true)}
   on:change={changeView}
+  on:bar={showBarDlg}
   profile={$profile}
 />
 <!-- three column wrapper -->
@@ -609,3 +632,4 @@
   on:submit={doBuyAsset}
 />
 <Sell bind:open={sellDialog} bind:data={sellItem} on:submit={doSellAsset} />
+<Bar bind:open={barDialog} ar={profileAR} on:burn={doBurnAR} />

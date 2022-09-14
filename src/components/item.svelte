@@ -174,13 +174,13 @@
             {compose(join(" "), take(50), split(" "))(stamp.description)}
           </p>
           <div class="mt-2 badge bg-gray-400 border-gray-400">{stamp.type}</div>
-          <!--
-          <button
-            on:click={() =>
-              dispatch("preview", { id: stamp.asset, title: stamp.title })}
-            class="link">[preview]</button
-          >
-          -->
+          {#if stamp.type === "image"}
+            <button
+              on:click={() =>
+                dispatch("preview", { id: stamp.asset, title: stamp.title })}
+              class="link text-primary">preview</button
+            >
+          {/if}
           <!--
           {#if stamp.type === "image"}
             <img
@@ -193,6 +193,7 @@
         </div>
       </div>
     </div>
+
     <div class="flex-none flex flex-col w-[300px] pl-[50px]">
       {#await getContract() then state}
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}

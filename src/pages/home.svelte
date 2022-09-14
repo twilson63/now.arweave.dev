@@ -15,6 +15,7 @@
   import Sell from "../dialogs/sell.svelte";
   import Connect from "../dialogs/connect.svelte";
   import Bar from "../dialogs/bar.svelte";
+  import Preview from "../dialogs/preview.svelte";
 
   import {
     arBalance,
@@ -67,6 +68,9 @@
     qty: 10000,
     price: 0,
   };
+
+  let showPreview = false;
+  let previewData = {};
 
   let defaultAvatarUrl =
     "https://tgbcqufuppegmlhigt2zosiv2q55qty4t4rg2gebmfm4vpvf.arweave.net/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0";
@@ -284,6 +288,10 @@
 
     buyDialog = true;
   }
+  function handlePreviewClick(e) {
+    previewData = e.detail;
+    setTimeout(() => (showPreview = true), 100);
+  }
 
   async function showBarDlg() {
     profileAR = await arBalance($profile.owner);
@@ -346,6 +354,7 @@
             on:stamp={handleStamp}
             on:sell={handleSellClick}
             on:buy={handleBuyClick}
+            on:preview={handlePreviewClick}
           />
         {/each}
       {/await}
@@ -633,3 +642,8 @@
 />
 <Sell bind:open={sellDialog} bind:data={sellItem} on:submit={doSellAsset} />
 <Bar bind:open={barDialog} ar={profileAR} on:burn={doBurnAR} />
+<Preview
+  bind:open={showPreview}
+  id={previewData.id}
+  title={previewData.title}
+/>

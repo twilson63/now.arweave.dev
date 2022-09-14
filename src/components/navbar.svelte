@@ -61,7 +61,7 @@
   <div class="xl:hidden flex-1" />
   <div class="hidden xl:inline-flex flex-1 space-x-8">
     {#if meta().url !== "/contest"}
-      <div class="tabs">
+      <div class="tabs w-[200px]">
         <a
           on:click={changeView("hot")}
           class="tab {view === 'hot'

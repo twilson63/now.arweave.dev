@@ -16,5 +16,5 @@
     on:click={() => (open = false)}
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
-  <img class="h-[250px] w-[300px]" src="https://arweave.net/{id}" alt={title} />
+  <img class="h-[90%] w-full" src="https://arweave.net/{id}" alt={title} />
 </Modal>

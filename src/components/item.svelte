@@ -28,6 +28,7 @@
   let unitsTotal = 0;
   let unitsAvailable = 0;
   let lowestPrice = 0;
+  let preview = false;
 
   let alreadyStamped = $profile
     ? !!stamp.stampers.find((s) => s.id === $profile.owner)
@@ -173,23 +174,35 @@
           <p class="text-[12px]">
             {compose(join(" "), take(50), split(" "))(stamp.description)}
           </p>
-          <div class="mt-2 badge bg-gray-400 border-gray-400">{stamp.type}</div>
-          {#if stamp.type === "image"}
-            <button
-              on:click={() =>
-                dispatch("preview", { id: stamp.asset, title: stamp.title })}
-              class="link text-primary">preview</button
-            >
-          {/if}
-          <!--
-          {#if stamp.type === "image"}
+          <div class="flex space-x-2">
+            <div class="mt-2 badge bg-gray-400 border-gray-400">
+              {stamp.type}
+            </div>
+            {#if stamp.type === "image" && preview === false}
+              <img
+                on:click={() => (preview = true)}
+                class="mt-2 w-[15px]"
+                src="expand.svg"
+                alt="expand image"
+              />
+            {/if}
+            {#if stamp.type === "image" && preview === true}
+              <img
+                on:click={() => (preview = false)}
+                class="mt-2 w-[15px]"
+                src="down.svg"
+                alt="close image"
+              />
+            {/if}
+          </div>
+
+          {#if stamp.type === "image" && preview}
             <img
-              class="mt-4 h-[300px] w-[400px]"
+              class="mt-4 w-[600px]"
               src={"https://arweave.net/" + stamp.asset}
               alt={stamp.title}
             />
           {/if}
-          -->
         </div>
       </div>
     </div>

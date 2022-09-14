@@ -39,7 +39,9 @@
         <li>Claim your reward!</li>
       </ol>
       <div class="mt-8 flex space-x-8">
-        <div class="px-8 py-4 rounded-lg bg-primary text-primary-text">
+        <div
+          class="px-8 py-4 rounded-lg bg-primary text-primary-text hover:drop-shadow-2xl hover:bg-blue-500 hover:cursor-pointer"
+        >
           <div class="flex space-x-2 text-white text-[32px] items-center">
             <img
               class="h-[58px] w-[56px]"
@@ -58,7 +60,9 @@
             Prize: &nbsp;<span class="text-[#FFC294]">50 $AR</span>
           </div>
         </div>
-        <div class="px-8 py-4 rounded-lg bg-primary text-primary-text">
+        <div
+          class="px-8 py-4 rounded-lg bg-primary text-primary-text  hover:drop-shadow-2xl hover:bg-blue-500 hover:cursor-pointer"
+        >
           <div class="flex space-x-2 text-white text-[32px] items-center">
             <img class="h-[58px] w-[56px]" src="image.svg" alt="image" />
             <div class="font-semibold">Upload an Image</div>
@@ -85,9 +89,10 @@
       <div>Contest Starts: <span class="text-primary">9/16/2022</span></div>
       <div>Contest Ends: <span class="text-primary">9/23/2022</span></div>
       <div class="text-right mt-2">
-        <button
+        <a
+          href="/"
           class="btn btn-sm btn-primary rounded-none normal-case font-light"
-          >View Standings</button
+          >View Standings</a
         >
       </div>
     </div>

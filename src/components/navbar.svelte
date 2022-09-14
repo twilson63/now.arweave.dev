@@ -118,7 +118,7 @@
       >
         <img src="arweave.svg" alt="arweave image" />
         <div class="text-[#44444F]">WIN $AR!</div>
-        <span class="">Click for Details</span>
+        <span class="hidden">Click for Details</span>
       </a>
     {/if}
   </div>

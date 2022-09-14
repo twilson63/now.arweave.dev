@@ -173,6 +173,23 @@
           <p class="text-[12px]">
             {compose(join(" "), take(50), split(" "))(stamp.description)}
           </p>
+          <div class="mt-2 badge bg-gray-400 border-gray-400">{stamp.type}</div>
+          <!--
+          <button
+            on:click={() =>
+              dispatch("preview", { id: stamp.asset, title: stamp.title })}
+            class="link">[preview]</button
+          >
+          -->
+          <!--
+          {#if stamp.type === "image"}
+            <img
+              class="mt-4 h-[300px] w-[400px]"
+              src={"https://arweave.net/" + stamp.asset}
+              alt={stamp.title}
+            />
+          {/if}
+          -->
         </div>
       </div>
     </div>

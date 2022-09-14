@@ -50,8 +50,12 @@
   <div class="flex-none">
     <a href="/" class="btn btn-ghost normal-case text-xl">
       <Logo />
-
-      <span class="text-primary ml-4">now</span>.arweave.dev
+      <div class="flex flex-col">
+        <div><span class="text-primary ml-4">now</span>.arweave.dev</div>
+        <div class="text-[12px] text-[#44444F] font-light">
+          A place to trade culture.
+        </div>
+      </div>
     </a>
   </div>
   <div class="flex-1 space-x-8">

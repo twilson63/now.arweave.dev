@@ -8,7 +8,7 @@
     <div class="flex flex-col items-center w-[1000px]">
       <img class="mt-16 w-[130px] h-[130px]" src="now.svg" alt="logo" />
       <h1 class="mt-4 text-[40px] font-light text-[#44444F]">
-        The <em>Stamp Content Contest</em> is going on
+        The <em>Stamp Contest</em> is going on
         <span class="text-[55px] text-primary font-bold">now.</span>
       </h1>
       <p class="text-[24px] font-normal text-[#44444F]">

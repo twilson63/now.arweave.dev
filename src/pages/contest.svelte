@@ -39,7 +39,9 @@
         <li>Claim your reward!</li>
       </ol>
       <div class="mt-8 flex space-x-8">
-        <div
+        <a
+          href="https://pages.arweave.dev"
+          target="_blank"
           class="px-8 py-4 rounded-lg bg-primary text-primary-text hover:drop-shadow-2xl hover:bg-blue-500 hover:cursor-pointer"
         >
           <div class="flex space-x-2 text-white text-[32px] items-center">
@@ -59,8 +61,10 @@
           >
             Prize: &nbsp;<span class="text-[#FFC294]">50 $AR</span>
           </div>
-        </div>
-        <div
+        </a>
+        <a
+          href="https://img.arweave.dev"
+          target="_blank"
           class="px-8 py-4 rounded-lg bg-primary text-primary-text  hover:drop-shadow-2xl hover:bg-blue-500 hover:cursor-pointer"
         >
           <div class="flex space-x-2 text-white text-[32px] items-center">
@@ -76,7 +80,7 @@
           >
             Prize: &nbsp;<span class="text-[#FFC294]">10 $AR</span>
           </div>
-        </div>
+        </a>
       </div>
       <div class="mt-8 flex w-[800px] text-[16px] text-[#979797] font-medium">
         * These buttons are intended to make the contest more accessible. If

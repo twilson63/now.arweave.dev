@@ -48,7 +48,7 @@
 
 <div class="navbar bg-base-100 border-2 border-b-slate space-x-8">
   <div class="flex-none">
-    <a class="btn btn-ghost normal-case text-xl">
+    <a href="/" class="btn btn-ghost normal-case text-xl">
       <Logo />
 
       <span class="text-primary ml-4">now</span>.arweave.dev

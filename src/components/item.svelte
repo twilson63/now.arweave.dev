@@ -133,7 +133,7 @@
             {stamp.count}
           </div>
         </div>
-        <figure class="mask mask-circle">
+        <figure class="">
           {#await getOwner(stamp.asset) then owner}
             {#if owner.avatar}
               <Avatar avatar={owner.avatar} />

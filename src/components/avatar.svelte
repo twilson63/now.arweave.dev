@@ -8,12 +8,12 @@
   <div class="w-10 h-10">
     {#if name}
       <div
-        class="bg-gray-400 h-full flex items-center justify-center text-white"
+        class="mask mask-circle bg-gray-400 h-full flex items-center justify-center text-white"
       >
         {toUpper(take(2, name))}
       </div>
     {:else}
-      <img src={avatar} />
+      <img class="mask mask-circle" src={avatar} />
     {/if}
   </div>
 </div>

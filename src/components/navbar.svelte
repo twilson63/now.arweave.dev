@@ -58,7 +58,8 @@
       </div>
     </a>
   </div>
-  <div class="flex-1 space-x-8">
+  <div class="xl:hidden flex-1" />
+  <div class="hidden xl:inline-flex flex-1 space-x-8">
     {#if meta().url !== "/contest"}
       <div class="tabs">
         <a
@@ -117,7 +118,7 @@
       >
         <img src="arweave.svg" alt="arweave image" />
         <div class="text-[#44444F]">WIN $AR!</div>
-        <span>Click for Details</span>
+        <span class="">Click for Details</span>
       </a>
     {/if}
   </div>
@@ -209,7 +210,7 @@
         </a>
       </li>
 
-      <li>
+      <li class="rounded-none">
         {#if profile.owner}
           <figure class="w-[72px]" on:click={disconnect}>
             {#if profile.avatar}
@@ -231,8 +232,9 @@
             {/if}
           </figure>
         {:else}
-          <button class="btn btn-primary text-white" on:click={connect}
-            >Connect Wallet</button
+          <button
+            class="btn btn-primary text-white rounded-none "
+            on:click={connect}>Connect Wallet</button
           >
         {/if}
       </li>
@@ -265,6 +267,71 @@
           </div>
         </div>
       </div>
+    {/if}
+  </div>
+</div>
+<div class="xl:hidden flex my-4 py-4 border-2 border-b-slate justify-center">
+  <div class="flex space-x-8">
+    {#if meta().url !== "/contest"}
+      <div class="tabs">
+        <a
+          on:click={changeView("hot")}
+          class="tab {view === 'hot'
+            ? 'tab-active'
+            : ''} text-sm text-gray-400 text-primary flex justify-center pb-8"
+          ><svg
+            width="20"
+            height="28"
+            viewBox="0 0 20 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M18.8011 23.5808C18.0443 24.9532 16.7195 26.1129 15.2801 26.9341C14.6671 27.284 13.7958 27.6958 13.2928 27.8719C15.48 25.6874 16.2524 22.4462 14.1169 19.9438C13.9485 20.8771 13.4096 21.8172 12.9605 22.2289C12.6619 18.9373 9.33403 17.1738 9.34076 14.6759C5.09451 18.5736 3.58777 25.111 7.724 28C7.21876 27.8445 6.68657 27.6775 6.20378 27.4739C5.03388 26.9821 3.8752 26.1747 2.88942 25.1751C-6.55068 15.5977 10.1693 0.92182 10.093 0C9.94704 1.82534 11.3056 7.99902 13.2614 10.2132C13.6521 9.51785 14.593 8.25063 15.3407 7.84348C14.1237 10.6272 23.1641 15.6824 18.8011 23.5808Z"
+              fill={view === "hot" ? "#ff8543" : "#44444F"}
+            />
+          </svg>
+          <span class="ml-2 {view === 'hot' ? 'font-bold text-primary' : ''}"
+            >Hot</span
+          ></a
+        >
+        <a
+          on:click={changeView("new")}
+          class="tab {view === 'new'
+            ? 'tab-active'
+            : ''} flex justify-center text-sm"
+        >
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 28 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M17.9102 4.65937C17.6641 4.75234 17.5 4.9875 17.5 5.25C17.5 5.5125 17.6641 5.74766 17.9102 5.84063L21 7L22.1594 10.0898C22.2523 10.3359 22.4875 10.5 22.75 10.5C23.0125 10.5 23.2477 10.3359 23.3406 10.0898L24.5 7L27.5898 5.84063C27.8359 5.74766 28 5.5125 28 5.25C28 4.9875 27.8359 4.75234 27.5898 4.65937L24.5 3.5L23.3406 0.410156C23.2477 0.164062 23.0125 0 22.75 0C22.4875 0 22.2523 0.164062 22.1594 0.410156L21 3.5L17.9102 4.65937ZM11.2164 4.00859C11.0742 3.69688 10.7625 3.5 10.4234 3.5C10.0844 3.5 9.77266 3.69688 9.63047 4.00859L6.74297 10.243L0.508594 13.125C0.196875 13.2672 0 13.5789 0 13.9234C0 14.268 0.196875 14.5742 0.508594 14.7164L6.74844 17.5984L9.625 23.8328C9.76719 24.1445 10.0789 24.3414 10.418 24.3414C10.757 24.3414 11.0688 24.1445 11.2109 23.8328L14.093 17.593L20.3328 14.7109C20.6445 14.5688 20.8414 14.257 20.8414 13.918C20.8414 13.5789 20.6445 13.2672 20.3328 13.125L14.0984 10.2484L11.2164 4.00859ZM21 21L17.9102 22.1594C17.6641 22.2523 17.5 22.4875 17.5 22.75C17.5 23.0125 17.6641 23.2477 17.9102 23.3406L21 24.5L22.1594 27.5898C22.2523 27.8359 22.4875 28 22.75 28C23.0125 28 23.2477 27.8359 23.3406 27.5898L24.5 24.5L27.5898 23.3406C27.8359 23.2477 28 23.0125 28 22.75C28 22.4875 27.8359 22.2523 27.5898 22.1594L24.5 21L23.3406 17.9102C23.2477 17.6641 23.0125 17.5 22.75 17.5C22.4875 17.5 22.2523 17.6641 22.1594 17.9102L21 21Z"
+              fill={view === "new" ? "#04D3EF" : "#44444F"}
+            />
+          </svg>
+
+          <span class="ml-2 {view === 'new' ? 'font-bold text-primary' : ''}"
+            >New</span
+          ></a
+        >
+      </div>
+
+      <SortButton bind:days on:change={changeDays} />
+
+      <a
+        href="/contest"
+        class="btn bg-[#3DD598] rounded-none flex space-x-2 hover:bg-[#3DD598]"
+      >
+        <img src="arweave.svg" alt="arweave image" />
+        <div class="text-[#44444F]">WIN $AR!</div>
+        <span class="">Click for Details</span>
+      </a>
     {/if}
   </div>
 </div>

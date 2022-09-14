@@ -12,7 +12,7 @@
         <span class="text-[55px] text-primary font-bold">now.</span>
       </h1>
       <p class="text-[24px] font-normal text-[#44444F]">
-        Hello permaweb content creators! Welcome to the experiement <span
+        Hello permaweb content creators! Welcome to the experiment <span
           class="emoji">🙌</span
         >
       </p>

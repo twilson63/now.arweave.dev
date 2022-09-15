@@ -89,12 +89,14 @@
           </div>
         </div>
         <div class="mt-16">
-          <button class="btn btn-outline rounded-none">Buy</button>
+          <button class="btn btn-outline btn-block rounded-none">Buy</button>
+          <!--
           <button
             type="button"
             class="btn btn-outline rounded-none"
             on:click={handleCancel}>Cancel</button
           >
+          -->
         </div>
       </form>
     </div>

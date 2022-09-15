@@ -67,6 +67,7 @@
   }
   async function getContract() {
     const info = await readState(stamp.asset);
+
     return info;
   }
 
@@ -199,7 +200,7 @@
       </div>
     </div>
 
-    <div class="flex-none flex flex-col w-[300px] pl-[50px]">
+    <div class="hidden flex-none flex flex-col w-[300px] pl-[50px]">
       {#await getContract() then state}
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
           <div class="badge bg-success text-white rounded-none border-none">

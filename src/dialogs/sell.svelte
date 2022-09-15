@@ -88,15 +88,19 @@
           </div>
         </div>
         <div class="mt-16">
-          <button class="btn btn-outline rounded-none">Create Order</button>
+          <button class="btn btn-outline btn-block rounded-none"
+            >Create Order</button
+          >
           <!--
           <button class="btn btn-outline rounded-none">Cancel Order</button>
           -->
+          <!--
           <button
             type="button"
             on:click={handleCancel}
             class="btn btn-outline rounded-none">Close</button
           >
+          -->
         </div>
       </form>
     </div>

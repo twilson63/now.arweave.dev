@@ -47,6 +47,7 @@
   let aboutDialog = false;
   let barDialog = false;
   let confirmBar = false;
+  let comingSoon = false;
 
   let confirmStampDialog = false;
   let confirmPurchaseDialog = false;
@@ -215,6 +216,9 @@
   }
 
   async function handleSellClick(e) {
+    comingSoon = true;
+    return;
+
     if (!window.arweaveWallet) {
       handleConnect();
       return;
@@ -249,6 +253,9 @@
   }
 
   async function handleBuyClick(e) {
+    comingSoon = true;
+    return;
+
     if (!window.arweaveWallet) {
       handleConnect();
       return;
@@ -295,6 +302,8 @@
   }
 
   async function showBarDlg() {
+    comingSoon = true;
+    return;
     profileAR = await arBalance($profile.owner);
     barDialog = true;
   }
@@ -663,6 +672,19 @@
     <button
       class="btn btn-outline rounded-none"
       on:click={() => (confirmBar = false)}>Ok</button
+    >
+  </div>
+</Modal>
+<Modal bind:open={comingSoon} ok={false}>
+  <button
+    on:click={() => (comingSoon = false)}
+    class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
+  >
+  <h1 class="text-3xl my-8 text-center">Tradeable assets <br />coming soon!</h1>
+  <div class="flex justify-center mt-8">
+    <button
+      class="btn btn-outline rounded-none"
+      on:click={() => (comingSoon = false)}>Ok</button
     >
   </div>
 </Modal>

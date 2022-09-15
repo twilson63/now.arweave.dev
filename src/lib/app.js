@@ -17,7 +17,8 @@ LoggerFactory.INST.logLevel("error");
 //const BAR = "ywE43lMzhO69CJQtrWqxa3K2Ip8EfUanqUQULbGslpc";
 //const BAR = 'LJbfMMltmCa_pwhA0QMY1XYK0e-xHtNQYcnHHhtCcNs';
 //const BAR = 'lWHXv3QJ8daqxY61b0u-TpS92zkDej_c6lMUtnU34DQ';
-const BAR = 'JnPMxlTvHtdMsEHgTJrhYvoBL33f_-FfNPt6a9qhaF4';
+//const BAR = 'JnPMxlTvHtdMsEHgTJrhYvoBL33f_-FfNPt6a9qhaF4';
+const BAR = 'rjrEUljk4lfLyrTQbjkXNJGyKCh33b4CX-3gKM6GSFc';
 const STAMPCOIN = "aSMILD7cEJr93i7TAVzzMjtci_sGkXcWnqpDkG6UGcA";
 const warp = WarpWebFactory.memCached(arweave);
 
@@ -68,5 +69,5 @@ export const buyAsset = //(contract, qty) => Flex.buy({ contract, BAR, qty }).ru
 
   }
 
-export const mintBar = (ar) => Bar.mint(arweave, ar)
+export const mintBar = (ar) => Bar.mint(arweave, BAR, ar)
 export const arBalance = (addr) => Bar.arbalance(arweave, addr)

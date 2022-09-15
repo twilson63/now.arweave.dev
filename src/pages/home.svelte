@@ -46,6 +46,7 @@
   let uploadDialog = false;
   let aboutDialog = false;
   let barDialog = false;
+  let confirmBar = false;
 
   let confirmStampDialog = false;
   let confirmPurchaseDialog = false;
@@ -308,6 +309,7 @@
     // check balance
     // prompt with dialog, successfully created mint transaction
     // it may take 5 to 10 minutes to resolve.
+    confirmBar = true;
   }
 
   function changeView(e) {
@@ -647,3 +649,20 @@
   id={previewData.id}
   title={previewData.title}
 />
+<Modal bind:open={confirmBar} ok={false}>
+  <button
+    on:click={() => (confirmBar = false)}
+    class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
+  >
+  <h1 class="text-4xl my-8">BAR Purchase Sent!</h1>
+  <p>
+    It can take 15 - 30 minutes for the transaction to confirm, please check
+    back soon.
+  </p>
+  <div class="flex justify-center mt-8">
+    <button
+      class="btn btn-outline rounded-none"
+      on:click={() => (confirmBar = false)}>Ok</button
+    >
+  </div>
+</Modal>

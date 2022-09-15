@@ -86,7 +86,8 @@
         * These buttons are intended to make the contest more accessible. If
         you're familiar with the stamp protocol and are already using it for
         uploading your content, it will automatically show up on now.arweave.dev
-        and is eligible to win.
+        and is eligible to win. By the way, No NSFW content is allowed! Lets
+        have fun!
       </div>
     </div>
     <div class="absolute top-4 right-4">

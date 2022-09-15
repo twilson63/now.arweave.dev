@@ -195,14 +195,6 @@
               />
             {/if}
           </div>
-
-          {#if stamp.type === "image" && preview}
-            <img
-              class="mt-4 w-[600px]"
-              src={"https://arweave.net/" + stamp.asset}
-              alt={stamp.title}
-            />
-          {/if}
         </div>
       </div>
     </div>
@@ -263,4 +255,11 @@
       </div>
     </div>
   </div>
+  {#if stamp.type === "image" && preview}
+    <img
+      class="mt-4 w-[600px]"
+      src={"https://arweave.net/" + stamp.asset}
+      alt={stamp.title}
+    />
+  {/if}
 </li>

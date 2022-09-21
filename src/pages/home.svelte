@@ -58,14 +58,14 @@
     qty: 1000,
     price: 0.1,
     percent: 0,
-    name: "Rakis Profile",
+    name: "",
     twitterText:
-      "I just purchased 20% of Rakis Profile. Go to https://now.arweave.dev and STAMP this Asset.",
+      "I just purchased an Atomic Asset. Go to https://now.arweave.dev and STAMP this Asset.",
   };
   let sellDialog = false;
   let sellItem = {
     contract: "",
-    name: "Rakis Profile",
+    name: "",
     balance: 0,
     qty: 10000,
     price: 0,

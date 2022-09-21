@@ -140,9 +140,11 @@
             {#if owner.avatar}
               <Avatar avatar={owner.avatar} />
             {:else if owner.name && owner.name.toUpperCase() !== "UNKNOWN"}
-              <Avatar name={owner.name} avatar="https://i.pravatar.cc/128" />
+              <Avatar name={owner.name} />
             {:else}
-              <Avatar avatar="https://pages.arweave.dev/avatar.svg" />
+              <div class="avatar mask mask-circle">
+                <div class="bg-gray-400 text-gray-400 h-[48px] w-[48px]" />
+              </div>
             {/if}
           {/await}
         </figure>

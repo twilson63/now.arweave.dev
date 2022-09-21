@@ -1,8 +1,55 @@
 <script>
   import Navbar from "../components/navbar.svelte";
+  import Connect from "../dialogs/connect.svelte";
+  import { profile } from "../store.js";
+  import { ArweaveWebWallet } from "arweave-wallet-connector";
+
+  import { getProfile } from "../lib/app.js";
+
+  let connectDialog = false;
+
+  function handleConnect() {
+    connectDialog = true;
+  }
+
+  async function doConnect(type) {
+    connectDialog = false;
+    if (type === "arconnect") {
+      if (!window.arweaveWallet) {
+        return window.open("https://arconnect.io");
+      }
+      await window.arweaveWallet.connect([
+        "ACCESS_ADDRESS",
+        "SIGN_TRANSACTION",
+      ]);
+      const address = await window.arweaveWallet.getActiveAddress();
+      $profile = await getProfile(address);
+      // hack to fix unknown profile
+      $profile.owner = address;
+    } else if (type === "arweaveapp") {
+      const wallet = new ArweaveWebWallet({
+        name: "now.arweave.dev",
+        logo: "https://now.arweave.dev/stamp-logo.webp",
+      });
+      wallet.setUrl("arweave.app");
+      await wallet.connect();
+      $profile = await getProfile(wallet.address);
+      // hack to fix unknown profile
+      $profile.owner = wallet.address;
+    }
+  }
+
+  async function disconnect() {
+    await arweaveWallet.disconnect();
+    $profile = {};
+  }
 </script>
 
-<Navbar />
+<Navbar
+  on:connect={handleConnect}
+  on:disconnect={disconnect}
+  profile={$profile}
+/>
 <main>
   <section class="flex flex-col items-center relative">
     <div class="flex flex-col items-center w-[1000px]">
@@ -28,7 +75,7 @@
         >
       </p>
       <div class="mt-16 font-bold text-[#44444F]">
-        The context details! We kept it easy!
+        The contest details! We kept it easy!
       </div>
       <ol class="mt-4 list-decimal">
         <li>
@@ -103,6 +150,12 @@
     </div>
   </section>
 </main>
+<Connect
+  bind:open={connectDialog}
+  on:connect={(e) => {
+    doConnect(e.detail.wallet);
+  }}
+/>
 
 <style>
   .emoji {

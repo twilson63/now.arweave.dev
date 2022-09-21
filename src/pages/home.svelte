@@ -145,8 +145,8 @@
       $profile.owner = address;
     } else if (type === "arweaveapp") {
       const wallet = new ArweaveWebWallet({
-        name: "stamps.arweave.dev",
-        logo: "https://stamps.arweave.dev/stamp-logo.webp",
+        name: "now.arweave.dev",
+        logo: "https://now.arweave.dev/stamp-logo.webp",
       });
       wallet.setUrl("arweave.app");
       await wallet.connect();

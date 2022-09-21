@@ -91,7 +91,7 @@
       </div>
     </div>
     <div class="absolute top-4 right-4">
-      <div>Contest Starts: <span class="text-primary">9/23/2022</span></div>
+      <div>Contest Starts: <span class="text-primary">9/21/2022</span></div>
       <div>Contest Ends: <span class="text-primary">9/30/2022</span></div>
       <div class="text-right mt-2">
         <a

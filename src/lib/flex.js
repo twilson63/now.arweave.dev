@@ -71,6 +71,8 @@ export const sell = ({ contract, BAR, qty, price }) =>
       pair: [contract, BAR]
     }))
     //.map(x => (console.log('call createorder ', x), x))
+    .chain(x => ask(() => fromPromise((x) => new Promise(resolve => setTimeout(() => resolve(x), 5 * 1000)))(x)).chain(lift))
+    //.map(x => (console.log(x), x))
     .chain(createOrder).map(always(contract))
     .chain(readState)
 

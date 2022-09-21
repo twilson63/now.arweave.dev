@@ -140,9 +140,13 @@
         "SIGN_TRANSACTION",
       ]);
       const address = await window.arweaveWallet.getActiveAddress();
-      $profile = await getProfile(address);
-      // hack to fix unknown profile
-      $profile.owner = address;
+      try {
+        $profile = await getProfile(address);
+        // hack to fix unknown profile
+        $profile.owner = address;
+      } catch (e) {
+        $profile = { owner: address };
+      }
     } else if (type === "arweaveapp") {
       const wallet = new ArweaveWebWallet({
         name: "now.arweave.dev",
@@ -150,9 +154,13 @@
       });
       wallet.setUrl("arweave.app");
       await wallet.connect();
-      $profile = await getProfile(wallet.address);
-      // hack to fix unknown profile
-      $profile.owner = wallet.address;
+      try {
+        $profile = await getProfile(wallet.address);
+        // hack to fix unknown profile
+        $profile.owner = wallet.address;
+      } catch (e) {
+        $profile = { owner: wallet.address };
+      }
     }
   }
 

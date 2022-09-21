@@ -434,11 +434,13 @@
     You now own {buyItem.percent}% of the available units of {buyItem.name} for {buyQty}
     $BAR.
   </p>
+  <!--
   <p class="mb-16">
     This purchase gives you an additional {Math.floor(
       (Number(buyItem.buyUnits) / Number(buyItem.units)) * 100
     )} % of STAMP Rewards.
   </p>
+  -->
   <div>
     <h4 class="text-2xl my-4">Share to encourage STAMPs</h4>
     <a

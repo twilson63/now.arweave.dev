@@ -176,9 +176,13 @@
             {compose(join(" "), take(50), split(" "))(stamp.description)}
           </p>
           <div class="flex space-x-2">
+            {#if unitsAvailable > 0}
+              <div class="mt-2 badge badge-success text-white">For Sale</div>
+            {/if}
             <div class="mt-2 badge bg-gray-400 border-gray-400">
               {stamp.type}
             </div>
+
             {#if stamp.type === "image" && preview === false}
               <img
                 on:click={() => (preview = true)}

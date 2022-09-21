@@ -24,16 +24,16 @@
   $: data.qty = data.units * (data.percent / 100);
   $: data.price = Number(data.bar) / data.qty;
 
-  $: {
-    console.log("data", data);
-    console.log("sell", data.percent);
-    console.log("available", (data.canPurchase / data.units) * 100);
-    console.log(
-      "notAvailable",
-      ((data.units - data.canPurchase - data.owned) / data.units) * 100
-    );
-    console.log("owned", (data.owned / data.units) * 100 - data.percent);
-  }
+  // $: {
+  //   console.log("data", data);
+  //   console.log("sell", data.percent);
+  //   console.log("available", (data.canPurchase / data.units) * 100);
+  //   console.log(
+  //     "notAvailable",
+  //     ((data.units - data.canPurchase - data.owned) / data.units) * 100
+  //   );
+  //   console.log("owned", (data.owned / data.units) * 100 - data.percent);
+  // }
 </script>
 
 <Modal {open} ok={false}>

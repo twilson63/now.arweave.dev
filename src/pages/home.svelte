@@ -390,7 +390,7 @@
     on:click={() => (confirmSaleDialog = false)}
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
-  <h1 class="text-4xl my-8">🪧 Sale Order Successful! ⚡️</h1>
+  <h1 class="text-4xl font-bold my-8">Sale Order Successful!</h1>
   <p>
     You have created a sale order for {sellItem.percent}% of the available units
     of {sellItem.name} for {Math.floor(
@@ -429,7 +429,7 @@
     on:click={() => (confirmPurchaseDialog = false)}
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
-  <h1 class="text-4xl my-8">🪧 Purchase Successful! ⚡️</h1>
+  <h1 class="text-4xl font-bold my-8">Purchase Successful!</h1>
   <p>
     You now own {buyItem.percent}% of the available units of {buyItem.name} for {buyQty}
     $BAR.

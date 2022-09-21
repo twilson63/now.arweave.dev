@@ -220,14 +220,16 @@
             {:else if profile.name && profile.name.toUpperCase() !== "UNKNOWN"}
               <div class="avatar mask mask-circle">
                 <div
-                  class="bg-gray-400 p-2 h-full w-full flex items-center justify-center text-white"
+                  class="bg-gray-400 text-gray-400 p-2 h-[48px] w-[48px] flex items-center justify-center text-white"
                 >
                   {toUpper(take(2, profile.name))}
                 </div>
               </div>
             {:else}
               <div class="avatar mask mask-circle">
-                <img src="https://i.pravatar.cc/128" alt="avatar" />
+                <div class="bg-gray-400 text-gray-400 h-[128px] w-[128px]">
+                  U
+                </div>
               </div>
             {/if}
           </figure>

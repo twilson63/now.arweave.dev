@@ -392,17 +392,15 @@
   >
   <h1 class="text-4xl font-bold my-8">Sale Order Successful!</h1>
   <p>
-    You have created a sale order for {sellItem.percent}% of the available units
-    of {sellItem.name} for {Math.floor(
-      Number(sellItem.qty) * Number(sellItem.price)
-    )}
-    $BAR.
+    You have created a sale order for {sellItem.name}!
   </p>
   <div>
-    <h4 class="text-2xl my-4">Share to encourage STAMPs</h4>
+    <h4 class="text-2xl my-4">
+      Share to let everyone know your Atomic Asset is for sale!
+    </h4>
     <a
       href="https://twitter.com/intent/tweet?text={encodeURI(
-        `I created a sale order for ${sellItem.percent}% of my share in ${sellItem.name}, go to https://now.arweave.dev to 🪧 STAMP!`
+        `Go to https://now.arweave.dev to purchase ${sellItem.name} Atomic Asset to collect $STAMPCoin Rewards`
       )}"
       class="twitter-share-button btn btn-outline btn-info"
       data-size="large"
@@ -431,8 +429,7 @@
   >
   <h1 class="text-4xl font-bold my-8">Purchase Successful!</h1>
   <p>
-    You now own {buyItem.percent}% of the available units of {buyItem.name} for {buyQty}
-    $BAR.
+    You have purchased {buyItem.name}.
   </p>
   <!--
   <p class="mb-16">
@@ -445,9 +442,7 @@
     <h4 class="text-2xl my-4">Share to encourage STAMPs</h4>
     <a
       href="https://twitter.com/intent/tweet?text={encodeURI(
-        `I just purchased ${Math.floor(
-          (Number(buyItem.buyUnits) / Number(buyItem.units)) * 100
-        )} % of ${buyItem.name}, go to https://now.arweave.dev to 🪧 STAMP!`
+        `I just purchased an Atomic Asset - ${buyItem.name}, go to https://now.arweave.dev to 🪧 STAMP!`
       )}"
       class="twitter-share-button btn btn-outline btn-info"
       data-size="large"
@@ -474,7 +469,7 @@
     on:click={() => (confirmStampDialog = false)}
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
-  <h1 class="text-4xl my-8">🪧 STAMP Successful! ⚡️</h1>
+  <h1 class="text-4xl my-8 font-bold">STAMP Successful!</h1>
   <p>You just stamped!</p>
   <div>
     <h4 class="text-2xl my-4">Share to encourage STAMPs</h4>

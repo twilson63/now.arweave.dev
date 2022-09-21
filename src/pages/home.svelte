@@ -216,9 +216,6 @@
   }
 
   async function handleSellClick(e) {
-    comingSoon = true;
-    return;
-
     if (!window.arweaveWallet) {
       handleConnect();
       return;
@@ -253,9 +250,6 @@
   }
 
   async function handleBuyClick(e) {
-    comingSoon = true;
-    return;
-
     if (!window.arweaveWallet) {
       handleConnect();
       return;
@@ -302,8 +296,6 @@
   }
 
   async function showBarDlg() {
-    comingSoon = true;
-    return;
     profileAR = await arBalance($profile.owner);
     barDialog = true;
   }
@@ -393,48 +385,6 @@
 <Modal open={processingDialog} ok={false}>
   <div class="text-xl">Processing Request...</div>
 </Modal>
-<!--
-<Modal open={sellDialog} ok={false}>
-  <h2 class="text-lg">Sell Asset</h2>
-  <button
-    on:click={() => (sellDialog = false)}
-    class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
-  >
-  <h3 class="my-8 text-2xl">{sellItem.name}</h3>
-  <p>Units you own: {sellItem.balance}</p>
-  <form
-    on:submit|preventDefault={doSellAsset}
-    class="form mt-8 flex flex-col space-y-8"
-  >
-    <div class="form-control">
-      <label class="label" for="qty"
-        >Enter the percentage you would like to sell?</label
-      >
-      <input
-        type="number"
-        class="input input-bordered"
-        bind:value={sellItem.percent}
-      />
-      <label class="label">Number of units to sell {sellItem.qty}</label>
-    </div>
-    <div class="form-control">
-      <label class="label" for="price">Sell Price per Unit in BAR</label>
-      <input
-        id="price"
-        type="text"
-        class="input input-bordered"
-        bind:value={sellItem.price}
-      />
-      <label class="label">
-        <span class="label-text-alt">** Price is in $BAR</span>
-      </label>
-    </div>
-    <div class="flex justify-end">
-      <button class="btn btn-outline">Sell Asset</button>
-    </div>
-  </form>
-</Modal>
--->
 <Modal open={confirmSaleDialog} ok={false}>
   <button
     on:click={() => (confirmSaleDialog = false)}
@@ -474,39 +424,6 @@
     </a>
   </div>
 </Modal>
-<!--
-<Modal open={buyDialog} ok={false}>
-  <h2 class="text-lg">Buy Asset</h2>
-  <button
-    on:click={() => (buyDialog = false)}
-    class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
-  >
-  <h3 class="my-8 text-2xl">{buyItem.name}</h3>
-  <p>Units available: {buyItem.canPurchase}</p>
-  <p>Price per unit: {buyItem.price} $BAR</p>
-  <p>Your $BAR Balance: {buyItem.balance}</p>
-  <div class="mt-8 flex flex-col space-y-8">
-    <div class="form-control">
-      <label class="label" for="price"
-        >Enter the percentage of {buyItem.name} you would like to own?</label
-      >
-      <input
-        id="price"
-        type="number"
-        class="input input-bordered"
-        bind:value={buyItem.percent}
-      />
-      <label class="label">Units to purchase {buyItem.buyUnits}</label>
-    </div>
-    {#if buyQty > 0}
-      <div class="text-xl">Suggested Cost {buyQty} $BAR</div>
-    {/if}
-    <div class="flex justify-end">
-      <button class="btn btn-outline" on:click={doBuyAsset}>Buy Asset</button>
-    </div>
-  </div>
-</Modal>
--->
 <Modal open={confirmPurchaseDialog} ok={false}>
   <button
     on:click={() => (confirmPurchaseDialog = false)}

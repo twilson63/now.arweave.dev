@@ -34,6 +34,7 @@
   import { assets, profile } from "../store.js";
   import { find, propEq, mergeRight } from "ramda";
 
+  let connectRequestFrom = { type: "none" };
   let profileAR = 0;
   let view = "hot";
   let days = 7;
@@ -162,6 +163,13 @@
         $profile = { owner: wallet.address };
       }
     }
+    if ($profile.owner) {
+      if (connectRequestFrom.type === "sell") {
+        handleSellClick(connectRequestFrom);
+      } else if (connectRequestFrom.type === "buy") {
+        handleBuyClick(connectRequestFrom);
+      }
+    }
   }
 
   async function disconnect() {
@@ -216,7 +224,7 @@
     }
     //const result = await buyAsset(buyItem.contract, Number(qty.toFixed(0)));
     const result = await buyAsset(buyItem.contract, qty);
-    console.log(result);
+
     processingDialog = false;
     confirmPurchaseDialog = true;
 
@@ -225,17 +233,22 @@
 
   async function handleSellClick(e) {
     if (!window.arweaveWallet) {
+      connectRequestFrom = { type: "sell", detail: e.detail };
       handleConnect();
+
       return;
     }
     if (!$profile.owner) {
+      connectRequestFrom = { type: "sell", detail: e.detail };
       handleConnect();
       return;
     }
+    // reset
+    connectRequestFrom = { type: "none" };
 
     sellItem = e.detail;
     const state = await readState(sellItem.contract);
-    console.log(state);
+
     if (!state.settings.find((a) => a[0] === "isTradeable" && a[1] === true)) {
       errorMessage = "Asset is not tradeable!";
       errorDialog = true;
@@ -259,13 +272,16 @@
 
   async function handleBuyClick(e) {
     if (!window.arweaveWallet) {
+      connectRequestFrom = { type: "buy", detail: e.detail };
       handleConnect();
       return;
     }
     if (!$profile.owner) {
+      connectRequestFrom = { type: "buy", detail: e.detail };
       handleConnect();
       return;
     }
+
     buyQty = 0;
     buyItem = e.detail;
 

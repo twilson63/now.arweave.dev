@@ -277,12 +277,14 @@
       errorDialog = true;
       return;
     }
+
     // if no bar get bar
-    if (!bar.balances[$profile.owner] || bar.balances[$profile.owner] <= 0) {
+    if (Number(bar.balances[$profile.owner] || null) <= 0) {
       errorMessage = "In order to buy, you need some $BAR";
       errorDialog = true;
       return;
     }
+
     if (buyItem.canPurchase === 0) {
       errorMessage = "There are no units on the market";
       errorDialog = true;

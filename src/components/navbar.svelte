@@ -227,9 +227,7 @@
               </div>
             {:else}
               <div class="avatar mask mask-circle">
-                <div class="bg-gray-400 text-gray-400 h-[128px] w-[128px]">
-                  U
-                </div>
+                <div class="bg-gray-400 text-gray-400 h-[48px] w-[48px]">U</div>
               </div>
             {/if}
           </figure>

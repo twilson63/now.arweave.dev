@@ -20,7 +20,7 @@
     let remaining =
       Number(data.units) - Math.floor(Number(buyQty) / Number(data.price));
     let percent = Math.floor((purchase / remaining) * 100);
-    console.log("percent owned", percent);
+
     data.percent = percent;
   }
 

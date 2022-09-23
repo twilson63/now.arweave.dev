@@ -54,17 +54,14 @@
   let confirmPurchaseDialog = false;
   let confirmSaleDialog = false;
   let buyDialog = false;
-  let buyItem = {
-    name: "Rakis Profile",
+  $: buyItem = {
+    name: "",
     qty: 1000,
     price: 0.1,
     percent: 0,
-    name: "",
-    twitterText:
-      "I just purchased an Atomic Asset. Go to https://now.arweave.dev and STAMP this Asset.",
   };
   let sellDialog = false;
-  let sellItem = {
+  $: sellItem = {
     contract: "",
     name: "",
     balance: 0,
@@ -185,12 +182,6 @@
       errorDialog = true;
       return;
     }
-
-    console.log({
-      contract: sellItem.contract,
-      qty: sellItem.qty,
-      price: Number(barToAtomic(sellItem.price)),
-    });
 
     try {
       const result = await sellAsset(
@@ -354,6 +345,21 @@
       });
     });
 
+  function createPurchaseText(name, id) {
+    return encodeURI(`I just purchased an Atomic Asset - "${name}", 
+go to  https://arweave.net/${id} to 🪧 STAMP!
+        
+    `);
+  }
+
+  function createSellText(name, id) {
+    return encodeURI(`👋🏻 Hey, I just listed my Tradeable Atomic Asset - "${name}" for sale on now.arweave.dev!
+If you like my asset: arweave.net/${id} - go to now and consider purchasing or STAMPing 🪧.
+
+Powered by the Permaweb 🐘
+`);
+  }
+
   let stampList = getStamps();
 </script>
 
@@ -418,15 +424,18 @@
   >
   <h1 class="text-4xl font-bold my-8">Sale Order Successful!</h1>
   <p>
-    You have created a sale order for {sellItem.name}!
+    You have created a sale order for <span class="font-bold"
+      >{sellItem.name}</span
+    >!
   </p>
   <div>
     <h4 class="text-2xl my-4">
       Share to let everyone know your Atomic Asset is for sale!
     </h4>
     <a
-      href="https://twitter.com/intent/tweet?text={encodeURI(
-        `Go to https://now.arweave.dev to purchase ${sellItem.name} Atomic Asset to collect $STAMPCoin Rewards`
+      href="https://twitter.com/intent/tweet?text={createSellText(
+        sellItem.name,
+        sellItem.contract
       )}"
       class="twitter-share-button btn btn-outline btn-info"
       data-size="large"
@@ -455,20 +464,14 @@
   >
   <h1 class="text-4xl font-bold my-8">Purchase Successful!</h1>
   <p>
-    You have purchased {buyItem.name}.
+    You have purchased <span class="font-bold">{buyItem.name}</span>.
   </p>
-  <!--
-  <p class="mb-16">
-    This purchase gives you an additional {Math.floor(
-      (Number(buyItem.buyUnits) / Number(buyItem.units)) * 100
-    )} % of STAMP Rewards.
-  </p>
-  -->
   <div>
     <h4 class="text-2xl my-4">Share to encourage STAMPs</h4>
     <a
-      href="https://twitter.com/intent/tweet?text={encodeURI(
-        `I just purchased an Atomic Asset - ${buyItem.name}, go to https://now.arweave.dev to 🪧 STAMP!`
+      href="https://twitter.com/intent/tweet?text={createPurchaseText(
+        buyItem.name,
+        buyItem.contract
       )}"
       class="twitter-share-button btn btn-outline btn-info"
       data-size="large"

@@ -216,10 +216,10 @@
         {@html showOrderTotal(state)}
       {/await}
     </div>
-    <div class="flex-1 flex flex-col">
+    <div class="w-[700px] flex flex-col">
       <div class="">Stampers</div>
       <div class="avatar-group -space-x-6">
-        {#each take(10, stamp.stampers) as stamper}
+        {#each take(30, stamp.stampers.reverse()) as stamper}
           {#if stamper.avatar}
             <Avatar avatar={stamper.avatar} />
           {:else if stamper.name && stamper.name.toUpperCase() !== "UNKNOWN"}

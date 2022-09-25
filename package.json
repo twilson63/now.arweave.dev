@@ -1,5 +1,5 @@
 {
-  "name": "hypar-app",
+  "name": "now.arweave.dev",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,7 +15,6 @@
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@tailwindcss/typography": "^0.5.4",
     "@verto/flex": "^0.1.1",
-    "arkb": "^1.1.60",
     "arweave": "^1.11.4",
     "autoprefixer": "^10.4.4",
     "daisyui": "^2.11.1",

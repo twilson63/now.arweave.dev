@@ -225,7 +225,10 @@
           {:else if stamper.name && stamper.name.toUpperCase() !== "UNKNOWN"}
             <Avatar name={stamper.name} avatar="https://i.pravatar.cc/128" />
           {:else}
-            <Avatar avatar="https://i.pravatar.cc/128" />
+            <Avatar
+              name={take(2, stamp.asset)}
+              avatar="https://i.pravatar.cc/128"
+            />
           {/if}
         {/each}
       </div>

@@ -51,7 +51,12 @@
     <a href="/" class="btn btn-ghost normal-case text-xl">
       <Logo />
       <div class="flex flex-col">
-        <div><span class="text-primary ml-4">now</span>.arweave.dev</div>
+        <div>
+          <span class="text-primary ml-4">now</span>.arweave.dev
+          <span class="float-right text-[8px] mt-[-10px]"
+            >v{__APP_VERSION__}</span
+          >
+        </div>
         <div class="text-[12px] text-[#44444F] font-light">
           A place to trade culture.
         </div>

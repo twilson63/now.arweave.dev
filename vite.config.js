@@ -11,6 +11,9 @@ const publicUrl = `3000-${host}`
 export default defineConfig({
   base: '',
   plugins: [svelte()],
+  define: {
+    '__APP_VERSION__': JSON.stringify(process.env.npm_package_version)
+  },
   server: {
     hmr: {
       clientPort: host ? 443 : 3000,

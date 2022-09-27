@@ -133,12 +133,13 @@
       if (!window.arweaveWallet) {
         return window.open("https://arconnect.io");
       }
-      await window.arweaveWallet.connect([
-        "ACCESS_ADDRESS",
-        "SIGN_TRANSACTION",
-      ]);
-      const address = await window.arweaveWallet.getActiveAddress();
       try {
+        await window.arweaveWallet.disconnect();
+        await window.arweaveWallet.connect([
+          "ACCESS_ADDRESS",
+          "SIGN_TRANSACTION",
+        ]);
+        const address = await window.arweaveWallet.getActiveAddress();
         $profile = await getProfile(address);
         // hack to fix unknown profile
         $profile.owner = address;
@@ -151,8 +152,9 @@
         logo: "https://now.arweave.dev/stamp-logo.webp",
       });
       wallet.setUrl("arweave.app");
-      await wallet.connect();
       try {
+        await wallet.connect();
+
         $profile = await getProfile(wallet.address);
         // hack to fix unknown profile
         $profile.owner = wallet.address;

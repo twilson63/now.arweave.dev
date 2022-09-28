@@ -11,6 +11,7 @@
     join,
     compose,
     append,
+    values,
   } from "ramda";
   import { readState, getOwner } from "../lib/app.js";
   import { atomicToBar } from "../lib/utils.js";
@@ -209,16 +210,34 @@
       <div>First Stamped: {new Date(stamp.firstStamped).toISOString()}</div>
       <div>Last Stamped: {new Date(stamp.lastStamped).toISOString()}</div>
     </div>
-    <div class="hidden flex-none flex flex-col w-[300px] pl-[50px]">
-      {#await getContract() then state}
+    {#await getContract() then state}
+      <div class="flex-none flex flex-col">
+        <div class="">Collectors</div>
+        <div class="flex space-x-2 items-center">
+          <div class="avatar-group -space-x-6">
+            {#each take(5, values(state.balances)) as stamper}
+              <Avatar
+                name={take(2, stamp.asset)}
+                avatar="https://i.pravatar.cc/128"
+              />
+            {/each}
+          </div>
+          {#if values(state.balances).length > 5}
+            <span class="ml-8 text-[#696974] text-[14px]"
+              >+{values(state.balances).length - 5}</span
+            >
+          {/if}
+        </div>
+      </div>
+      <div class="hidden flex-none flex flex-col w-[300px] pl-[50px]">
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
           <div class="badge bg-success text-white rounded-none border-none">
             For Sale
           </div>
         {/if}
         {@html showOrderTotal(state)}
-      {/await}
-    </div>
+      </div>
+    {/await}
     <div class="w-[700px] flex flex-col">
       <div class="">Stampers</div>
       <div class="flex space-x-2 items-center">

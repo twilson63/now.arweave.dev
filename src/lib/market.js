@@ -1,7 +1,7 @@
 import crocks from 'crocks'
 import * as R from 'ramda'
 
-const { propOr, pathOr, sortWith, ascend, descend, __, filter, gt, compose, groupBy, reduce, values, keys, reverse, prop, identity, pluck, path, map, find, propEq, uniq, concat } = R
+const { take, propOr, pathOr, sortWith, ascend, descend, __, filter, gt, compose, groupBy, reduce, values, keys, reverse, prop, identity, pluck, path, map, find, propEq, uniq, concat } = R
 
 const { Async, ReaderT } = crocks
 const { of, ask, lift } = ReaderT(Async)
@@ -51,6 +51,7 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
     ))
     .map(sortWith([descend(prop('count'))]))
     .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('firstStamped'))))
+    .map(take(25))
     .chain(assets => {
       const ids = pluck('asset', assets)
       const query = buildQuery(ids)
@@ -160,6 +161,7 @@ export const whatsNew = (contract, days) =>
           ], [], keys(assets)
           ))
           .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('lastStamped'))))
+          .map(take(25))
           .chain(assets => {
             const ids = pluck('asset', assets)
             const query = buildQuery(ids)

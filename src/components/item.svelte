@@ -218,19 +218,26 @@
     </div>
     <div class="w-[700px] flex flex-col">
       <div class="">Stampers</div>
-      <div class="avatar-group -space-x-6">
-        {#each take(30, stamp.stampers.reverse()) as stamper}
-          {#if stamper.avatar}
-            <Avatar avatar={stamper.avatar} />
-          {:else if stamper.name && stamper.name.toUpperCase() !== "UNKNOWN"}
-            <Avatar name={stamper.name} avatar="https://i.pravatar.cc/128" />
-          {:else}
-            <Avatar
-              name={take(2, stamp.asset)}
-              avatar="https://i.pravatar.cc/128"
-            />
-          {/if}
-        {/each}
+      <div class="flex space-x-2 items-center">
+        <div class="avatar-group -space-x-6">
+          {#each take(15, stamp.stampers.reverse()) as stamper}
+            {#if stamper.avatar}
+              <Avatar avatar={stamper.avatar} />
+            {:else if stamper.name && stamper.name.toUpperCase() !== "UNKNOWN"}
+              <Avatar name={stamper.name} avatar="https://i.pravatar.cc/128" />
+            {:else}
+              <Avatar
+                name={take(2, stamp.asset)}
+                avatar="https://i.pravatar.cc/128"
+              />
+            {/if}
+          {/each}
+        </div>
+        {#if stamp.stampers.length > 15}
+          <span class="ml-8 text-[#696974] text-[14px]"
+            >+{stamp.stampers.length - 15}</span
+          >
+        {/if}
       </div>
     </div>
     <div class="sm:hidden">

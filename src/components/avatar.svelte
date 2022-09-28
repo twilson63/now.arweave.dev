@@ -4,13 +4,15 @@
   export let name;
 
   const colors = [
-    "#4785ff",
-    "#00FFD1",
-    "#F96666",
-    "#FFABE1",
-    "#937DC2",
-    "#FFF5E4",
+    "#C8792B",
+    "#4BA75E",
+    "#DDBC3F",
+    "#449ECF",
+    "#AB84B0",
+    "#C8792B",
+    "#CB3C34",
   ];
+
   function getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }

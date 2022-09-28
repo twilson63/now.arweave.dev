@@ -205,7 +205,10 @@
         </div>
       </div>
     </div>
-
+    <div class="hidden flex-none flex flex-col">
+      <div>First Stamped: {new Date(stamp.firstStamped).toISOString()}</div>
+      <div>Last Stamped: {new Date(stamp.lastStamped).toISOString()}</div>
+    </div>
     <div class="hidden flex-none flex flex-col w-[300px] pl-[50px]">
       {#await getContract() then state}
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}

@@ -160,7 +160,7 @@ export const whatsNew = (contract, days) =>
             },
           ], [], keys(assets)
           ))
-          .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('lastStamped'))))
+          .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('firstStamped'))))
           .map(take(25))
           .chain(assets => {
             const ids = pluck('asset', assets)

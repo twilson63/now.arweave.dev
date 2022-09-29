@@ -4,6 +4,7 @@ import * as Stamper from './stamper.js'
 import * as Flex from './flex.js'
 import * as Upload from './upload.js'
 import * as Bar from './bar.js'
+import * as Collectors from './collectors.js'
 
 
 const arweave = Arweave.init({
@@ -18,6 +19,7 @@ const BAR = 'mMffEC07TyoAFAI_O6q_nskj2bT8n4UFvckQ3yELeic';
 const STAMPCOIN = "aSMILD7cEJr93i7TAVzzMjtci_sGkXcWnqpDkG6UGcA";
 const warp = WarpWebFactory.memCached(arweave);
 
+export const getCollectors = (wallets) => Collectors.getProfiles(arweave, wallets)
 export const getPrice = (file) => Upload.getPrice(file.buffer.byteLength).runWith({ arweave }).toPromise()
 export const uploadAsset = (file, addr, tags) => Upload.uploadAsset({ file, addr, tags }).runWith({ arweave }).toPromise()
 

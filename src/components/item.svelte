@@ -12,8 +12,9 @@
     compose,
     append,
     values,
+    keys,
   } from "ramda";
-  import { readState, getOwner } from "../lib/app.js";
+  import { readState, getOwner, getCollectors } from "../lib/app.js";
   import { atomicToBar } from "../lib/utils.js";
   import { spring, tweened } from "svelte/motion";
   import Pie from "./pie.svelte";
@@ -215,16 +216,23 @@
         <div class="">Collectors</div>
         <div class="flex space-x-2 items-center">
           <div class="avatar-group -space-x-6">
-            {#each take(5, values(state.balances)) as stamper}
-              <Avatar
-                name={take(2, stamp.asset)}
-                avatar="https://i.pravatar.cc/128"
-              />
-            {/each}
+            {#await getCollectors(keys(state.balances)) then collectors}
+              {#each take(5, collectors) as c}
+                {#if c.avatar}
+                  <Avatar avatar={c.avatar} />
+                {:else if c.name}
+                  <Avatar name={take(2, c.name)} />
+                {:else}
+                  <Avatar name={"AA"} />
+                {/if}
+              {:else}
+                <Avatar name={"BB"} />
+              {/each}
+            {/await}
           </div>
-          {#if values(state.balances).length > 5}
+          {#if keys(state.balances).length > 5}
             <span class="ml-8 text-[#696974] text-[14px]"
-              >+{values(state.balances).length - 5}</span
+              >+{keys(state.balances).length - 5}</span
             >
           {/if}
         </div>

@@ -109,7 +109,7 @@
     <!-- Repo name and link -->
     <div class="min-w-0 space-y-3">
       <div class="flex-none flex flex-col md:flex-row items-center space-x-3">
-        <div class="flex flex-col">
+        <div class="hidden md:flex flex-col">
           <button
             on:click|stopPropagation={handleStamp}
             class="btn btn-ghost btn-primary rounded-none"
@@ -137,7 +137,7 @@
             {stamp.count}
           </div>
         </div>
-        <figure class="">
+        <figure class="hidden md:block">
           {#await getOwner(stamp.asset) then owner}
             {#if owner.avatar}
               <Avatar avatar={owner.avatar} />
@@ -150,7 +150,7 @@
             {/if}
           {/await}
         </figure>
-        <div class="flex-1 flex flex-col w-[400px]">
+        <div class="flex-1 flex flex-col md:w-[400px]">
           <h2 class="text-xl font-bold">
             {#if stamp.type === "image"}
               <a
@@ -212,6 +212,7 @@
       <div>Last Stamped: {new Date(stamp.lastStamped).toISOString()}</div>
     </div>
     {#await getContract() then state}
+      <!--
       <div class="flex-none flex flex-col">
         <div class="">Collectors</div>
         <div class="flex space-x-2 items-center">
@@ -237,6 +238,7 @@
           {/if}
         </div>
       </div>
+      -->
       <div class="hidden flex-none flex flex-col w-[300px] pl-[50px]">
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
           <div class="badge bg-success text-white rounded-none border-none">
@@ -246,7 +248,7 @@
         {@html showOrderTotal(state)}
       </div>
     {/await}
-    <div class="w-[700px] flex flex-col">
+    <div class="hidden w-[700px] lg:flex flex-col">
       <div class="">Stampers</div>
       <div class="flex space-x-2 items-center">
         <div class="avatar-group -space-x-6">
@@ -270,7 +272,7 @@
         {/if}
       </div>
     </div>
-    <div class="sm:hidden">
+    <div class="hidden">
       <!-- Heroicon name: solid/chevron-right -->
       <svg
         class="h-5 w-5 text-gray-400"
@@ -286,7 +288,7 @@
         />
       </svg>
     </div>
-    <div class="hidden flex-none sm:flex flex-col items-start space-y-3">
+    <div class="hidden flex-none md:flex flex-col items-start space-y-3">
       <div class="flex space-x-4">
         <div class="flex-none flex items-center justify-center">
           <Pie size={50} {percent} />

@@ -326,12 +326,12 @@
           ></a
         >
       </div>
-
-      <SortButton bind:days on:change={changeDays} />
-
+      <div class="hidden md:flex">
+        <SortButton bind:days on:change={changeDays} />
+      </div>
       <a
         href="/contest"
-        class="btn bg-[#3DD598] rounded-none flex space-x-2 hover:bg-[#3DD598]"
+        class="hidden btn bg-[#3DD598] rounded-none md:flex space-x-2 hover:bg-[#3DD598]"
       >
         <img src="arweave.svg" alt="arweave image" />
         <div class="text-[#44444F]">WIN $AR!</div>

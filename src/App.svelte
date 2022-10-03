@@ -16,7 +16,9 @@
   <Route path="/">
     <Home />
   </Route>
+
   <Route path="/contest">
-    <Contest />
+    <!-- <Contest /> -->
+    <Home />
   </Route>
 </Transition>

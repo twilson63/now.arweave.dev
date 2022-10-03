@@ -117,6 +117,7 @@
 
       <SortButton bind:days on:change={changeDays} />
 
+      <!--
       <a
         href="/contest"
         class="btn bg-[#3DD598] rounded-none flex space-x-2 hover:bg-[#3DD598]"
@@ -125,6 +126,7 @@
         <div class="text-[#44444F]">WIN $AR!</div>
         <span class="hidden">Click for Details</span>
       </a>
+      -->
     {/if}
   </div>
   <div class="flex-none">
@@ -329,6 +331,7 @@
       <div class="hidden md:flex">
         <SortButton bind:days on:change={changeDays} />
       </div>
+      <!--
       <a
         href="/contest"
         class="hidden btn bg-[#3DD598] rounded-none md:flex space-x-2 hover:bg-[#3DD598]"
@@ -337,6 +340,7 @@
         <div class="text-[#44444F]">WIN $AR!</div>
         <span class="">Click for Details</span>
       </a>
+      -->
     {/if}
   </div>
 </div>

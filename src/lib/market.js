@@ -8,7 +8,11 @@ const { of, ask, lift } = ReaderT(Async)
 const CACHE = 'https://cache.permapages.app'
 const DAY = (24 * 60 * 60 * 1000)
 
-const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet).setEvaluationOptions({ allowUnsafeClient: true })
+const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet).setEvaluationOptions({
+  allowUnsafeClient: true,
+  internalWrites: true,
+  allowBigInt: true
+})
 const getState = contract => Async.fromPromise(fetch)(`${CACHE}/${contract}`)
   .chain(res => Async.fromPromise(res.json.bind(res))())
 

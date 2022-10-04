@@ -15,6 +15,7 @@ const arweave = Arweave.init({
 const { WarpWebFactory, LoggerFactory } = window.warp;
 LoggerFactory.INST.logLevel("error");
 
+const CACHE = 'https://cache.permapages.app'
 const BAR = 'mMffEC07TyoAFAI_O6q_nskj2bT8n4UFvckQ3yELeic';
 const STAMPCOIN = "aSMILD7cEJr93i7TAVzzMjtci_sGkXcWnqpDkG6UGcA";
 const warp = WarpWebFactory.memCached(arweave);
@@ -38,7 +39,10 @@ export const isVouched = (addr) => Stamper.isVouched(addr).runWith({ arweave }).
 export const addPair = (contract, pair) => Flex.addPair(contract, pair).runWith({ warp }).toPromise()
 export const createOrder = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const allowOrder = (contract, target, qty) => Flex.allow(contract, target, qty).runWith({ warp }).toPromise()
-export const readState = (contract) => Flex.readState(contract).runWith({ warp }).toPromise()
+export const readState = (contract) => fetch(`${CACHE}/${contract}`)
+  .then(res => res.ok ? res.json() : Promise.reject('no contract found'))
+  .catch(_ => Flex.readState(contract).runWith({ warp }).toPromise())
+
 export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const readBar = () => Flex.readState(BAR).runWith({ warp }).toPromise()
 

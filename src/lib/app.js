@@ -44,7 +44,9 @@ export const readState = (contract) => fetch(`${CACHE}/${contract}`)
   .catch(_ => Flex.readState(contract).runWith({ warp }).toPromise())
 
 export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
-export const readBar = () => Flex.readState(BAR).runWith({ warp }).toPromise()
+export const readBar = () => fetch(`${CACHE}/${BAR}`)
+  .then(res => res.ok ? res.json() : Promise.reject('no contract found'))
+  .catch(_ => Flex.readState(BAR).runWith({ warp }).toPromise())
 
 export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()
 export const buyAsset = //(contract, qty) => Flex.buy({ contract, BAR, qty }).runWith({ warp }).toPromise()

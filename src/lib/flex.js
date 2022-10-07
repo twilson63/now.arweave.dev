@@ -1,6 +1,8 @@
 import { Async, ReaderT } from 'crocks'
 import { prop } from 'ramda'
 
+const GATEWAY = 'https://gateway.redstone.finance'
+const CACHE = 'https://cache.permapages.app'
 const { fromPromise } = Async
 const { of, ask, lift } = ReaderT(Async)
 
@@ -76,6 +78,32 @@ export const sell = ({ contract, BAR, qty, price }) =>
     .chain(createOrder).map(always(contract))
     .chain(readState)
 
+export const sell2 = ({ contract, BAR, qty, price }) =>
+  ask(({ arweave }) => fromPromise(async (arweave) => {
+    // addPair
+    const addPairTx = await createTransaction(arweave, contract, {
+      function: 'addPair',
+      pair: BAR
+    })
+
+    await arweave.transactions.sign(addPairTx)
+    console.log(await writeInteraction2(addPairTx))
+
+    // createOrder
+    const tx = await createTransaction(arweave, contract, {
+      function: 'createOrder',
+      pair: [contract, BAR],
+      price,
+      qty
+    })
+
+    await arweave.transactions.sign(tx)
+    console.log('createOrder', await writeInteraction2(tx))
+
+    return fetch(`${CACHE}/${contract}`).then(res => res.json())
+  })(arweave))
+    .chain(lift)
+
 export const buy = ({ contract, BAR, qty }) =>
   allow(BAR, contract, qty)
     .map(transaction => ({
@@ -86,3 +114,59 @@ export const buy = ({ contract, BAR, qty }) =>
     }))
     .chain(createOrder).map(always(contract))
     .chain(readState)
+
+export const buy2 = ({ contract, BAR, qty }) =>
+  ask(({ arweave }) => fromPromise(async (arweave) => {
+    // addPair
+    const allowTx = await createTransaction(arweave, BAR, {
+      function: 'allow',
+      target: contract,
+      qty
+    })
+
+    await arweave.transactions.sign(allowTx)
+    const transaction = allowTx.id
+    await writeInteraction2(allowTx)
+
+    // createOrder
+    const tx = await createTransaction(arweave, contract, {
+      function: 'createOrder',
+      pair: [BAR, contract],
+      transaction,
+      qty: Number(qty)
+    })
+
+    await arweave.transactions.sign(tx)
+    console.log('createOrder', await writeInteraction2(tx))
+
+    return fetch(`${CACHE}/${contract}`).then(res => res.json())
+  })(arweave))
+    .chain(lift)
+
+async function createTransaction(arweave, contract, input) {
+  const tx = await arweave.createTransaction({
+    data: Math.random().toString().slice(-4),
+    reward: '72600854',
+    last_tx: 'p7vc1iSP6bvH_fCeUFa9LqoV5qiyW-jdEKouAT0XMoSwrNraB9mgpi29Q10waEpO'
+  })
+
+  tx.addTag('App-Name', 'SmartWeaveAction')
+  tx.addTag('App-Version', '0.3.0')
+  tx.addTag('Contract', contract)
+  tx.addTag('Input', JSON.stringify(input))
+  tx.addTag('SDK', 'Warp')
+
+  return tx
+}
+
+function writeInteraction2(tx) {
+  return fetch(`${GATEWAY}/gateway/sequencer/register`, {
+    method: 'POST',
+    body: JSON.stringify(tx),
+    headers: {
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
+  }).then(res => res.ok ? res.json() : Promise.reject(res))
+}

@@ -48,7 +48,11 @@ export const readBar = () => fetch(`${CACHE}/${BAR}`)
   .then(res => res.ok ? res.json() : Promise.reject('no contract found'))
   .catch(_ => Flex.readState(BAR).runWith({ warp }).toPromise())
 
-export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()
+//export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()
+export const sellAsset = (contract, qty, price) => Flex.sell2({ contract, BAR, qty, price }).runWith({ arweave }).toPromise()
+export const buyAsset = (contract, qty) => Flex.buy2({ contract, BAR, qty }).runWith({ arweave }).toPromise()
+
+/*
 export const buyAsset = //(contract, qty) => Flex.buy({ contract, BAR, qty }).runWith({ warp }).toPromise()
   async (contract, qty) => {
     const bar = warp.contract(BAR).connect('use_wallet').setEvaluationOptions({
@@ -72,6 +76,7 @@ export const buyAsset = //(contract, qty) => Flex.buy({ contract, BAR, qty }).ru
     return contractState.state
 
   }
+*/
 
 export const mintBar = (ar) => Bar.mint(arweave, BAR, ar)
 export const arBalance = (addr) => Bar.arbalance(arweave, addr)

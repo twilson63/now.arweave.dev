@@ -93,8 +93,8 @@ export const sell2 = ({ contract, BAR, qty, price }) =>
     const tx = await createTransaction(arweave, contract, {
       function: 'createOrder',
       pair: [contract, BAR],
-      price,
-      qty
+      price: Number(price.toFixed(0)),
+      qty: Number(qty.toFixed(0))
     })
 
     await arweave.transactions.sign(tx)

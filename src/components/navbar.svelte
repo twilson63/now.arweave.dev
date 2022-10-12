@@ -260,7 +260,13 @@
                 <span class="text-primary"
                   >{Number(atomicToStamp(rewards)).toFixed(2)}</span
                 >
-                <span>$STAMP</span>
+                <a
+                  class="link"
+                  href="https://stamps.arweave.dev"
+                  target="_blank"
+                >
+                  <span>$STAMP</span>
+                </a>
               </div>
             {/await}
             {#await myBar(profile.owner) then bar}

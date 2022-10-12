@@ -5,6 +5,7 @@ import * as Flex from './flex.js'
 import * as Upload from './upload.js'
 import * as Bar from './bar.js'
 import * as Collectors from './collectors.js'
+import { pathOr } from 'ramda'
 
 
 const arweave = Arweave.init({
@@ -16,6 +17,7 @@ const { WarpWebFactory, LoggerFactory } = window.warp;
 LoggerFactory.INST.logLevel("error");
 
 const CACHE = 'https://cache.permapages.app'
+const BAR_CACHE = 'https://bar-cache.onrender.com'
 const BAR = 'mMffEC07TyoAFAI_O6q_nskj2bT8n4UFvckQ3yELeic';
 const STAMPCOIN = "aSMILD7cEJr93i7TAVzzMjtci_sGkXcWnqpDkG6UGcA";
 const warp = WarpWebFactory.memCached(arweave);
@@ -24,7 +26,8 @@ export const getCollectors = (wallets) => Collectors.getProfiles(arweave, wallet
 export const getPrice = (file) => Upload.getPrice(file.buffer.byteLength).runWith({ arweave }).toPromise()
 export const uploadAsset = (file, addr, tags) => Upload.uploadAsset({ file, addr, tags }).runWith({ arweave }).toPromise()
 
-export const myBar = (addr) => Market.getBalance(BAR, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
+//export const myBar = (addr) => Market.getBalance(BAR, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
+export const myBar = (addr) => fetch(BAR_CACHE).then(res => res.json()).then(pathOr(0, ['balances', addr]))
 export const myRewards = (addr) => Market.getBalance(STAMPCOIN, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
 export const whatsHot = (days) => Market.whatsHot(STAMPCOIN, days).runWith({ warp, wallet: 'use_wallet', arweave }).toPromise()
 export const whatsNew = (days) => Market.whatsNew(STAMPCOIN, days).runWith({ warp, arweave, wallet: 'use_wallet' }).toPromise()

@@ -187,7 +187,7 @@
               {stamp.type}
             </div>
 
-            {#if stamp.type === "image" && preview === false}
+            {#if preview === false}
               <img
                 on:click={() => (preview = true)}
                 class="mt-2 w-[15px]"
@@ -195,7 +195,7 @@
                 alt="expand image"
               />
             {/if}
-            {#if stamp.type === "image" && preview === true}
+            {#if preview === true}
               <img
                 on:click={() => (preview = false)}
                 class="mt-2 w-[15px]"
@@ -304,9 +304,9 @@
       </div>
     </div>
   </div>
-  {#if stamp.type === "image" && preview}
-    <img
-      class="mt-4 w-[600px]"
+  {#if preview}
+    <iframe
+      class="mt-4 w-[600px] h-[350px]"
       src={"https://arweave.net/" + stamp.asset}
       alt={stamp.title}
     />

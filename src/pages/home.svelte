@@ -84,12 +84,14 @@
     if ($assets.length === 0) {
       $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
     }
+    console.log($assets);
     return Promise.resolve($assets);
   }
 
   async function refreshStampList() {
     window.scrollTo(0, 0);
     $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
+    console.log($assets);
     return Promise.resolve($assets);
   }
 

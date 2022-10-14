@@ -14,11 +14,11 @@
     values,
     keys,
   } from "ramda";
-  import { readState, getOwner, getCollectors } from "../lib/app.js";
+  import { readState, getOwner } from "../lib/app.js";
   import { atomicToBar } from "../lib/utils.js";
   import { spring, tweened } from "svelte/motion";
   import Pie from "./pie.svelte";
-  import { profile } from "../store.js";
+  import { profile, collectors } from "../store.js";
 
   let percent = 0;
   const store = tweened(0, { duration: 1000 });
@@ -212,12 +212,11 @@
       <div>Last Stamped: {new Date(stamp.lastStamped).toISOString()}</div>
     </div>
     {#await getContract() then state}
-      <!--
-      <div class="flex-none flex flex-col">
+      <div class="flex-none flex flex-col w-[250px]">
         <div class="">Collectors</div>
         <div class="flex space-x-2 items-center">
           <div class="avatar-group -space-x-6">
-            {#await getCollectors(keys(state.balances)) then collectors}
+            {#await keys(state.balances).reduce((a, b) => ($collectors.find((p) => p.owner == b) ? [...a, $collectors.find((p) => p.owner == b)] : a), []) then collectors}
               {#each take(5, collectors) as c}
                 {#if c.avatar}
                   <Avatar avatar={c.avatar} />
@@ -238,7 +237,7 @@
           {/if}
         </div>
       </div>
-      -->
+
       <div class="hidden flex-none flex flex-col w-[300px] pl-[50px]">
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
           <div class="badge bg-success text-white rounded-none border-none">
@@ -246,6 +245,15 @@
           </div>
         {/if}
         {@html showOrderTotal(state)}
+      </div>
+    {:catch e}
+      <div class="flex-none flex flex-col w-[250px]">
+        <div class="">Collectors</div>
+        <div class="flex space-x-2 items-center">
+          <div class="avatar-group -space-x-6">
+            <Avatar name={"  "} />
+          </div>
+        </div>
       </div>
     {/await}
     <div class="hidden w-[700px] lg:flex flex-col">
@@ -305,10 +313,22 @@
     </div>
   </div>
   {#if preview}
-    <iframe
-      class="mt-4 w-[600px] h-[350px]"
-      src={"https://arweave.net/" + stamp.asset}
-      alt={stamp.title}
-    />
+    {#if stamp.type === "image"}
+      <img
+        class="mt-4 w-[600px] h-[350px]"
+        src={"https://arweave.net/" + stamp.asset}
+        alt={stamp.title}
+      />
+    {:else if stamp.type === "video"}
+      <video class="mt-4 w-[600px] h-[350px]" controls>
+        <source src={"https://arweave.net/" + stamp.asset} />
+      </video>
+    {:else}
+      <iframe
+        class="mt-4 w-[600px] h-[350px]"
+        src={"https://arweave.net/" + stamp.asset}
+        alt={stamp.title}
+      />
+    {/if}
   {/if}
 </li>

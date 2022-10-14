@@ -30,8 +30,9 @@
     readBar,
     whatsHot,
     uploadAsset,
+    loadCollectors,
   } from "../lib/app.js";
-  import { assets, profile } from "../store.js";
+  import { assets, profile, collectors } from "../store.js";
   import { find, propEq, mergeRight } from "ramda";
 
   let connectRequestFrom = { type: "none" };
@@ -84,14 +85,16 @@
     if ($assets.length === 0) {
       $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
     }
-    console.log($assets);
+    $collectors = await loadCollectors($assets);
+
     return Promise.resolve($assets);
   }
 
   async function refreshStampList() {
     window.scrollTo(0, 0);
     $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
-    console.log($assets);
+
+    $collectors = await loadCollectors($assets);
     return Promise.resolve($assets);
   }
 

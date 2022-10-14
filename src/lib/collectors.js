@@ -1,9 +1,21 @@
-import { compose, map, path, pluck, prop } from 'ramda'
+import { compose, concat, flatten, uniq, keys, map, path, pluck, prop, reduce } from 'ramda'
+
+export async function getWallets(warp, assets) {
+  return Promise.all(map(
+    id => fetch(`https://cache.permapages.app/${id}`)
+      .then(res => res.json())
+      .then(compose(keys, prop('balances')))
+      .catch(e => [])
+    , //warp.contract(id).readState().then(res => keys(res.state.balances)),
+    assets
+  )).then((...args) => reduce(concat, [], args))
+    .then(compose(uniq, flatten))
+}
 
 export async function getProfiles(arweave, wallets) {
   const query = `query {
   transactions(
-    first: 1,
+    first: 100,
     owners:[${map(id => `"${id}"`, wallets)}],
     tags: [
       {name: "Protocol", values: ["PermaProfile-v0.1"]}

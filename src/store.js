@@ -3,7 +3,7 @@ import { writable } from 'svelte/store'
 export const assets = writable([])
 export const stampers = writable([])
 export const profile = writable({})
-export const profiles = writable([])
+export const collectors = writable([])
 /*
 
 import { createMachine, state, transition, invoke, reduce } from 'robot3'

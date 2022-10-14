@@ -150,7 +150,7 @@
             {/if}
           {/await}
         </figure>
-        <div class="flex-1 flex flex-col md:w-[400px]">
+        <div class="flex-1 flex flex-col md:w-[450px]">
           <h2 class="text-xl font-bold">
             {#if stamp.type === "image"}
               <a
@@ -256,7 +256,7 @@
         </div>
       </div>
     {/await}
-    <div class="hidden w-[700px] lg:flex flex-col">
+    <div class="hidden w-[600px] lg:flex flex-col">
       <div class="">Stampers</div>
       <div class="flex space-x-2 items-center">
         <div class="avatar-group -space-x-6">

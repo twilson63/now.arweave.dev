@@ -85,6 +85,7 @@
     if ($assets.length === 0) {
       $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
     }
+
     $collectors = await loadCollectors($assets);
 
     return Promise.resolve($assets);

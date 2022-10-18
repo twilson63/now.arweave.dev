@@ -110,6 +110,7 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
           }, assets)
         })
     })
+    .map(filter(a => a.title))
 ).chain(lift)
 
 
@@ -225,6 +226,7 @@ export const whatsNew = (contract, days) =>
                 }, assets)
               })
           })
+          .map(filter(a => a.title))
       ).chain(lift)
 
     )

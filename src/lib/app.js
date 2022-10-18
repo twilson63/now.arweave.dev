@@ -18,7 +18,7 @@ LoggerFactory.INST.logLevel("error");
 
 const CACHE = 'https://cache.permapages.app'
 const BAR_CACHE = 'https://bar-cache.onrender.com'
-const BAR = 'mMffEC07TyoAFAI_O6q_nskj2bT8n4UFvckQ3yELeic';
+const BAR = 'ifGl8H8VrPJbYk8o1jVjXqcveO4uxdyF0ir8uS-zRdU';
 const STAMPCOIN = "aSMILD7cEJr93i7TAVzzMjtci_sGkXcWnqpDkG6UGcA";
 const warp = WarpWebFactory.memCached(arweave);
 

@@ -1,5 +1,5 @@
 <h1 align="center">HypAR Template</h1>
-<p>Setup Permaweb Apps ⚡️ HypAR Apps!</p>
+<p>now.arweave.dev</p>
 
 ## Contents
 
@@ -12,13 +12,7 @@
 
 ## Welcome
 
-The Permaweb is changing the internet and the way applications are built, this toolkit gives web developers an on ramp to delivering permaweb applications.
-
-## Usage
-
-``` sh
-npx degit twilson63/hypar myapp
-```
+now is the home page of the permaweb, you can find interesting pages, posts, images, papers and videos that are STAMPed using the STAMPS Protocol.
 
 Development Mode
 

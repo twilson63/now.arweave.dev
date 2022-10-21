@@ -212,6 +212,7 @@
       <div>Last Stamped: {new Date(stamp.lastStamped).toISOString()}</div>
     </div>
     {#await getContract() then state}
+      <!--
       <div class="flex-none flex flex-col w-[250px]">
         <div class="">Collectors</div>
         <div class="flex space-x-2 items-center">
@@ -237,7 +238,7 @@
           {/if}
         </div>
       </div>
-
+-->
       <div class="hidden flex-none flex flex-col w-[300px] pl-[50px]">
         {#if ((state.pairs && state.pairs[0]?.orders) || []).length > 0}
           <div class="badge bg-success text-white rounded-none border-none">

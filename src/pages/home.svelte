@@ -86,7 +86,7 @@
       $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
     }
 
-    $collectors = await loadCollectors($assets);
+    //$collectors = await loadCollectors($assets);
 
     return Promise.resolve($assets);
   }
@@ -95,7 +95,7 @@
     window.scrollTo(0, 0);
     $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
 
-    $collectors = await loadCollectors($assets);
+    // $collectors = await loadCollectors($assets);
     return Promise.resolve($assets);
   }
 

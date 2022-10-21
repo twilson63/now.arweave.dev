@@ -1,9 +1,15 @@
 import { compose, concat, flatten, uniq, keys, map, path, pluck, prop, reduce } from 'ramda'
 
+// fetch(`https://cache.permapages.app/${id}`)
+// .then(res => res.json())
+
 export async function getWallets(warp, assets) {
   return Promise.all(map(
-    id => fetch(`https://cache.permapages.app/${id}`)
-      .then(res => res.json())
+    id => warp.contract(id).setEvaluationOptions({
+      internalWrites: true,
+      allowBigInt: true
+    }).readState()
+      .then(({ cachedValue }) => cachedValue.state)
       .then(compose(keys, prop('balances')))
       .catch(e => [])
     , //warp.contract(id).readState().then(res => keys(res.state.balances)),

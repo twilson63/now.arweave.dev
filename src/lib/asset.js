@@ -13,7 +13,7 @@ const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet)
 export const stamp = (id) => ask(({ warp, contract }) =>
   Async.of(contract)
     .map(connect(warp, 'use_wallet'))
-    .chain(pst => Async.fromPromise(pst.bundleInteraction.bind(pst))({
+    .chain(pst => Async.fromPromise(pst.writeInteraction.bind(pst))({
       function: 'stamp',
       transactionId: id,
       timestamp: Date.now()

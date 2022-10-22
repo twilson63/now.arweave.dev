@@ -40,7 +40,14 @@ export const stamp = (id) => Asset.stamp(id).runWith({ warp, contract: STAMPCOIN
 export const getOwner = (id) => Asset.getOwner(id).runWith({ arweave }).toPromise()
 export const isVouched = (addr) => Stamper.isVouched(addr).runWith({ arweave }).toPromise()
 
-export const addPair = (contract, pair) => Flex.addPair(contract, pair).runWith({ warp }).toPromise()
+export const addPair = (contract, pair) =>
+  warp.contract(contract).connect('use_wallet').setEvaluationOptions({
+    internalWrites: true
+  }).writeInteraction({
+    function: 'addPair',
+    pair: BAR
+  })
+
 export const createOrder = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const allowOrder = (contract, target, qty) => Flex.allow(contract, target, qty).runWith({ warp }).toPromise()
 export const readState = (contract) => fetch(`${CACHE}/${contract}`)
@@ -53,34 +60,50 @@ export const readBar = () => fetch(`${CACHE}/${BAR}`)
   .catch(_ => Flex.readState(BAR).runWith({ warp }).toPromise())
 
 //export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()
-export const sellAsset = (contract, qty, price) => Flex.sell2({ contract, BAR, qty, price }).runWith({ arweave }).toPromise()
-export const buyAsset = (contract, qty) => Flex.buy2({ contract, BAR, qty }).runWith({ arweave }).toPromise()
+export const sellAsset = (contract, qty, price) =>
+  Promise.resolve(warp.contract(contract).connect('use_wallet').setEvaluationOptions({
+    internalWrites: true
+  }))
+    .then(c => c.writeInteraction({
+      function: 'addPair',
+      pair: BAR
+    }).then(_ => c)
+    )
+    .then(c => c.writeInteraction({
+      function: 'createOrder',
+      pair: [contract, BAR],
+      qty,
+      price
+    }).then(_ => c))
+    .then(c => c.readState().then(({ cachedValue }) => cachedValue.state))
 
-/*
-export const buyAsset = //(contract, qty) => Flex.buy({ contract, BAR, qty }).runWith({ warp }).toPromise()
-  async (contract, qty) => {
-    const bar = warp.contract(BAR).connect('use_wallet').setEvaluationOptions({
-      internalWrites: true,
-      allowUnsafeClient: true
-    })
-    const asset = warp.contract(contract).connect('use_wallet').setEvaluationOptions({
-      internalWrites: true,
-      allowUnsafeClient: true
-    })
-    const allowResult = await bar.bundleInteraction({ function: 'allow', target: contract, qty: Number(qty) })
-    // wait 15 secs to allow claimable record to show
-    await new Promise(resolve => setTimeout(resolve, 15 * 1000))
+//Flex.sell2({ contract, BAR, qty, price }).runWith({ arweave }).toPromise()
+export const buyAsset = (contract, qty) => {
+  const assetContract = warp.contract(contract).connect('use_wallet').setEvaluationOptions({
+    internalWrites: true
+  })
+  const barContract = warp.contract(BAR).connect('use_wallet').setEvaluationOptions({
+    internalWrites: true
+  })
 
-    const barState = await bar.readState()
-    // console.log('claimables', JSON.stringify(barState.state.claimables))
-    // console.log('txId', allowResult.originalTxId)
-    const orderResult = await asset.bundleInteraction({ function: 'createOrder', qty: Number(qty), pair: [BAR, contract], transaction: allowResult.originalTxId })
-    const contractState = await asset.readState()
+  return Promise.resolve({ qty, contract })
+    .then(({ qty, contract }) => barContract.writeInteraction({
+      function: 'allow',
+      target: contract,
+      qty: Number(qty)
+    }).then(r => ({ qty, contract, transaction: r.originalTxId })))
+    .then(({ qty, contract, transaction }) => assetContract.writeInteraction({
+      function: 'createOrder',
+      pair: [BAR, contract],
+      qty: Number(qty),
+      transaction
+    }).then(_ => transaction))
+    .then(transaction => barContract.readState().then(({ cachedValue }) => cachedValue.state)
+      .then(({ claims }) => claims.includes(transaction))
+    )
+}
 
-    return contractState.state
-
-  }
-*/
+//Flex.buy2({ contract, BAR, qty }).runWith({ arweave }).toPromise()
 
 export const mintBar = (ar) => Bar.mint(arweave, BAR, ar)
 export const arBalance = (addr) => Bar.arbalance(arweave, addr)

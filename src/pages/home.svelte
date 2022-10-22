@@ -223,11 +223,14 @@
     }
     //const result = await buyAsset(buyItem.contract, Number(qty.toFixed(0)));
     const result = await buyAsset(buyItem.contract, qty);
+    if (result) {
+      processingDialog = false;
+      confirmPurchaseDialog = true;
 
-    processingDialog = false;
-    confirmPurchaseDialog = true;
-
-    stampList = refreshStampList();
+      stampList = refreshStampList();
+    } else {
+      alert("error: could not buy asset");
+    }
   }
 
   async function handleSellClick(e) {

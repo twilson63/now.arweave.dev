@@ -19,8 +19,8 @@ LoggerFactory.INST.logLevel("error");
 const CACHE = 'https://cache.permapages.app'
 const BAR_CACHE = 'https://bar-cache.onrender.com'
 //const BAR = 'ifGl8H8VrPJbYk8o1jVjXqcveO4uxdyF0ir8uS-zRdU';
-const BAR = 'VFr3Bk-uM-motpNNkkFg4lNW1BMmSfzqsVO551Ho4hA'
-const STAMPCOIN = "jAE_V6oXkb0dohIOjReMhrTlgLW0X2j3rxIZ5zgbjXw";
+const BAR = __BAR_CONTRACT__;
+const STAMPCOIN = __STAMP_CONTRACT__;
 const warp = WarpFactory.forMainnet();
 
 export const loadCollectors = (assets) => Collectors.getWallets(warp, pluck('asset', assets)).then(wallets => Collectors.getProfiles(arweave, wallets))

@@ -12,7 +12,10 @@ export default defineConfig({
   base: '',
   plugins: [svelte()],
   define: {
-    '__APP_VERSION__': JSON.stringify(process.env.npm_package_version)
+    '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
+    __STAMP_CONTRACT__: '"jAE_V6oXkb0dohIOjReMhrTlgLW0X2j3rxIZ5zgbjXw"',
+    __BAR_CONTRACT__: '"VFr3Bk-uM-motpNNkkFg4lNW1BMmSfzqsVO551Ho4hA"'
+
   },
   server: {
     hmr: {

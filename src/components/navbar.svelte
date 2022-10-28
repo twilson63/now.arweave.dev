@@ -131,7 +131,6 @@
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal p-0 items-center space-x-none">
-      <!--
       {#if profile.owner}
         <li on:click={post}>
           <div
@@ -140,21 +139,21 @@
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
+              fill="none"
               viewBox="0 0 24 24"
-              fill="currentColor"
+              stroke-width="1.5"
+              stroke="currentColor"
               class="w-6 h-6"
             >
               <path
-                d="M9.97.97a.75.75 0 011.06 0l3 3a.75.75 0 01-1.06 1.06l-1.72-1.72v3.44h-1.5V3.31L8.03 5.03a.75.75 0 01-1.06-1.06l3-3zM9.75 6.75v6a.75.75 0 001.5 0v-6h3a3 3 0 013 3v7.5a3 3 0 01-3 3h-7.5a3 3 0 01-3-3v-7.5a3 3 0 013-3h3z"
-              />
-              <path
-                d="M7.151 21.75a2.999 2.999 0 002.599 1.5h7.5a3 3 0 003-3v-7.5c0-1.11-.603-2.08-1.5-2.599v7.099a4.5 4.5 0 01-4.5 4.5H7.151z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
               />
             </svg>
           </div>
         </li>
       {/if}
-      -->
       <li on:click={() => about()}>
         <div
           class="tooltip tooltip-bottom tooltip-primary"

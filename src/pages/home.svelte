@@ -8,8 +8,7 @@
   import SortButton from "../components/sort-button.svelte";
 
   import { barToAtomic, atomicToBar } from "../lib/utils.js";
-  import PostAsset from "../dialogs/post.svelte";
-  import Upload from "../dialogs/upload.svelte";
+  import PostInfo from "../dialogs/post-info.svelte";
   import About from "../dialogs/about.svelte";
   import Buy from "../dialogs/buy.svelte";
   import Sell from "../dialogs/sell.svelte";
@@ -552,67 +551,7 @@ Powered by the Permaweb 🐘
     </a>
   </div>
 </Modal>
-<PostAsset
-  open={postDialog}
-  on:cancel={() => (postDialog = false)}
-  on:submit={({ detail }) => {
-    postDialog = false;
-    assetData = detail;
-    console.log(assetData);
-    uploadDialog = true;
-  }}
-/>
-<Upload
-  open={uploadDialog}
-  on:cancel={() => (uploadDialog = false)}
-  on:submit={async ({ detail }) => {
-    uploadDialog = false;
-    assetData = mergeRight(assetData, {
-      file: await toArrayBuffer(detail.files[0]),
-    });
-    //console.log(assetData);
-    const tags = [
-      { name: "Title", value: assetData.title },
-      { name: "Description", value: assetData.description },
-      { name: "Type", value: assetData.type },
-      { name: "Content-Type", value: detail.files[0].type },
-      { name: "App-Name", value: "SmartWeaveContract" },
-      { name: "App-Version", value: "0.3.0" },
-      { name: "SDK", value: "RedStone" },
-      {
-        name: "Contract-Src",
-        value: "BzNLxND_nJEMfcLWShyhU4i9BnzEWaATo6FYFsfsO0Q",
-      },
-      {
-        name: "Init-State",
-        value: JSON.stringify({
-          ticker: "MEME-" + assetData.title,
-          title: assetData.title,
-          owner: $profile.owner,
-          contentType: detail.files[0].type,
-          balances: {
-            [$profile.owner]: 10000,
-          },
-          createdAt: Date.now(),
-          invocations: [],
-          halted: false,
-          pairs: [],
-          usedTransfers: [],
-          foreignCalls: [],
-          emergencyHaltWallet: $profile.owner,
-          claims: [],
-          claimable: [],
-          settings: [["isTradeable", true]],
-        }),
-      },
-    ];
-    //console.log(tags);
-    // uploadAsset
-    console.log(assetData.file);
-    const result = await uploadAsset(assetData.file, $profile.owner, tags);
-    console.log(result);
-  }}
-/>
+<PostInfo bind:open={postDialog} />
 <About open={aboutDialog} on:cancel={() => (aboutDialog = false)} />
 <Buy
   bind:open={buyDialog}

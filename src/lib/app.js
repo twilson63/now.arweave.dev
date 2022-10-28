@@ -28,7 +28,7 @@ export const getPrice = (file) => Upload.getPrice(file.buffer.byteLength).runWit
 export const uploadAsset = (file, addr, tags) => Upload.uploadAsset({ file, addr, tags }).runWith({ arweave }).toPromise()
 
 //export const myBar = (addr) => Market.getBalance(BAR, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
-export const myBar = (addr) => fetch(BAR_CACHE).then(res => res.json()).then(pathOr(0, ['balances', addr]))
+export const myBar = (addr) => fetch(`${CACHE}/${BAR}`).then(res => res.json()).then(pathOr(0, ['balances', addr]))
 export const myRewards = (addr) => Market.getBalance(STAMPCOIN, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
 export const whatsHot = (days) => Market.whatsHot(STAMPCOIN, days).runWith({ warp, wallet: 'use_wallet', arweave }).toPromise()
 export const whatsNew = (days) => Market.whatsNew(STAMPCOIN, days).runWith({ warp, arweave, wallet: 'use_wallet' }).toPromise()
@@ -79,11 +79,16 @@ export const sellAsset = (contract, qty, price) =>
 
 //Flex.sell2({ contract, BAR, qty, price }).runWith({ arweave }).toPromise()
 export const buyAsset = (contract, qty) => {
+
   const assetContract = warp.contract(contract).connect('use_wallet').setEvaluationOptions({
-    internalWrites: true
+    internalWrites: true,
+    allowBigInt: true,
+    allowUnsafeClient: true
   })
   const barContract = warp.contract(BAR).connect('use_wallet').setEvaluationOptions({
-    internalWrites: true
+    internalWrites: true,
+    allowBigInt: true,
+    allowUnsafeClient: true
   })
 
   return Promise.resolve({ qty, contract })

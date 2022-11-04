@@ -17,7 +17,7 @@ const { WarpFactory, LoggerFactory } = window.warp;
 LoggerFactory.INST.logLevel("error");
 
 const CACHE = 'https://cache.permapages.app'
-const BAR_CACHE = 'https://bar-cache.onrender.com'
+const GATEWAY = 'https://gateway.redstone.finance'
 //const BAR = 'ifGl8H8VrPJbYk8o1jVjXqcveO4uxdyF0ir8uS-zRdU';
 const BAR = __BAR_CONTRACT__;
 const STAMPCOIN = __STAMP_CONTRACT__;
@@ -80,35 +80,81 @@ export const sellAsset = (contract, qty, price) =>
 //Flex.sell2({ contract, BAR, qty, price }).runWith({ arweave }).toPromise()
 export const buyAsset = (contract, qty) => {
 
-  const assetContract = warp.contract(contract).connect('use_wallet').setEvaluationOptions({
-    internalWrites: true,
-    allowBigInt: true,
-    allowUnsafeClient: true
-  })
-  const barContract = warp.contract(BAR).connect('use_wallet').setEvaluationOptions({
-    internalWrites: true,
-    allowBigInt: true,
-    allowUnsafeClient: true
-  })
+  // const assetContract = warp.contract(contract).connect('use_wallet').setEvaluationOptions({
+  //   internalWrites: true,
+  //   allowBigInt: true,
+  //   allowUnsafeClient: true
+  // })
+  // const barContract = warp.contract(BAR).connect('use_wallet').setEvaluationOptions({
+  //   internalWrites: true,
+  //   allowBigInt: true,
+  //   allowUnsafeClient: true
+  // })
 
   return Promise.resolve({ qty, contract })
-    .then(({ qty, contract }) => barContract.writeInteraction({
-      function: 'allow',
-      target: contract,
-      qty: Number(qty)
-    }).then(r => ({ qty, contract, transaction: r.originalTxId })))
-    .then(({ qty, contract, transaction }) => assetContract.writeInteraction({
-      function: 'createOrder',
-      pair: [BAR, contract],
-      qty: Number(qty),
-      transaction
-    }).then(_ => transaction))
-    .then(transaction => barContract.readState().then(({ cachedValue }) => cachedValue.state)
-      .then(({ claims }) => claims.includes(transaction))
+    .then(async ({ qty, contract }) => {
+      const tx = await createTransaction(arweave, BAR, {
+        function: 'allow',
+        target: contract,
+        qty: Number(qty)
+      })
+      await arweave.transactions.sign(tx, 'use_wallet')
+      const transaction = tx.id
+      await writeInteraction(tx)
+
+      return { qty, contract, transaction }
+    })
+    .then(async ({ qty, contract, transaction }) => {
+      const tx = await createTransaction(arweave, contract, {
+        function: 'createOrder',
+        pair: [BAR, contract],
+        qty: Number(qty),
+        transaction
+      }, BAR)
+      await arweave.transactions.sign(tx, 'use_wallet')
+      await writeInteraction(tx)
+      return transaction
+    })
+    .then(transaction =>
+      fetch(`${CACHE}/${BAR}`).then(res => res.json())
+        .then(({ claims }) => claims.includes(transaction))
     )
+
 }
 
 //Flex.buy2({ contract, BAR, qty }).runWith({ arweave }).toPromise()
 
 export const mintBar = (ar) => Bar.mint(arweave, BAR, ar)
 export const arBalance = (addr) => Bar.arbalance(arweave, addr)
+
+
+async function createTransaction(arweave, contract, input, interact = null) {
+  const tx = await arweave.createTransaction({
+    data: Math.random().toString().slice(-4),
+    reward: '72600854',
+    last_tx: 'p7vc1iSP6bvH_fCeUFa9LqoV5qiyW-jdEKouAT0XMoSwrNraB9mgpi29Q10waEpO'
+  })
+
+  if (interact) {
+    tx.addTag('Interact-Write', interact)
+  }
+  tx.addTag('App-Name', 'SmartWeaveAction')
+  tx.addTag('App-Version', '0.3.0')
+  tx.addTag('Contract', contract)
+  tx.addTag('Input', JSON.stringify(input))
+  tx.addTag('SDK', 'Warp')
+
+  return tx
+}
+
+function writeInteraction(tx) {
+  return fetch(`${GATEWAY}/gateway/sequencer/register`, {
+    method: 'POST',
+    body: JSON.stringify(tx),
+    headers: {
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
+  }).then(res => res.ok ? res.json() : Promise.reject(res))
+}

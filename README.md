@@ -1,5 +1,5 @@
-<h1 align="center">HypAR Template</h1>
-<p>now.arweave.dev</p>
+<h1 align="center">now.arweave.dev</h1>
+<p>The home page of the permaweb</p>
 
 ## Contents
 

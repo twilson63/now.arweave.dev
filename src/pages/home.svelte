@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   //import { formatDistanceToNow } from "date-fns";
   import { ArweaveWebWallet } from "arweave-wallet-connector";
 
@@ -7,7 +8,7 @@
   import NavBar from "../components/navbar.svelte";
   import SortButton from "../components/sort-button.svelte";
 
-  import { barToAtomic, atomicToBar } from "../lib/utils.js";
+  import { barToAtomic, atomicToBar, atomicToStamp } from "../lib/utils.js";
   import PostInfo from "../dialogs/post-info.svelte";
   import About from "../dialogs/about.svelte";
   import Buy from "../dialogs/buy.svelte";
@@ -30,6 +31,8 @@
     whatsHot,
     uploadAsset,
     loadCollectors,
+    myRewards,
+    myBar,
   } from "../lib/app.js";
   import { assets, profile, collectors } from "../store.js";
   import { find, propEq, mergeRight } from "ramda";
@@ -54,6 +57,9 @@
   let confirmPurchaseDialog = false;
   let confirmSaleDialog = false;
   let buyDialog = false;
+  let stampcoin = 0;
+  let barcoin = 0;
+
   $: buyItem = {
     name: "",
     qty: 1000,
@@ -80,6 +86,16 @@
   $: sellItem.qty = Math.floor(
     (Number(sellItem.percent) / 100) * Number(sellItem.balance)
   );
+
+  onMount(async () => {
+    if ($profile.owner) {
+      stampcoin = Number(
+        atomicToStamp(await myRewards($profile.owner))
+      ).toFixed(2);
+      barcoin = Number(atomicToBar(await myBar($profile.owner))).toFixed(2);
+    }
+  });
+
   async function getStamps() {
     if ($assets.length === 0) {
       $assets = view === "hot" ? await whatsHot(days) : await whatsNew(days);
@@ -166,6 +182,10 @@
       } catch (e) {
         $profile = { owner: wallet.address };
       }
+      stampcoin = Number(
+        atomicToStamp(await myRewards($profile.owner))
+      ).toFixed(2);
+      barcoin = Number(atomicToBar(await myBar($profile.owner))).toFixed(2);
     }
     if ($profile.owner) {
       if (connectRequestFrom.type === "sell") {
@@ -203,8 +223,17 @@
       errorDialog = true;
       return;
     }
+
     processingDialog = false;
     confirmSaleDialog = true;
+
+    if ($profile.owner) {
+      stampcoin = Number(
+        atomicToStamp(await myRewards($profile.owner))
+      ).toFixed(2);
+      barcoin = Number(atomicToBar(await myBar($profile.owner))).toFixed(2);
+    }
+
     stampList = refreshStampList();
   }
 
@@ -225,6 +254,13 @@
     if (result) {
       processingDialog = false;
       confirmPurchaseDialog = true;
+
+      if ($profile.owner) {
+        stampcoin = Number(
+          atomicToStamp(await myRewards($profile.owner))
+        ).toFixed(2);
+        barcoin = Number(atomicToBar(await myBar($profile.owner))).toFixed(2);
+      }
 
       stampList = refreshStampList();
     } else {
@@ -400,6 +436,8 @@ Powered by the Permaweb 🐘
   on:change={changeView}
   on:bar={showBarDlg}
   profile={$profile}
+  {stampcoin}
+  {barcoin}
 />
 <!-- three column wrapper -->
 <div class="flex-grow w-full max-w-7xl mx-auto xl:px-8 lg:flex" />

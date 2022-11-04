@@ -8,6 +8,9 @@
   import { take, toUpper } from "ramda";
 
   export let profile = {};
+  export let stampcoin = 0;
+  export let barcoin = 0;
+
   let view = "hot";
   let days = 7;
   let bar = 0;
@@ -253,6 +256,17 @@
             <span>Balances:</span>
           </div>
           <div class="flex space-x-4">
+            <div>
+              <span class="text-primary">{stampcoin}</span>
+              <a class="link" href="https://stamps.arweave.dev" target="_blank">
+                <span>$STAMP</span>
+              </a>
+            </div>
+            <div on:click={() => dispatch("bar")} class="">
+              <span class="text-primary">{barcoin}</span>
+              <span class="underline cursor-pointer">$bAR</span>
+            </div>
+            <!--
             {#await myRewards(profile.owner) then rewards}
               <div>
                 <span class="text-primary"
@@ -275,6 +289,7 @@
                 <span class="underline cursor-pointer">$bAR</span>
               </div>
             {/await}
+            -->
           </div>
         </div>
       </div>

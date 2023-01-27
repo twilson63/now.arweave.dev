@@ -27,6 +27,8 @@
 
   export let stamp;
 
+  console.log("stamp", stamp);
+
   let unitsTotal = 0;
   let unitsAvailable = 0;
   let lowestPrice = 0;
@@ -156,6 +158,18 @@
               <a
                 target="_blank"
                 href="https://img.arweave.dev/#/show/{stamp.asset}"
+              >
+                {stamp.title.length > 35
+                  ? take(35, stamp.title) + "..."
+                  : stamp.title}
+                <span class="text-sm font-normal"
+                  >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)})</span
+                >
+              </a>
+            {:else if stamp.type === "fact-post"}
+              <a
+                target="_blank"
+                href={stamp.renderWith.replace("{txId}", stamp.asset)}
               >
                 {stamp.title.length > 35
                   ? take(35, stamp.title) + "..."
@@ -318,6 +332,12 @@
       <img
         class="mt-4 w-[600px] h-[350px]"
         src={"https://arweave.net/" + stamp.asset}
+        alt={stamp.title}
+      />
+    {:else if stamp.type === "fact-post"}
+      <iframe
+        class="mt-4 w-[600px] h-[350px]"
+        src={stamp.renderWith.replace("{txId}", stamp.asset)}
         alt={stamp.title}
       />
     {:else if stamp.type === "video"}

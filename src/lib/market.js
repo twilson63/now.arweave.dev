@@ -66,7 +66,8 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
             id: n.id,
             title: prop('value', find(propEq('name', 'Title'), n.tags) || find(propEq('name', 'Page-Title'), n.tags)),
             description: propOr('', 'value', find(propEq('name', 'Description'), n.tags)),
-            type: propOr('page', 'value', find(propEq('name', 'Type'), n.tags))
+            type: propOr('page', 'value', find(propEq('name', 'Type'), n.tags)),
+            renderWith: propOr('', 'value', find(propEq('name', 'Render-With'), n.tags))
           })),
           pluck('node'),
           path(['data', 'data', 'transactions', 'edges'])
@@ -76,7 +77,8 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
           const getTitle = id => compose(prop('title'), find(propEq('id', id)))(nodes)
           const getDescription = id => compose(prop('description'), find(propEq('id', id)))(nodes)
           const getType = id => compose(prop('type'), find(propEq('id', id)))(nodes)
-          return map(a => ({ ...a, title: getTitle(a.asset), description: getDescription(a.asset), type: getType(a.asset) }), assets)
+          const getRenderWith = id => compose(prop('renderWith'), find(propEq('id', id)))(nodes)
+          return map(a => ({ ...a, title: getTitle(a.asset), description: getDescription(a.asset), renderWith: getRenderWith(a.asset), type: getType(a.asset) }), assets)
         })
       //.map(x => (console.log(x), x))
     })
@@ -181,7 +183,8 @@ export const whatsNew = (contract, days) =>
                     find(propEq('name', 'Page-Title'), n.tags)
                   ),
                   description: propOr('', 'value', find(propEq('name', 'Description'), n.tags)),
-                  type: propOr('page', 'value', find(propEq('name', 'Type'), n.tags))
+                  type: propOr('page', 'value', find(propEq('name', 'Type'), n.tags)),
+                  renderWith: propOr('', 'value', find(propEq('name', 'Render-With'), n.tags))
                 })
 
                 ),
@@ -193,7 +196,9 @@ export const whatsNew = (contract, days) =>
                 const getTitle = id => compose(prop('title'), find(propEq('id', id)))(nodes)
                 const getDescription = id => compose(prop('description'), find(propEq('id', id)))(nodes)
                 const getType = id => compose(prop('type'), find(propEq('id', id)))(nodes)
-                return map(a => ({ ...a, title: getTitle(a.asset), description: getDescription(a.asset), type: getType(a.asset) }), assets)
+                const getRenderWith = id => compose(prop('renderWith'), find(propEq('id', id)))(nodes)
+                return map(a => ({ ...a, title: getTitle(a.asset), description: getDescription(a.asset), renderWith: getRenderWith(a.asset), type: getType(a.asset) }), assets)
+
               })
           })
           // stampers name and avatar with one gql call?

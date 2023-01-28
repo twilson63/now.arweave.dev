@@ -27,8 +27,6 @@
 
   export let stamp;
 
-  console.log("stamp", stamp);
-
   let unitsTotal = 0;
   let unitsAvailable = 0;
   let lowestPrice = 0;
@@ -166,10 +164,22 @@
                   >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)})</span
                 >
               </a>
-            {:else if stamp.type === "fact-post"}
+            {:else if stamp.renderWith !== "" && stamp.renderWith.length === "43"}
               <a
                 target="_blank"
-                href={stamp.renderWith.replace("{txId}", stamp.asset)}
+                href={`https://arweave.net/${stamp.renderWith}?txId=${stamp.asset}`}
+              >
+                {stamp.title.length > 35
+                  ? take(35, stamp.title) + "..."
+                  : stamp.title}
+                <span class="text-sm font-normal"
+                  >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)})</span
+                >
+              </a>
+            {:else if stamp.renderWith !== ""}
+              <a
+                target="_blank"
+                href={`https://${stamp.renderWith}.arweave.dev/?txId=${stamp.asset}`}
               >
                 {stamp.title.length > 35
                   ? take(35, stamp.title) + "..."
@@ -334,10 +344,16 @@
         src={"https://arweave.net/" + stamp.asset}
         alt={stamp.title}
       />
-    {:else if stamp.type === "fact-post"}
+    {:else if stamp.renderWith !== "" && stamp.renderWith.length === "43"}
       <iframe
         class="mt-4 w-[600px] h-[350px]"
-        src={stamp.renderWith.replace("{txId}", stamp.asset)}
+        src={`https://arweave.net/${stamp.renderWith}?txId=${stamp.asset}`}
+        alt={stamp.title}
+      />
+    {:else if stamp.renderWith !== ""}
+      <iframe
+        class="mt-4 w-[600px] h-[350px]"
+        src={`https://${stamp.renderWith}.arweave.dev/?txId=${stamp.asset}`}
         alt={stamp.title}
       />
     {:else if stamp.type === "video"}

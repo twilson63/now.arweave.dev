@@ -65,6 +65,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@permaweb/stampjs@https://js_stamps.g8way.io":
+  version "0.0.2"
+  resolved "https://js_stamps.g8way.io#ef5ed4c01e0367bf3683da01b2f4294ed43a2de7"
+
 "@rollup/pluginutils@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-4.2.0.tgz#a14bbd058fdbba0a5647143b16ed0d86fb60bd08"

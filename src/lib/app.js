@@ -14,10 +14,11 @@ const arweave = Arweave.init({
   protocol: "https",
 });
 const { WarpFactory, LoggerFactory } = window.warp;
-LoggerFactory.INST.logLevel("error");
+LoggerFactory.INST.logLevel("fatal");
 
 const CACHE = 'https://cache.permapages.app'
 const GATEWAY = 'https://gateway.redstone.finance'
+const DRE = 'https://dre-1.warp.cc'
 //const BAR = 'ifGl8H8VrPJbYk8o1jVjXqcveO4uxdyF0ir8uS-zRdU';
 const BAR = __BAR_CONTRACT__;
 const STAMPCOIN = __STAMP_CONTRACT__;

@@ -271,15 +271,6 @@
         {/if}
         {@html showOrderTotal(state)}
       </div>
-    {:catch e}
-      <div class="flex-none flex flex-col w-[250px]">
-        <div class="">Collectors</div>
-        <div class="flex space-x-2 items-center">
-          <div class="avatar-group -space-x-6">
-            <Avatar name={"  "} />
-          </div>
-        </div>
-      </div>
     {/await}
     <div class="hidden w-[600px] lg:flex flex-col">
       <div class="">Stampers</div>

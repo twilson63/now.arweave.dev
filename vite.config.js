@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [svelte()],
   define: {
     '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
-    __STAMP_CONTRACT__: '"FMRHYgSijiUNBrFy-XqyNNXenHsCV0ThR4lGAPO4chA"',
+    __STAMP_CONTRACT__: '"61vg8n54MGSC9ZHfSVAtQp4WjNb20TaThu6bkQ86pPI"',
     __BAR_CONTRACT__: '"VFr3Bk-uM-motpNNkkFg4lNW1BMmSfzqsVO551Ho4hA"'
 
   },

@@ -1,7 +1,7 @@
 {
   "name": "now.arweave.dev",
   "private": true,
-  "version": "0.0.25",
+  "version": "0.0.26",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -35,6 +35,7 @@
     "arweave-wallet-connector": "^0.0.31",
     "bignumber.js": "^9.1.0",
     "crocks": "^0.12.4",
+    "date-fns": "^2.29.3",
     "ramda": "^0.28.0"
   }
 }

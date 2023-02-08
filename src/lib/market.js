@@ -1,11 +1,12 @@
 import crocks from 'crocks'
 import * as R from 'ramda'
+import { isAfter, fromUnixTime, subDays } from 'date-fns'
 
 const { take, propOr, pathOr, sortWith, ascend, descend, __, filter, gt, compose, groupBy, reduce, values, keys, reverse, prop, identity, pluck, path, map, find, propEq, uniq, concat } = R
 
 const { Async, ReaderT } = crocks
 const { of, ask, lift } = ReaderT(Async)
-const CACHE = 'https://cache.permapages.app'
+const DRE = 'https://dre-1.warp.cc'
 const DAY = (24 * 60 * 60 * 1000)
 
 const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet).setEvaluationOptions({
@@ -13,8 +14,10 @@ const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet)
   internalWrites: true,
   allowBigInt: true
 })
-const getState = contract => Async.fromPromise(fetch)(`${CACHE}/${contract}`)
+
+const getState = contract => Async.fromPromise(fetch)(`${DRE}/contract?id=${contract}&query=$`)
   .chain(res => Async.fromPromise(res.json.bind(res))())
+  .map(r => r.result[0])
 
 export const getBalance = (contract, addr) => ask(({ warp, wallet }) =>
   getState(contract)
@@ -48,15 +51,21 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
       {
         asset: x,
         count: assets[x].length,
+        vouched: assets[x].filter(propEq('vouched', true)).length,
         stampers: assets[x].map((o) => o.address),
-        firstStamped: assets[x][assets[x].length - 1].timestamp,
-        lastStamped: assets[x][0].timestamp
+        firstStamped: Number(assets[x][assets[x].length - 1].timestamp),
+        lastStamped: Number(assets[x][0].timestamp)
       },
     ], [], keys(assets)
     ))
-    .map(sortWith([descend(prop('count'))]))
-    .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('firstStamped'))))
-    .map(take(25))
+    .map(sortWith([descend(prop('vouched'))]))
+    .map(stamps => stamps.filter(s => isAfter(fromUnixTime(s.lastStamped), subDays(Date.now(), days))))
+    //.map(take(50))
+    .map(x => {
+      console.log('token', x.filter(propEq('asset', 'BvC_62ToxUrnhHIM3xACewy87kF8O80j_P_ZtkVv28w')))
+      return x
+    })
+    .map(x => (console.log('tokens', x), x))
     .chain(assets => {
       const ids = pluck('asset', assets)
       const query = buildQuery(ids)
@@ -169,7 +178,9 @@ export const whatsNew = (contract, days) =>
             },
           ], [], keys(assets)
           ))
-          .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('firstStamped'))))
+          //          .map(filter(compose(gt(__, Date.now() - (DAY * days)), prop('firstStamped'))))
+          .map(stamps => stamps.filter(s => isAfter(fromUnixTime(s.lastStamped), subDays(Date.now(), days))))
+
           .map(take(25))
           .chain(assets => {
             const ids = pluck('asset', assets)

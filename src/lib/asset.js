@@ -1,6 +1,7 @@
 import crocks from 'crocks'
 import * as R from 'ramda'
 import { getProfile } from './stamper.js'
+import Stamps from '@permaweb/stampjs'
 
 const { find, map, pathOr, propOr, propEq, prop, path, compose, head, pluck } = R
 
@@ -12,12 +13,14 @@ const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet)
 
 export const stamp = (id) => ask(({ warp, contract }) =>
   Async.of(contract)
-    .map(connect(warp, 'use_wallet'))
+    .chain(_ => Async.fromPromise(Stamps.init({ warp }).stamp.bind(Stamps.init({ warp })))(id))
+    /*
     .chain(pst => Async.fromPromise(pst.writeInteraction.bind(pst))({
       function: 'stamp',
       transactionId: id,
       timestamp: Date.now()
     }))
+    */
     .toPromise()
 )
 

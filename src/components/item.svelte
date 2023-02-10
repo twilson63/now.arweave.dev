@@ -1,25 +1,14 @@
 <script>
-  import { router } from "tinro";
   import { createEventDispatcher } from "svelte";
   import Avatar from "./avatar.svelte";
-  import {
-    head,
-    sort,
-    take,
-    takeLast,
-    split,
-    join,
-    compose,
-    append,
-    values,
-    keys,
-  } from "ramda";
+  import { head, sort, take, takeLast, split, join, compose } from "ramda";
   import { readState, getOwner } from "../lib/app.js";
-  import { atomicToBar } from "../lib/utils.js";
-  import { spring, tweened } from "svelte/motion";
+  import { atomicToBar, getHost } from "../lib/utils.js";
+  import { tweened } from "svelte/motion";
   import Pie from "./pie.svelte";
-  import { profile, collectors } from "../store.js";
+  import { profile } from "../store.js";
 
+  const host = getHost(location);
   let percent = 0;
   const store = tweened(0, { duration: 1000 });
   //const store = spring(0, {stiffness: 0.3, damping: 0.3});
@@ -167,7 +156,7 @@
             {:else if stamp.renderWith !== "" && stamp.renderWith.length === "43"}
               <a
                 target="_blank"
-                href={`https://arweave.net/${stamp.renderWith}?txId=${stamp.asset}`}
+                href={`https://arweave.net/${stamp.renderWith}?tx=${stamp.asset}`}
               >
                 {stamp.title.length > 35
                   ? take(35, stamp.title) + "..."
@@ -179,7 +168,7 @@
             {:else if stamp.renderWith !== ""}
               <a
                 target="_blank"
-                href={`https://${stamp.renderWith}.arweave.dev/?txId=${stamp.asset}`}
+                href={`https://${stamp.renderWith}.${host}/?tx=${stamp.asset}`}
               >
                 {stamp.title.length > 35
                   ? take(35, stamp.title) + "..."
@@ -338,13 +327,13 @@
     {:else if stamp.renderWith !== "" && stamp.renderWith.length === "43"}
       <iframe
         class="mt-4 w-[600px] h-[350px]"
-        src={`https://arweave.net/${stamp.renderWith}?txId=${stamp.asset}`}
+        src={`https://arweave.net/${stamp.renderWith}?tx=${stamp.asset}`}
         alt={stamp.title}
       />
     {:else if stamp.renderWith !== ""}
       <iframe
         class="mt-4 w-[600px] h-[350px]"
-        src={`https://${stamp.renderWith}.arweave.dev/?txId=${stamp.asset}`}
+        src={`https://${stamp.renderWith}.${host}/?tx=${stamp.asset}`}
         alt={stamp.title}
       />
     {:else if stamp.type === "video"}

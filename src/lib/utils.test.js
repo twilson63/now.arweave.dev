@@ -17,7 +17,7 @@ describe("Utils", () => {
       search: "",
       hash: "",
     };
-    const host = getHost(location);
+    const host = getHost(location.hostname);
     expect(host).toBe("arweave.dev");
   });
   it("should getHost on g8way.io", () => {
@@ -33,7 +33,7 @@ describe("Utils", () => {
       search: "",
       hash: "",
     };
-    const host = getHost(location);
+    const host = getHost(location.hostname);
     expect(host).toBe("g8way.io");
   });
   it("should getHost on arweave.dev", () => {
@@ -49,7 +49,7 @@ describe("Utils", () => {
       search: "",
       hash: "",
     };
-    const host = getHost(location);
+    const host = getHost(location.hostnameq);
     expect(host).toBe("arweave.dev");
   });
 });

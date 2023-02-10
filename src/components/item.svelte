@@ -8,7 +8,7 @@
   import Pie from "./pie.svelte";
   import { profile } from "../store.js";
 
-  const host = getHost(location);
+  const host = getHost(window.location.hostname);
   let percent = 0;
   const store = tweened(0, { duration: 1000 });
   //const store = spring(0, {stiffness: 0.3, damping: 0.3});

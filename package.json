@@ -31,7 +31,7 @@
     "warp-contracts": "^1.1.14"
   },
   "dependencies": {
-    "@permaweb/stampjs": "https://js_stamps.g8way.io",
+    "@permaweb/stampjs": "^0.0.13",
     "arweave-wallet-connector": "^0.0.31",
     "bignumber.js": "^9.1.0",
     "crocks": "^0.12.4",

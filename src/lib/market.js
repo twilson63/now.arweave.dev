@@ -6,7 +6,7 @@ const { take, propOr, pathOr, sortWith, ascend, descend, __, filter, gt, compose
 
 const { Async, ReaderT } = crocks
 const { of, ask, lift } = ReaderT(Async)
-const DRE = 'https://dre-1.warp.cc'
+const DRE = 'https://cache-1.permaweb.tools'
 const DAY = (24 * 60 * 60 * 1000)
 
 const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet).setEvaluationOptions({
@@ -17,7 +17,10 @@ const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet)
 
 const getState = contract => Async.fromPromise(fetch)(`${DRE}/contract?id=${contract}&query=$`)
   .chain(res => Async.fromPromise(res.json.bind(res))())
-  .map(r => r.result[0])
+
+  .map(prop('state'))
+//.map(x => (console.log(x), x))
+//.map(r => r.result[0])
 
 export const getBalance = (contract, addr) => ask(({ warp, wallet }) =>
   getState(contract)

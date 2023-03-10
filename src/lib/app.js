@@ -61,8 +61,11 @@ export const readBar = () => fetch(`${CACHE}/${BAR}`)
   .catch(_ => Flex.readState(BAR).runWith({ warp }).toPromise())
 
 //export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()
-export const sellAsset = (contract, qty, price) =>
-  Promise.resolve(warp.contract(contract).connect('use_wallet').setEvaluationOptions({
+export const sellAsset = async (contract, qty, price) => {
+  await doSyncState(BAR)
+  await doSyncState(contract)
+  // const c = await warp.contract(contract).syncState(CACHE + '/contract', { validity: true })
+  return Promise.resolve(warp.contract(contract).connect('use_wallet').setEvaluationOptions({
     internalWrites: true
   }))
     .then(c => c.writeInteraction({
@@ -75,9 +78,10 @@ export const sellAsset = (contract, qty, price) =>
       pair: [contract, BAR],
       qty,
       price
-    }).then(_ => c))
+    })
+      .then(_ => c))
     .then(c => c.readState().then(({ cachedValue }) => cachedValue.state))
-
+}
 //Flex.sell2({ contract, BAR, qty, price }).runWith({ arweave }).toPromise()
 export const buyAsset = (contract, qty) => {
 
@@ -158,4 +162,13 @@ function writeInteraction(tx) {
       Accept: 'application/json'
     }
   }).then(res => res.ok ? res.json() : Promise.reject(res))
+}
+
+async function doSyncState(c) {
+  await (await warp.contract(c).syncState(CACHE + '/contract', { validity: true })).setEvaluationOptions({
+    internalWrites: true,
+    allowBigInt: true,
+    unsafeClient: 'allow'
+  }).readState()
+
 }

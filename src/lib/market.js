@@ -15,15 +15,25 @@ const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet)
   allowBigInt: true
 })
 
-const getState = contract => Async.fromPromise(fetch)(`${DRE}/contract?id=${contract}&query=$`)
-  .chain(res => Async.fromPromise(res.json.bind(res))())
+const getState = (contract, warp) => {
+  return Async.fromPromise(async () => {
+    const c = await warp.contract(contract).syncState('https://cache.permapages.app/contract', { validity: true })
+    return await c.setEvaluationOptions({
+      internalWrites: true,
+      allowBigInt: true
+    }).readState().then(({ cachedValue }) => cachedValue.state)
 
-  .map(prop('state'))
-//.map(x => (console.log(x), x))
-//.map(r => r.result[0])
+  })()
 
+  // Async.fromPromise(fetch)(`${DRE}/contract?id=${contract}&query=$`)
+  // .chain(res => Async.fromPromise(res.json.bind(res))())
+
+  // .map(prop('state'))
+  //.map(x => (console.log(x), x))
+  //.map(r => r.result[0])
+}
 export const getBalance = (contract, addr) => ask(({ warp, wallet }) =>
-  getState(contract)
+  getState(contract, warp)
     .bichain(
       _ => connect(warp, wallet)(contract)
         .chain(pst => Async.fromPromise(pst.readState.bind(pst))())
@@ -36,7 +46,7 @@ export const getBalance = (contract, addr) => ask(({ warp, wallet }) =>
 ).chain(lift)
 
 export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) =>
-  getState(contract)
+  getState(contract, warp)
     .bichain(
       _ => connect(warp, wallet)(contract)
         .chain(pst => Async.fromPromise(pst.readState.bind(pst))())
@@ -130,7 +140,7 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
 
 export const listStampers = (contract) =>
   ask(({ warp, wallet }) =>
-    getState(contract)
+    getState(contract, warp)
       .bichain(
         _ => connect(warp, wallet)(contract)
           .chain(pst => Async.fromPromise(pst.readState.bind(pst))())
@@ -158,7 +168,7 @@ export const whatsNew = (contract, days) =>
   of(contract)
     .chain(contract =>
       ask(({ warp, wallet, arweave }) =>
-        getState(contract)
+        getState(contract, warp)
           .bichain(
             _ => connect(warp, wallet)(contract)
               .chain(pst => Async.fromPromise(pst.readState.bind(pst))())

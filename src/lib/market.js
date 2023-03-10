@@ -74,11 +74,6 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
     .map(sortWith([descend(prop('vouched'))]))
     .map(stamps => stamps.filter(s => isAfter(fromUnixTime(s.lastStamped), subDays(Date.now(), days))))
     //.map(take(50))
-    .map(x => {
-      console.log('token', x.filter(propEq('asset', 'BvC_62ToxUrnhHIM3xACewy87kF8O80j_P_ZtkVv28w')))
-      return x
-    })
-    .map(x => (console.log('tokens', x), x))
     .chain(assets => {
       const ids = pluck('asset', assets)
       const query = buildQuery(ids)

@@ -133,9 +133,9 @@
             {:else if owner.name && owner.name.toUpperCase() !== "UNKNOWN"}
               <Avatar name={owner.name} />
             {:else}
-              <div class="avatar mask mask-circle">
-                <div class="bg-gray-400 text-gray-400 h-[48px] w-[48px]" />
-              </div>
+              <Avatar
+                avatar={"https://arweave.net/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA"}
+              />
             {/if}
           {/await}
         </figure>
@@ -271,10 +271,7 @@
             {:else if stamper.name && stamper.name.toUpperCase() !== "UNKNOWN"}
               <Avatar name={stamper.name} avatar="https://i.pravatar.cc/128" />
             {:else}
-              <Avatar
-                name={take(2, stamp.asset)}
-                avatar="https://i.pravatar.cc/128"
-              />
+              <Avatar name={stamper.id} avatar="https://i.pravatar.cc/128" />
             {/if}
           {/each}
         </div>

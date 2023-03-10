@@ -161,9 +161,15 @@
           "SIGN_TRANSACTION",
         ]);
         const address = await window.arweaveWallet.getActiveAddress();
-        $profile = await getProfile(address);
+        $profile = await getProfile(address).catch((e) => ({}));
+
         // hack to fix unknown profile
         $profile.owner = address;
+
+        stampcoin = Number(
+          atomicToStamp(await myRewards($profile.owner))
+        ).toFixed(2);
+        barcoin = Number(atomicToBar(await myBar($profile.owner))).toFixed(2);
       } catch (e) {
         $profile = { owner: address };
       }

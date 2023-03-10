@@ -42,7 +42,7 @@ export const getOwner = (id) => ask(({ arweave }) =>
     .chain(runQuery(arweave))
     .map(pathOr({ tags: [] }, ['data', 'data', 'transactions', 'edges']))
     .map(compose(propOr('unknown', 'id'), head, pluck('node')))
-    .chain((id) => Async.fromPromise(arweave.api.get.bind(arweave.api))(id)).map(propOr({}, 'data'))
+    .chain((id) => id === 'unknown' ? Async.Resolved({}) : Async.fromPromise(arweave.api.get.bind(arweave.api))(id)).map(propOr({}, 'data'))
 ).chain(lift)
 
 export const getStampers = assetId => ask(({ arweave, assets }) =>

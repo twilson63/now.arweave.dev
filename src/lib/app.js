@@ -7,17 +7,22 @@ import * as Bar from './bar.js'
 import * as Collectors from './collectors.js'
 import { pathOr, pluck } from 'ramda'
 
-
-const arweave = Arweave.init({
-  host: "arweave.net",
+let _config = {
+  host: "g8way.io",
   port: 443,
   protocol: "https",
-});
+}
+
+if (import.meta.env.MODE !== 'development') {
+  _config = {}
+}
+const arweave = Arweave.init(_config);
+
 const { WarpFactory, LoggerFactory } = window.warp;
 LoggerFactory.INST.logLevel("fatal");
 
 const CACHE = 'https://cache.permapages.app'
-const GATEWAY = 'https://gateway.redstone.finance'
+const GATEWAY = 'https://gateway.warp.cc'
 const DRE = 'https://dre-1.warp.cc'
 //const BAR = 'ifGl8H8VrPJbYk8o1jVjXqcveO4uxdyF0ir8uS-zRdU';
 const BAR = __BAR_CONTRACT__;
@@ -83,47 +88,64 @@ export const sellAsset = async (contract, qty, price) => {
     .then(c => c.readState().then(({ cachedValue }) => cachedValue.state))
 }
 //Flex.sell2({ contract, BAR, qty, price }).runWith({ arweave }).toPromise()
-export const buyAsset = (contract, qty) => {
+export const buyAsset = async (contract, qty) => {
+  await doSyncState(BAR)
+  await doSyncState(contract)
 
-  // const assetContract = warp.contract(contract).connect('use_wallet').setEvaluationOptions({
-  //   internalWrites: true,
-  //   allowBigInt: true,
-  //   allowUnsafeClient: true
-  // })
-  // const barContract = warp.contract(BAR).connect('use_wallet').setEvaluationOptions({
-  //   internalWrites: true,
-  //   allowBigInt: true,
-  //   allowUnsafeClient: true
-  // })
-
-  return Promise.resolve({ qty, contract })
-    .then(async ({ qty, contract }) => {
-      const tx = await createTransaction(arweave, BAR, {
-        function: 'allow',
-        target: contract,
-        qty: Number(qty)
-      })
-      await arweave.transactions.sign(tx, 'use_wallet')
-      const transaction = tx.id
-      await writeInteraction(tx)
-
-      return { qty, contract, transaction }
-    })
-    .then(async ({ qty, contract, transaction }) => {
-      const tx = await createTransaction(arweave, contract, {
-        function: 'createOrder',
-        pair: [BAR, contract],
-        qty: Number(qty),
-        transaction
-      }, BAR)
-      await arweave.transactions.sign(tx, 'use_wallet')
-      await writeInteraction(tx)
-      return transaction
-    })
-    .then(transaction =>
-      fetch(`${CACHE}/${BAR}`).then(res => res.json())
-        .then(({ claims }) => claims.includes(transaction))
+  const assetContract = warp.contract(contract).connect('use_wallet').setEvaluationOptions({
+    internalWrites: true,
+    allowBigInt: true,
+    unsafeClient: 'allow'
+  })
+  const barContract = warp.contract(BAR).connect('use_wallet').setEvaluationOptions({
+    internalWrites: true,
+    allowBigInt: true,
+    unsafeClient: 'allow'
+  })
+  return barContract.writeInteraction({
+    function: 'allow',
+    target: contract,
+    qty: Number(qty)
+  }, { strict: true })
+    .then(x => (console.log(x), x))
+    .then(result => assetContract.writeInteraction({
+      function: 'createOrder',
+      pair: [BAR, contract],
+      qty: Number(qty),
+      transaction: result.originalTxId
+    }, { strict: true })
+      .then(r => barContract.readState())
+      .then(x => (console.log(x), x))
+      .then(({ cachedValue }) => cachedValue.state.claims.includes(result.originalTxId))
     )
+  // return Promise.re  solve({ qty, contract })
+  // .then(async ({ qty, contract }) => {
+  //   const tx = await createTransaction(arweave, BAR, {
+  //     function: 'allow',
+  //     target: contract,
+  //     qty: Number(qty)
+  //   })
+  //   await arweave.transactions.sign(tx, 'use_wallet')
+  //   const transaction = tx.id
+  //   await writeInteraction(tx)
+
+  //   return { qty, contract, transaction }
+  // })
+  // .then(async ({ qty, contract, transaction }) => {
+  //   const tx = await createTransaction(arweave, contract, {
+  //     function: 'createOrder',
+  //     pair: [BAR, contract],
+  //     qty: Number(qty),
+  //     transaction
+  //   }, BAR)
+  //   await arweave.transactions.sign(tx, 'use_wallet')
+  //   await writeInteraction(tx)
+  //   return transaction
+  // })
+  // .then(transaction =>
+  //   fetch(`${CACHE}/${BAR}`).then(res => res.json())
+  //     .then(({ claims }) => claims.includes(transaction))
+  // )
 
 }
 

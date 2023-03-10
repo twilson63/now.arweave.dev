@@ -1,7 +1,7 @@
 {
   "name": "now.arweave.dev",
   "private": true,
-  "version": "0.0.27",
+  "version": "0.0.30",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -31,7 +31,7 @@
     "warp-contracts": "^1.1.14"
   },
   "dependencies": {
-    "@permaweb/stampjs": "^0.0.13",
+    "@permaweb/stampjs": "^0.0.14",
     "arweave-wallet-connector": "^0.0.31",
     "bignumber.js": "^9.1.0",
     "crocks": "^0.12.4",

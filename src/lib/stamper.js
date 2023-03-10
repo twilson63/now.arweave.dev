@@ -1,7 +1,7 @@
 import crocks from 'crocks'
 import * as R from 'ramda'
 
-const { find, pathOr, propOr, pluck, compose, head, path } = R
+const { always, find, prop, pathOr, propOr, pluck, compose, head, path } = R
 
 const { Async, ReaderT } = crocks
 const { of, ask, lift } = ReaderT(Async)
@@ -30,13 +30,12 @@ query {
 
 export const getProfile = (id) => ask(({ arweave }) =>
   Async.of(id)
-    //.map(x => (console.log(x), x))
     .map(buildProfileQuery)
     .chain(runQuery(arweave))
     .map(pathOr({ tags: [] }, ['data', 'data', 'transactions', 'edges']))
-    .map(compose(propOr('unknown', 'id'), head, pluck('node')))
-    .chain((id) => Async.fromPromise(arweave.api.get.bind(arweave.api))(id)).map(propOr({}, 'data'))
-  //.map(x => (console.log(x), x))
+    .map(compose(prop('id'), head, pluck('node')))
+    .chain((id) => id === 'unknown' ? Async.Resolved({}) : Async.fromPromise(arweave.api.get.bind(arweave.api))(id)).bimap(always({}), propOr({}, 'data'))
+
   //.map(({ tags }) => find(t => t.name === 'Page-Title', tags))
   //.map(propOr('Unknown', 'value'))
 ).chain(lift)

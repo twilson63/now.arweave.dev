@@ -13,9 +13,14 @@ let _config = {
   protocol: "https",
 }
 
+/*
 if (import.meta.env.MODE !== 'development') {
-  _config = {}
+  if (location.hostname === 'now.arweave.dev') {
+
+  }
+  
 }
+*/
 const arweave = Arweave.init(_config);
 
 const { WarpFactory, LoggerFactory } = window.warp;

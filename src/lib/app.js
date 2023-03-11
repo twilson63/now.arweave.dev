@@ -69,10 +69,6 @@ export const readState = async (contract) => {
 }
 
 
-//fetch(`${CACHE}/${contract}`)
-//.then(res => res.ok ? res.json() : Promise.reject('no contract found'))
-//.catch(_ => Flex.readState(contract).runWith({ warp }).toPromise())
-
 export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const readBar = () => fetch(`${CACHE}/${BAR}`)
   .then(res => res.ok ? res.json() : Promise.reject('no contract found'))
@@ -95,7 +91,7 @@ export const sellAsset = async (contract, qty, price) => {
       function: 'createOrder',
       pair: [contract, BAR],
       qty,
-      price
+      price: Math.floor(price) > 1 ? 1 : Math.floor(price)
     })
       .then(_ => c))
     .then(c => c.readState().then(({ cachedValue }) => cachedValue.state))

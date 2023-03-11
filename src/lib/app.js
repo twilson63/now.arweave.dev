@@ -61,9 +61,17 @@ export const addPair = (contract, pair) =>
 
 export const createOrder = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const allowOrder = (contract, target, qty) => Flex.allow(contract, target, qty).runWith({ warp }).toPromise()
-export const readState = (contract) => fetch(`${CACHE}/${contract}`)
-  .then(res => res.ok ? res.json() : Promise.reject('no contract found'))
-  .catch(_ => Flex.readState(contract).runWith({ warp }).toPromise())
+export const readState = async (contract) => {
+  const c = await warp.contract(contract).syncState('https://dre-1.warp.cc/contract', { validity: true })
+  return c.setEvaluationOptions({ internalWrites: true, allowBigInt: true })
+    .readState().then(({ cachedValue }) => cachedValue.state)
+
+}
+
+
+//fetch(`${CACHE}/${contract}`)
+//.then(res => res.ok ? res.json() : Promise.reject('no contract found'))
+//.catch(_ => Flex.readState(contract).runWith({ warp }).toPromise())
 
 export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const readBar = () => fetch(`${CACHE}/${BAR}`)

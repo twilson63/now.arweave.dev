@@ -1,7 +1,8 @@
 <script>
   import { take, toUpper } from "ramda";
-  export let avatar;
-  export let name;
+  export let avatar =
+    "https://arweave.net/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA";
+  export let name = "mrzzzzz";
 
   const colors = [
     "#C8792B",
@@ -26,7 +27,7 @@
 
 <div class="avatar">
   <div class="w-10 h-10">
-    {#if name}
+    {#if name !== "mrzzzzz"}
       {#await getBackgroundColor() then color}
         <div
           class="mask mask-circle h-full flex items-center justify-center text-white"

@@ -175,7 +175,7 @@
       }
     } else if (type === "arweaveapp") {
       const wallet = new ArweaveWebWallet({
-        name: "now.arweave.dev",
+        name: "now",
         logo: "https://now.arweave.dev/stamp-logo.webp",
       });
       wallet.setUrl("arweave.app");

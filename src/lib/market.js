@@ -10,7 +10,7 @@ const DRE = 'https://cache-1.permaweb.tools'
 const DAY = (24 * 60 * 60 * 1000)
 
 const connect = (warp, wallet) => contract => warp.pst(contract).connect(wallet).setEvaluationOptions({
-  allowUnsafeClient: true,
+  unsafeClient: 'allow',
   internalWrites: true,
   allowBigInt: true
 })
@@ -20,7 +20,8 @@ const getState = (contract, warp) => {
     const c = await warp.contract(contract).syncState('https://cache.permapages.app/contract', { validity: true })
     return await c.setEvaluationOptions({
       internalWrites: true,
-      allowBigInt: true
+      allowBigInt: true,
+      unsafeClient: 'allow'
     }).readState().then(({ cachedValue }) => cachedValue.state)
 
   })()
@@ -152,12 +153,6 @@ export const whatsNew = (contract, days) =>
     .chain(contract =>
       ask(({ warp, wallet, arweave }) =>
         getState(contract, warp)
-          .bichain(
-            _ => connect(warp, wallet)(contract)
-              .chain(pst => Async.fromPromise(pst.readState.bind(pst))())
-              .map(prop('state')),
-            Async.Resolved
-          )
           .map(prop('stamps'))
           .map(values)
           .map(filter(o => o.asset.length === 43))

@@ -39,7 +39,12 @@ export const getPrice = (file) => Upload.getPrice(file.buffer.byteLength).runWit
 export const uploadAsset = (file, addr, tags) => Upload.uploadAsset({ file, addr, tags }).runWith({ arweave }).toPromise()
 
 //export const myBar = (addr) => Market.getBalance(BAR, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
-export const myBar = (addr) => fetch(`${CACHE}/${BAR}`).then(res => res.json()).then(pathOr(0, ['balances', addr]))
+//export const myBar = (addr) => fetch(`${CACHE}/${BAR}`).then(res => res.json()).then(pathOr(0, ['balances', addr]))
+export const myBar = (addr) => warp.contract(BAR).syncState(`${CACHE}/contract`, { validity: true }).then(c => c.setEvaluationOptions({
+  allowBigInt: true,
+  internalWrites: true,
+  unsafeClient: 'allow'
+}).readState().then(({ cachedValue }) => cachedValue.state.balances[addr]))
 export const myRewards = (addr) => Market.getBalance(STAMPCOIN, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
 export const whatsHot = (days) => Market.whatsHot(STAMPCOIN, days).runWith({ warp, wallet: 'use_wallet', arweave }).toPromise()
 export const whatsNew = (days) => Market.whatsNew(STAMPCOIN, days).runWith({ warp, arweave, wallet: 'use_wallet' }).toPromise()
@@ -62,7 +67,7 @@ export const addPair = (contract, pair) =>
 export const createOrder = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const allowOrder = (contract, target, qty) => Flex.allow(contract, target, qty).runWith({ warp }).toPromise()
 export const readState = async (contract) => {
-  const c = await warp.contract(contract).syncState('https://dre-1.warp.cc/contract', { validity: true })
+  const c = await warp.contract(contract).syncState('https://cache.permapages.app/contract', { validity: true })
   return c.setEvaluationOptions({ internalWrites: true, allowBigInt: true })
     .readState().then(({ cachedValue }) => cachedValue.state)
 
@@ -82,17 +87,18 @@ export const sellAsset = async (contract, qty, price) => {
   return Promise.resolve(warp.contract(contract).connect('use_wallet').setEvaluationOptions({
     internalWrites: true
   }))
+
     .then(c => c.writeInteraction({
       function: 'addPair',
       pair: BAR
-    }).then(_ => c)
+    }, { strict: true }).catch(e => c).then(_ => c)
     )
     .then(c => c.writeInteraction({
       function: 'createOrder',
       pair: [contract, BAR],
       qty,
-      price: Math.floor(price) > 1 ? 1 : Math.floor(price)
-    })
+      price: Math.floor(price) > 1 ? Math.floor(price) : 1
+    }, { strict: true })
       .then(_ => c))
     .then(c => c.readState().then(({ cachedValue }) => cachedValue.state))
 }

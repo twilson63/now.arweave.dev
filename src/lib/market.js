@@ -34,12 +34,6 @@ const getState = (contract, warp) => {
 }
 export const getBalance = (contract, addr) => ask(({ warp, wallet }) =>
   getState(contract, warp)
-    .bichain(
-      _ => connect(warp, wallet)(contract)
-        .chain(pst => Async.fromPromise(pst.readState.bind(pst))())
-        .map(prop('state')),
-      Async.Resolved
-    )
     .map(pathOr(0, ['balances', addr]))
     .map(x => (console.log(x), x))
 
@@ -47,12 +41,6 @@ export const getBalance = (contract, addr) => ask(({ warp, wallet }) =>
 
 export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) =>
   getState(contract, warp)
-    .bichain(
-      _ => connect(warp, wallet)(contract)
-        .chain(pst => Async.fromPromise(pst.readState.bind(pst))())
-        .map(prop('state')),
-      Async.Resolved
-    )
     .map(prop('stamps'))
     .map(values)
     .map(filter(o => o.asset.length === 43))

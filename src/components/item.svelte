@@ -127,7 +127,11 @@
           </div>
         </div>
         <figure class="hidden md:block">
-          {#await getOwner(stamp.asset) then owner}
+          {#await getOwner(stamp.asset)}
+            <Avatar
+              avatar={"https://arweave.net/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA"}
+            />
+          {:then owner}
             {#if owner.avatar}
               <Avatar avatar={owner.avatar} />
             {:else if owner.name && owner.name.toUpperCase() !== "UNKNOWN"}

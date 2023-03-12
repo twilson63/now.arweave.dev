@@ -157,10 +157,10 @@
                   >({take(4, stamp.asset)}...{takeLast(4, stamp.asset)})</span
                 >
               </a>
-            {:else if stamp.renderWith !== "" && stamp.renderWith.length === "43"}
+            {:else if stamp.renderWith !== "" && stamp.renderWith.length === 43}
               <a
                 target="_blank"
-                href={`https://arweave.net/${stamp.renderWith}?tx=${stamp.asset}`}
+                href={`https://arweave.net/${stamp.renderWith}/?tx=${stamp.asset}`}
               >
                 {stamp.title.length > 35
                   ? take(35, stamp.title) + "..."
@@ -325,15 +325,15 @@
         src={"https://arweave.net/" + stamp.asset}
         alt={stamp.title}
       />
-    {:else if stamp.renderWith !== "" && stamp.renderWith.length === "43"}
+    {:else if stamp.renderWith !== "" && stamp.renderWith.length === 43}
       <iframe
-        class="mt-4 w-[600px] h-[350px]"
-        src={`https://arweave.net/${stamp.renderWith}?tx=${stamp.asset}`}
+        class="mt-4 w-[600px] h-[350px] object-contain"
+        src={`https://arweave.net/${stamp.renderWith}/?tx=${stamp.asset}`}
         alt={stamp.title}
       />
     {:else if stamp.renderWith !== ""}
       <iframe
-        class="mt-4 w-[600px] h-[350px]"
+        class="mt-4 w-[600px] h-[350px] object-contain"
         src={`https://${stamp.renderWith}.${host}/?tx=${stamp.asset}`}
         alt={stamp.title}
       />

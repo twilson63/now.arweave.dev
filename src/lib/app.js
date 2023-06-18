@@ -29,23 +29,49 @@ LoggerFactory.INST.logLevel("fatal");
 const CACHE = 'https://cache.permapages.app'
 const GATEWAY = 'https://gateway.warp.cc'
 const DRE = 'https://dre-1.warp.cc'
-//const BAR = 'ifGl8H8VrPJbYk8o1jVjXqcveO4uxdyF0ir8uS-zRdU';
+//const BAR = 'rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk';
 const BAR = __BAR_CONTRACT__;
 const STAMPCOIN = __STAMP_CONTRACT__;
+
 const warp = WarpFactory.forMainnet();
 
 export const loadCollectors = (assets) => Collectors.getWallets(warp, pluck('asset', assets)).then(wallets => Collectors.getProfiles(arweave, wallets))
 export const getPrice = (file) => Upload.getPrice(file.buffer.byteLength).runWith({ arweave }).toPromise()
 export const uploadAsset = (file, addr, tags) => Upload.uploadAsset({ file, addr, tags }).runWith({ arweave }).toPromise()
 
-//export const myBar = (addr) => Market.getBalance(BAR, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
-//export const myBar = (addr) => fetch(`${CACHE}/${BAR}`).then(res => res.json()).then(pathOr(0, ['balances', addr]))
-export const myBar = (addr) => warp.contract(BAR).syncState(`${CACHE}/contract`, { validity: true }).then(c => c.setEvaluationOptions({
+export const myBar = (addr) => warp.contract(BAR).setEvaluationOptions({
   allowBigInt: true,
   internalWrites: true,
-  unsafeClient: 'allow'
-}).readState().then(({ cachedValue }) => cachedValue.state.balances[addr]))
-export const myRewards = (addr) => Market.getBalance(STAMPCOIN, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
+  unsafeClient: 'skip',
+  remoteStateSyncEnabled: true
+})
+  .readState()
+
+  .then(({ cachedValue }) => cachedValue.state.balances[addr])
+  .catch(e => 'N/A')
+export const myRewards = (addr) => warp.contract(STAMPCOIN).setEvaluationOptions({
+  allowBigInt: true,
+  internalWrites: true,
+  unsafeClient: 'skip',
+  remoteStateSyncEnabled: true,
+  remoteStateSyncSource: 'https://dre-5.warp.cc/contract'
+})
+  .readState()
+  // .then(x => {
+  //   console.log('STAMP balances', x.cachedValue.state.balances)
+  //   console.log('STAMP address', addr)
+  //   console.log('STAMP balance', x.cachedValue.state.balances[addr])
+  //   return x
+  // })
+  .then(({ cachedValue }) => cachedValue.state.balances[addr])
+  //.then(x => (console.log('STAMP ', x), x))
+  .catch(e => {
+    console.log(e)
+    return null
+  })
+
+
+//Market.getBalance(STAMPCOIN, addr).runWith({ warp, wallet: 'use_wallet' }).toPromise()
 export const whatsHot = (days) => Market.whatsHot(STAMPCOIN, days).runWith({ warp, wallet: 'use_wallet', arweave }).toPromise()
 export const whatsNew = (days) => Market.whatsNew(STAMPCOIN, days).runWith({ warp, arweave, wallet: 'use_wallet' }).toPromise()
 export const getTitle = (id) => Asset.getTitle(id).runWith({ arweave }).toPromise()

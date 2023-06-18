@@ -241,7 +241,7 @@
           </figure>
         {:else}
           <button
-            class="btn btn-primary text-white rounded-none "
+            class="btn btn-primary text-white rounded-none"
             on:click={connect}>Connect Wallet</button
           >
         {/if}
@@ -264,7 +264,7 @@
             </div>
             <div on:click={() => dispatch("bar")} class="">
               <span class="text-primary">{barcoin}</span>
-              <span class="underline cursor-pointer">$bAR</span>
+              <span class="underline cursor-pointer">$U</span>
             </div>
             <!--
             {#await myRewards(profile.owner) then rewards}

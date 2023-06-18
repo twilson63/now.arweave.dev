@@ -57,12 +57,19 @@
     });
   }
   async function getContract() {
-    const info = await readState(stamp.asset);
+    try {
+      const info = await readState(stamp.asset);
 
-    return info;
+      return info;
+    } catch (e) {
+      return null;
+    }
   }
 
   function showOrderTotal(state) {
+    if (!state) {
+      return;
+    }
     unitsTotal = Object.values(state.balances).reduce((a, b) => a + b, 0);
     if (state.pairs && state.pairs[0]) {
       unitsAvailable = state.pairs[0].orders.reduce(
@@ -224,10 +231,10 @@
         </div>
       </div>
     </div>
-    <div class="hidden flex-none flex flex-col">
+    <!-- <div class="hidden flex-none flex flex-col">
       <div>First Stamped: {new Date(stamp.firstStamped).toISOString()}</div>
       <div>Last Stamped: {new Date(stamp.lastStamped).toISOString()}</div>
-    </div>
+    </div> -->
     {#await getContract() then state}
       <!--
       <div class="flex-none flex flex-col w-[250px]">
@@ -319,34 +326,38 @@
     </div>
   </div>
   {#if preview}
-    {#if stamp.type === "image"}
-      <img
-        class="mt-4 w-[600px] h-[350px]"
-        src={"https://arweave.net/" + stamp.asset}
-        alt={stamp.title}
-      />
-    {:else if stamp.renderWith !== "" && stamp.renderWith.length === 43}
-      <iframe
-        class="mt-4 w-[600px] h-[350px] object-contain"
-        src={`https://arweave.net/${stamp.renderWith}/?tx=${stamp.asset}`}
-        alt={stamp.title}
-      />
-    {:else if stamp.renderWith !== ""}
-      <iframe
-        class="mt-4 w-[600px] h-[350px] object-contain"
-        src={`https://${stamp.renderWith}.${host}/?tx=${stamp.asset}`}
-        alt={stamp.title}
-      />
-    {:else if stamp.type === "video"}
-      <video class="mt-4 w-[600px] h-[350px]" controls>
-        <source src={"https://arweave.net/" + stamp.asset} />
-      </video>
-    {:else}
-      <iframe
-        class="mt-4 w-[600px] h-[350px]"
-        src={"https://arweave.net/" + stamp.asset}
-        alt={stamp.title}
-      />
-    {/if}
+    <div class="ml-[200px]">
+      {#if stamp.type === "image"}
+        <div class="w-[600px] h-[350px]">
+          <img
+            class="mt-4 w-[600px] h-[350px] object-contain"
+            src={"https://arweave.net/" + stamp.asset}
+            alt={stamp.title}
+          />
+        </div>
+      {:else if stamp.renderWith !== "" && stamp.renderWith.length === 43}
+        <iframe
+          class="mt-4 w-[600px] h-[450px] object-contain"
+          src={`https://arweave.net/${stamp.renderWith}/?tx=${stamp.asset}`}
+          alt={stamp.title}
+        />
+      {:else if stamp.renderWith !== ""}
+        <iframe
+          class="mt-4 w-[600px] h-[350px] object-contain"
+          src={`https://${stamp.renderWith}.${host}/?tx=${stamp.asset}`}
+          alt={stamp.title}
+        />
+      {:else if stamp.type === "video"}
+        <video class="mt-4 w-[600px] h-[350px]" controls>
+          <source src={"https://arweave.net/" + stamp.asset} />
+        </video>
+      {:else}
+        <iframe
+          class="mt-4 w-[600px] h-[350px]"
+          src={"https://arweave.net/" + stamp.asset}
+          alt={stamp.title}
+        />
+      {/if}
+    </div>
   {/if}
 </li>

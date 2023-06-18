@@ -92,6 +92,7 @@
       stampcoin = Number(
         atomicToStamp(await myRewards($profile.owner))
       ).toFixed(2);
+
       barcoin = Number(atomicToBar(await myBar($profile.owner))).toFixed(2);
     }
   });
@@ -150,6 +151,7 @@
 
   async function doConnect(type) {
     connectDialog = false;
+
     if (type === "arconnect") {
       if (!window.arweaveWallet) {
         return window.open("https://arconnect.io");
@@ -465,6 +467,8 @@ Powered by the Permaweb 🐘
             on:preview={handlePreviewClick}
           />
         {/each}
+      {:catch e}
+        <li class="alert alert-error mx-16 my-8 w-11/12">{e.message}</li>
       {/await}
 
       <!-- More projects... -->

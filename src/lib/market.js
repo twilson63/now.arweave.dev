@@ -40,6 +40,125 @@ export const getBalance = (contract, addr) => ask(({ warp, wallet }) =>
 
 ).chain(lift)
 
+export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) => {
+  const query = Async.fromPromise(arweave.api.post.bind(arweave.api))
+  return query('graphql', {
+    query: `
+query {
+  transactions(first: 100, tags: [
+    {name: "Protocol-Name", values: ["Stamp"]}
+  ]) {
+    edges {
+      node {
+        id
+        owner {
+          address
+        }
+        tags {
+          name
+          value
+        }
+        block {
+          height
+        }
+      }
+    }
+  }
+}
+  `})
+    .map(compose(
+      filter(n => n.asset !== ""),
+      map(node => {
+        const address = node.tags.find(t => t.name === 'Sequencer')
+          ? node.tags.find(t => t.name === 'Sequencer-Owner').value
+          : node.owner.address
+
+        return {
+          asset: node.tags.find(t => t.name === 'Data-Source').value,
+          height: node.block.height,
+          address
+        }
+      }),
+      pluck('node'),
+      path(['data', 'data', 'transactions', 'edges'])
+    ))
+    .map(groupBy(prop('asset')))
+    .map(assets => reduce((a, x) => [
+      ...a,
+      {
+        asset: x,
+        count: assets[x].length,
+        stampers: assets[x].map((o) => o.address)
+      },
+    ], [], keys(assets)
+    ))
+    .chain(assets => {
+      const ids = pluck('asset', assets)
+      const query = buildQuery(ids)
+      return Async.fromPromise(arweave.api.post.bind(arweave.api))('graphql', { query })
+        .map(compose(
+          map(n => ({
+            id: n.id,
+            title: prop('value', find(propEq('name', 'Title'), n.tags) || find(propEq('name', 'Page-Title'), n.tags)),
+            description: propOr('', 'value', find(propEq('name', 'Description'), n.tags)),
+            type: propOr('page', 'value', find(propEq('name', 'Type'), n.tags)),
+            renderWith: propOr('', 'value', find(propEq('name', 'Render-With'), n.tags)),
+            height: n.block.height
+          })),
+          pluck('node'),
+          path(['data', 'data', 'transactions', 'edges'])
+        ))
+
+        .map(nodes => {
+          const getTitle = id => compose(prop('title'), find(propEq('id', id)))(nodes)
+          const getDescription = id => compose(prop('description'), find(propEq('id', id)))(nodes)
+          const getType = id => compose(prop('type'), find(propEq('id', id)))(nodes)
+          const getRenderWith = id => compose(prop('renderWith'), find(propEq('id', id)))(nodes)
+          const getHeight = id => compose(prop('height'), find(propEq('id', id)))(nodes)
+          return map(a => ({
+            ...a,
+            title: getTitle(a.asset),
+            description: getDescription(a.asset),
+            renderWith: getRenderWith(a.asset),
+            type: getType(a.asset),
+            height: getHeight(a.asset)
+          }), assets)
+        })
+    })
+    .chain(assets => {
+      const stampers = uniq(reduce(concat, [], pluck('stampers', assets)))
+      const query = buildProfileQuery(stampers)
+      return Async.fromPromise(arweave.api.post.bind(arweave.api))('graphql', { query })
+        .map(compose(
+          map(profile => ({
+            id: profile.owner.address,
+            name: prop('value', find(propEq('name', 'Profile-Name'), profile.tags)),
+            avatar: prop('value', find(propEq('name', 'Profile-Avatar'), profile.tags))
+          })),
+          pluck('node'),
+          path(['data', 'data', 'transactions', 'edges'])
+        ))
+        .map(profiles => {
+
+          return map(asset => {
+            return ({
+              ...asset, stampers: map(stamper => {
+                const profile = find(propEq('id', stamper), profiles)
+                return {
+                  id: stamper,
+                  name: profile?.name || 'unknown',
+                  avatar: profile?.avatar
+                }
+              }, asset.stampers)
+            })
+          }, assets)
+        })
+    })
+    .map(filter(a => a.title))
+
+}).chain(lift)
+
+/*
 export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) =>
   getState(contract, warp)
     .map(prop('stamps'))
@@ -120,7 +239,7 @@ export const whatsHot = (contract, days = 1) => ask(({ warp, wallet, arweave }) 
     })
     .map(filter(a => a.title))
 ).chain(lift)
-
+*/
 
 export const listStampers = (contract) =>
   ask(({ warp, wallet }) =>
@@ -249,6 +368,9 @@ const buildQuery = (ids) => `
           tags {
             name 
             value
+          }
+          block {
+            height
           }
         }
       }

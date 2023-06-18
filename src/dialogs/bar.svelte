@@ -25,12 +25,9 @@
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
   <div class="px-[36px] py-[24px] flex flex-col space-y-8">
-    <img class="h-[55px] w-[55px]" src="wallet.svg" alt="wallet" />
-    <h2 class="text-2xl font-bold text-[#160042]">Get $bAR</h2>
-    <p class="text-xl  text-[#160042]">Burn AR to get BAR:</p>
-    <p class="text-sm">
-      A scarce medium of exchange for the SmartWeave ecosystem.
-    </p>
+    <h2 class="text-2xl font-bold text-[#160042]">Get $U</h2>
+    <p class="text-xl text-[#160042]">Burn AR to get U:</p>
+    <p class="text-sm">A Unit of exchange for the Permaweb.</p>
     <div class="form-control">
       <div class="relative">
         <input

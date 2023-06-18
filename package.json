@@ -27,12 +27,12 @@
     "tinro": "^0.6.12",
     "tsm": "^2.2.2",
     "uvu": "^0.5.6",
-    "vite": "^2.8.0",
-    "vitest": "^0.21.1",
+    "vite": "^4.3.9",
+    "vitest": "^0.32.2",
     "warp-contracts": "^1.2.56"
   },
   "dependencies": {
-    "@permaweb/stampjs": "^0.0.14",
+    "@permaweb/stampjs": "^0.2.9",
     "arweave-wallet-connector": "^0.0.31",
     "bignumber.js": "^9.1.0",
     "crocks": "^0.12.4",

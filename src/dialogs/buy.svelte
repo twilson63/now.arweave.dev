@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import Modal from "../components/modal.svelte";
   import Pie from "../components/pie2.svelte";
+  import U from "../assets/u.svg";
 
   export let open;
 
@@ -66,7 +67,7 @@
               class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
             >
               <!-- Heroicon name: mini/exclamation-circle -->
-              <span class="font-bold">$bAR</span>
+              <span class="font-bold"><img src={U} alt="$U" /></span>
             </div>
           </div>
         </div>

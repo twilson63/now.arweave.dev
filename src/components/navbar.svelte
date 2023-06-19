@@ -118,7 +118,7 @@
         >
       </div>
 
-      <SortButton bind:days on:change={changeDays} />
+      <!-- <SortButton bind:days on:change={changeDays} /> -->
 
       <!--
       <a
@@ -132,7 +132,7 @@
       -->
     {/if}
   </div>
-  <div class="flex-none">
+  <div class="hidden md:block flex-none">
     <ul class="menu menu-horizontal p-0 items-center space-x-none">
       <li on:click={post}>
         <div
@@ -241,7 +241,7 @@
           </figure>
         {:else}
           <button
-            class="btn btn-primary text-white rounded-none "
+            class="btn btn-primary text-white rounded-none"
             on:click={connect}>Connect Wallet</button
           >
         {/if}
@@ -262,9 +262,11 @@
                 <span>$STAMP</span>
               </a>
             </div>
-            <div on:click={() => dispatch("bar")} class="">
+            <div>
               <span class="text-primary">{barcoin}</span>
-              <span class="underline cursor-pointer">$bAR</span>
+              <a class="link" href="https://getu.arweave.dev" target="_blank">
+                $U
+              </a>
             </div>
             <!--
             {#await myRewards(profile.owner) then rewards}
@@ -347,9 +349,9 @@
           ></a
         >
       </div>
-      <div class="hidden md:flex">
+      <!-- <div class="hidden md:flex">
         <SortButton bind:days on:change={changeDays} />
-      </div>
+      </div> -->
       <!--
       <a
         href="/contest"

@@ -3,12 +3,12 @@
   import Avatar from "./avatar.svelte";
   import { head, sort, take, takeLast, split, join, compose } from "ramda";
   import { readState, getOwner } from "../lib/app.js";
-  import { atomicToBar, getHost } from "../lib/utils.js";
+  import { atomicToBar, getHostLink } from "../lib/utils.js";
   import { tweened } from "svelte/motion";
   import Pie from "./pie.svelte";
   import { profile } from "../store.js";
 
-  const host = getHost(window.location.hostname);
+  const host = getHostLink(window.location.hostname);
   let percent = 0;
   const store = tweened(0, { duration: 1000 });
   //const store = spring(0, {stiffness: 0.3, damping: 0.3});
@@ -57,12 +57,19 @@
     });
   }
   async function getContract() {
-    const info = await readState(stamp.asset);
+    try {
+      const info = await readState(stamp.asset);
 
-    return info;
+      return info;
+    } catch (e) {
+      return null;
+    }
   }
 
   function showOrderTotal(state) {
+    if (!state) {
+      return;
+    }
     unitsTotal = Object.values(state.balances).reduce((a, b) => a + b, 0);
     if (state.pairs && state.pairs[0]) {
       unitsAvailable = state.pairs[0].orders.reduce(
@@ -129,7 +136,7 @@
         <figure class="hidden md:block">
           {#await getOwner(stamp.asset)}
             <Avatar
-              avatar={"https://arweave.net/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA"}
+              avatar={`https://${host}/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA`}
             />
           {:then owner}
             {#if owner.avatar}
@@ -138,7 +145,7 @@
               <Avatar name={owner.name} />
             {:else}
               <Avatar
-                avatar={"https://arweave.net/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA"}
+                avatar={`https://${host}/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA`}
               />
             {/if}
           {/await}
@@ -160,7 +167,7 @@
             {:else if stamp.renderWith !== "" && stamp.renderWith.length === 43}
               <a
                 target="_blank"
-                href={`https://arweave.net/${stamp.renderWith}/?tx=${stamp.asset}`}
+                href={`https://${host}/${stamp.renderWith}/?tx=${stamp.asset}`}
               >
                 {stamp.title.length > 35
                   ? take(35, stamp.title) + "..."
@@ -224,10 +231,10 @@
         </div>
       </div>
     </div>
-    <div class="hidden flex-none flex flex-col">
+    <!-- <div class="hidden flex-none flex flex-col">
       <div>First Stamped: {new Date(stamp.firstStamped).toISOString()}</div>
       <div>Last Stamped: {new Date(stamp.lastStamped).toISOString()}</div>
-    </div>
+    </div> -->
     {#await getContract() then state}
       <!--
       <div class="flex-none flex flex-col w-[250px]">
@@ -307,46 +314,55 @@
         <div class="flex-none flex items-center justify-center">
           <Pie size={50} {percent} />
         </div>
-        <button
+        <!-- <button
           class="btn btn-outline btn-success rounded-none"
           on:click|stopPropagation={handleBuy}>Buy</button
         >
         <button
           class="btn btn-outline btn-error rounded-none"
           on:click|stopPropagation={handleSell}>Sell</button
+        > -->
+        <a
+          href={`https://pst.arweave.dev/#/show/${stamp.asset}`}
+          target="_blank"
+          class="btn btn-outline btn-info rounded-none">Buy/Sell</a
         >
       </div>
     </div>
   </div>
   {#if preview}
-    {#if stamp.type === "image"}
-      <img
-        class="mt-4 w-[600px] h-[350px]"
-        src={"https://arweave.net/" + stamp.asset}
-        alt={stamp.title}
-      />
-    {:else if stamp.renderWith !== "" && stamp.renderWith.length === 43}
-      <iframe
-        class="mt-4 w-[600px] h-[350px] object-contain"
-        src={`https://arweave.net/${stamp.renderWith}/?tx=${stamp.asset}`}
-        alt={stamp.title}
-      />
-    {:else if stamp.renderWith !== ""}
-      <iframe
-        class="mt-4 w-[600px] h-[350px] object-contain"
-        src={`https://${stamp.renderWith}.${host}/?tx=${stamp.asset}`}
-        alt={stamp.title}
-      />
-    {:else if stamp.type === "video"}
-      <video class="mt-4 w-[600px] h-[350px]" controls>
-        <source src={"https://arweave.net/" + stamp.asset} />
-      </video>
-    {:else}
-      <iframe
-        class="mt-4 w-[600px] h-[350px]"
-        src={"https://arweave.net/" + stamp.asset}
-        alt={stamp.title}
-      />
-    {/if}
+    <div class="md:ml-[200px]">
+      {#if stamp.type === "image"}
+        <div class="w-full md:w-[600px] h-[350px]">
+          <img
+            class="mt-4 w-full md:w-[600px] h-[350px] object-contain"
+            src={"https://arweave.net/" + stamp.asset}
+            alt={stamp.title}
+          />
+        </div>
+      {:else if stamp.renderWith !== "" && stamp.renderWith.length === 43}
+        <iframe
+          class="mt-4 w-full md:w-[600px] h-[450px] object-contain"
+          src={`https://arweave.net/${stamp.renderWith}/?tx=${stamp.asset}`}
+          alt={stamp.title}
+        />
+      {:else if stamp.renderWith !== ""}
+        <iframe
+          class="mt-4 w-full md:w-[600px] h-[350px] object-contain"
+          src={`https://${stamp.renderWith}.${host}/?tx=${stamp.asset}`}
+          alt={stamp.title}
+        />
+      {:else if stamp.type === "video"}
+        <video class="mt-4 w-full md:w-[600px] h-[350px]" controls>
+          <source src={"https://arweave.net/" + stamp.asset} />
+        </video>
+      {:else}
+        <iframe
+          class="mt-4 w-full md:w-[600px] h-[350px]"
+          src={"https://arweave.net/" + stamp.asset}
+          alt={stamp.title}
+        />
+      {/if}
+    </div>
   {/if}
 </li>

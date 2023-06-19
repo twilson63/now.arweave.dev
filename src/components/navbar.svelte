@@ -132,7 +132,7 @@
       -->
     {/if}
   </div>
-  <div class="flex-none">
+  <div class="hidden md:block flex-none">
     <ul class="menu menu-horizontal p-0 items-center space-x-none">
       <li on:click={post}>
         <div

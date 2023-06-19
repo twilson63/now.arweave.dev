@@ -31,3 +31,13 @@ export const getHost = (hostname) => {
     split('.')
   )(hostname)
 };
+
+export const getHostLink = (hostname) => {
+  return compose(
+    ifElse(equals('gitpod.io'), always('arweave.dev'), identity),
+    ifElse(equals('localhost'), always('arweave.dev'), identity),
+    join('.'),
+    takeLast(2),
+    split('.')
+  )(hostname)
+};

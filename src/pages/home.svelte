@@ -456,7 +456,9 @@ Powered by the Permaweb 🐘
   <div class="bg-white lg:min-w-0 lg:flex-1">
     <ul class="relative divide-y divide-gray-200 border-b border-gray-200">
       {#await stampList}
-        <li class="alert alert-info mx-16 my-8 w-11/12">Loading stamps</li>
+        <li class="alert alert-info mx-4 md:mx-16 my-8 w-11/12">
+          Loading stamps
+        </li>
       {:then stamps}
         {#each stamps as stamp}
           <Item

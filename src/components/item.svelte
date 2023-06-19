@@ -136,7 +136,7 @@
         <figure class="hidden md:block">
           {#await getOwner(stamp.asset)}
             <Avatar
-              avatar={"https://arweave.net/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA"}
+              avatar={`https://${host}/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA`}
             />
           {:then owner}
             {#if owner.avatar}
@@ -145,7 +145,7 @@
               <Avatar name={owner.name} />
             {:else}
               <Avatar
-                avatar={"https://arweave.net/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA"}
+                avatar={`https://${host}/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA`}
               />
             {/if}
           {/await}
@@ -314,19 +314,24 @@
         <div class="flex-none flex items-center justify-center">
           <Pie size={50} {percent} />
         </div>
-        <button
+        <!-- <button
           class="btn btn-outline btn-success rounded-none"
           on:click|stopPropagation={handleBuy}>Buy</button
         >
         <button
           class="btn btn-outline btn-error rounded-none"
           on:click|stopPropagation={handleSell}>Sell</button
+        > -->
+        <a
+          href={`https://pst.arweave.dev/#/show/${stamp.asset}`}
+          target="_blank"
+          class="btn btn-outline btn-info rounded-none">Buy/Sell</a
         >
       </div>
     </div>
   </div>
   {#if preview}
-    <div class="ml-[200px]">
+    <div class="md:ml-[200px]">
       {#if stamp.type === "image"}
         <div class="w-[600px] h-[350px]">
           <img

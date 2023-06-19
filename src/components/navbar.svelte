@@ -349,9 +349,9 @@
           ></a
         >
       </div>
-      <div class="hidden md:flex">
+      <!-- <div class="hidden md:flex">
         <SortButton bind:days on:change={changeDays} />
-      </div>
+      </div> -->
       <!--
       <a
         href="/contest"

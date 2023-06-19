@@ -18,6 +18,14 @@ let _config = {
 
 const arweave = Arweave.init(_config);
 
+const options = {
+  allowBigInt: true,
+  internalWrites: true,
+  unsafeClient: 'skip',
+  remoteStateSyncEnabled: true,
+  remoteStateSyncSource: 'https://dre-5.warp.cc/contract'
+}
+
 const { WarpFactory, LoggerFactory } = window.warp;
 LoggerFactory.INST.logLevel("fatal");
 
@@ -34,23 +42,12 @@ export const loadCollectors = (assets) => Collectors.getWallets(warp, pluck('ass
 export const getPrice = (file) => Upload.getPrice(file.buffer.byteLength).runWith({ arweave }).toPromise()
 export const uploadAsset = (file, addr, tags) => Upload.uploadAsset({ file, addr, tags }).runWith({ arweave }).toPromise()
 
-export const myBar = (addr) => warp.contract(BAR).setEvaluationOptions({
-  allowBigInt: true,
-  internalWrites: true,
-  unsafeClient: 'skip',
-  remoteStateSyncEnabled: true
-})
+export const myBar = (addr) => warp.contract(BAR).setEvaluationOptions(options)
   .readState()
 
   .then(({ cachedValue }) => cachedValue.state.balances[addr])
   .catch(e => 'N/A')
-export const myRewards = (addr) => warp.contract(STAMPCOIN).setEvaluationOptions({
-  allowBigInt: true,
-  internalWrites: true,
-  unsafeClient: 'skip',
-  remoteStateSyncEnabled: true,
-  remoteStateSyncSource: 'https://dre-5.warp.cc/contract'
-})
+export const myRewards = (addr) => warp.contract(STAMPCOIN).setEvaluationOptions(options)
   .readState()
   // .then(x => {
   //   console.log('STAMP balances', x.cachedValue.state.balances)
@@ -78,49 +75,44 @@ export const getOwner = (id) => Asset.getOwner(id).runWith({ arweave }).toPromis
 export const isVouched = (addr) => Stamper.isVouched(addr).runWith({ arweave }).toPromise()
 
 export const addPair = (contract, pair) =>
-  warp.contract(contract).connect('use_wallet').setEvaluationOptions({
-    internalWrites: true
-  }).writeInteraction({
+  warp.contract(contract).connect('use_wallet')
+  .setEvaluationOptions(options).writeInteraction({
     function: 'addPair',
     pair: BAR
   })
 
 export const createOrder = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const allowOrder = (contract, target, qty) => Flex.allow(contract, target, qty).runWith({ warp }).toPromise()
-export const readState = async (contract) => {
-  const c = await warp.contract(contract).syncState('https://cache.permapages.app/contract', { validity: true })
-  return c.setEvaluationOptions({ internalWrites: true, allowBigInt: true })
-    .readState().then(({ cachedValue }) => cachedValue.state)
-
+export const readState = (contract) => {
+  return warp.contract(contract)
+    .setEvaluationOptions(options)
+    .readState()
+    .then(({ cachedValue }) => cachedValue.state)
 }
 
 
 export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
-export const readBar = () => fetch(`${CACHE}/${BAR}`)
-  .then(res => res.ok ? res.json() : Promise.reject('no contract found'))
-  .catch(_ => Flex.readState(BAR).runWith({ warp }).toPromise())
+export const readBar = () => warp.contract(BAR).setEvaluationOptions(options).readState()
+  .then(({cachedValue}) => cachedValue.state )
 
 //export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()
 export const sellAsset = async (contract, qty, price) => {
-  await doSyncState(BAR)
-  await doSyncState(contract)
+  // await doSyncState(BAR)
+  // await doSyncState(contract)
+  const c = warp.contract(contract).connect('use_wallet').setEvaluationOptions(options)
   // const c = await warp.contract(contract).syncState(CACHE + '/contract', { validity: true })
-  return Promise.resolve(warp.contract(contract).connect('use_wallet').setEvaluationOptions({
-    internalWrites: true
-  }))
-
-    .then(c => c.writeInteraction({
+  return c
+    .writeInteraction({
       function: 'addPair',
       pair: BAR
-    }, { strict: true }).catch(e => c).then(_ => c)
-    )
+    }, { strict: true }).then(_ => contract)
     .then(c => c.writeInteraction({
       function: 'createOrder',
       pair: [contract, BAR],
       qty,
       price: Math.floor(price) > 1 ? Math.floor(price) : 1
     }, { strict: true })
-      .then(_ => c))
+    .then(_ => c))
     .then(c => c.readState().then(({ cachedValue }) => cachedValue.state))
 }
 //Flex.sell2({ contract, BAR, qty, price }).runWith({ arweave }).toPromise()

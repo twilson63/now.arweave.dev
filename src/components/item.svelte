@@ -1,4 +1,5 @@
 <script>
+  import StampLogo from "../assets/stamp.svg";
   import { createEventDispatcher } from "svelte";
   import Avatar from "./avatar.svelte";
   import { head, sort, take, takeLast, split, join, compose } from "ramda";
@@ -204,6 +205,10 @@
             {compose(join(" "), take(50), split(" "))(stamp.description)}
           </p>
           <div class="flex space-x-2">
+            <div class="md:hidden flex space-x-2 items-center mt-2">
+              <img class="h-4 w-4" src={StampLogo} alt="stamps" />
+              <span class="font-mono text-xs">{stamp.count}</span>
+            </div>
             {#if unitsAvailable > 0}
               <div class="mt-2 badge badge-success text-white">For Sale</div>
             {/if}

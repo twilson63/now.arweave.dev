@@ -49,7 +49,7 @@
   }
 </script>
 
-<div class="navbar bg-base-100 border-2 border-b-slate space-x-8">
+<div class="navbar bg-base-100 md:border-2 border-b-slate space-x-8">
   <div class="flex-none">
     <a href="/" class="btn btn-ghost normal-case text-xl">
       <Logo />

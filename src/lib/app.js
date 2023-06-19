@@ -6,21 +6,16 @@ import * as Upload from './upload.js'
 import * as Bar from './bar.js'
 import * as Collectors from './collectors.js'
 import { pathOr, pluck } from 'ramda'
+import { getHost } from './utils.js'
+
+const host = getHost(globalThis.location.hostname)
 
 let _config = {
-  host: "g8way.io",
+  host: host,
   port: 443,
   protocol: "https",
 }
 
-/*
-if (import.meta.env.MODE !== 'development') {
-  if (location.hostname === 'now.arweave.dev') {
-
-  }
-  
-}
-*/
 const arweave = Arweave.init(_config);
 
 const { WarpFactory, LoggerFactory } = window.warp;

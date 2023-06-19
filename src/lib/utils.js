@@ -23,8 +23,8 @@ export const getHost = (location) => {
 
 export const getHost = (hostname) => {
   return compose(
-    ifElse(equals('gitpod.io'), always('arweave.dev'), identity),
-    ifElse(equals('localhost'), always('arweave.dev'), identity),
+    ifElse(equals('gitpod.io'), always('arweave.net'), identity),
+    ifElse(equals('localhost'), always('arweave.net'), identity),
     join('.'),
     takeLast(2),
     split('.')

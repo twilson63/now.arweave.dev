@@ -118,7 +118,7 @@
         >
       </div>
 
-      <SortButton bind:days on:change={changeDays} />
+      <!-- <SortButton bind:days on:change={changeDays} /> -->
 
       <!--
       <a
@@ -262,9 +262,11 @@
                 <span>$STAMP</span>
               </a>
             </div>
-            <div on:click={() => dispatch("bar")} class="">
+            <div>
               <span class="text-primary">{barcoin}</span>
-              <span class="underline cursor-pointer">$U</span>
+              <a class="link" href="https://getu.arweave.dev" target="_blank">
+                $U
+              </a>
             </div>
             <!--
             {#await myRewards(profile.owner) then rewards}

@@ -32,7 +32,7 @@ LoggerFactory.INST.logLevel("fatal");
 const CACHE = 'https://cache.permapages.app'
 const GATEWAY = 'https://gateway.warp.cc'
 const DRE = 'https://dre-1.warp.cc'
-//const BAR = 'rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk';
+//const BAR = 'KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw';
 const BAR = __BAR_CONTRACT__;
 const STAMPCOIN = __STAMP_CONTRACT__;
 

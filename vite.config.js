@@ -14,8 +14,8 @@ export default defineConfig({
   define: {
     '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
     __STAMP_CONTRACT__: '"TlqASNDLA1Uh8yFiH-BzR_1FDag4s735F3PoUFEv2Mo"',
-    __BAR_CONTRACT__: '"rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk"'
-
+    //__BAR_CONTRACT__: '"rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk"'
+    __BAR_CONTRACT__: '"KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw"'
   },
   server: {
     hmr: {

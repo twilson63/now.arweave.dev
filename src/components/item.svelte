@@ -10,6 +10,7 @@
   import { profile } from "../store.js";
 
   const host = getHostLink(window.location.hostname);
+
   let percent = 0;
   const store = tweened(0, { duration: 1000 });
   //const store = spring(0, {stiffness: 0.3, damping: 0.3});
@@ -29,7 +30,7 @@
   const dispatch = createEventDispatcher();
 
   function navTo(id) {
-    window.open("https://arweave.dev/" + id);
+    window.open(host + "/" + id);
     //router.goto("https://arweave.dev/" + id);
   }
 
@@ -37,26 +38,6 @@
     dispatch("stamp", { asset: stamp.asset });
   }
 
-  function handleSell() {
-    dispatch("sell", {
-      contract: stamp.asset,
-      name: stamp.title,
-      percent: 0,
-      price: "0.01",
-      units: unitsTotal,
-      canPurchase: unitsAvailable,
-    });
-  }
-  function handleBuy() {
-    dispatch("buy", {
-      contract: stamp.asset,
-      name: stamp.title,
-      units: unitsTotal,
-      canPurchase: unitsAvailable,
-      price: lowestPrice,
-      percent: 0,
-    });
-  }
   async function getContract() {
     try {
       const info = await readState(stamp.asset);
@@ -154,10 +135,7 @@
         <div class="flex-1 flex flex-col md:w-[450px]">
           <h2 class="text-xl font-bold">
             {#if stamp.type === "image"}
-              <a
-                target="_blank"
-                href="https://img.arweave.dev/#/show/{stamp.asset}"
-              >
+              <a target="_blank" href="https://img.{host}/#/show/{stamp.asset}">
                 {stamp.title.length > 35
                   ? take(35, stamp.title) + "..."
                   : stamp.title}
@@ -190,7 +168,7 @@
                 >
               </a>
             {:else}
-              <a target="_blank" href="https://arweave.net/{stamp.asset}">
+              <a target="_blank" href="https://{host}/{stamp.asset}">
                 {stamp.title.length > 35
                   ? take(35, stamp.title) + "..."
                   : stamp.title}
@@ -328,7 +306,7 @@
           on:click|stopPropagation={handleSell}>Sell</button
         > -->
         <a
-          href={`https://pst.arweave.dev/#/show/${stamp.asset}`}
+          href={`https://bazar.${host}/#/asset/${stamp.asset}`}
           target="_blank"
           class="btn btn-outline btn-info rounded-none">Buy/Sell</a
         >
@@ -341,14 +319,14 @@
         <div class="w-full md:w-[600px] h-[350px]">
           <img
             class="mt-4 w-full md:w-[600px] h-[350px] object-contain"
-            src={"https://arweave.net/" + stamp.asset}
+            src={`https://${host}/` + stamp.asset}
             alt={stamp.title}
           />
         </div>
       {:else if stamp.renderWith !== "" && stamp.renderWith.length === 43}
         <iframe
           class="mt-4 w-full md:w-[600px] h-[450px] object-contain"
-          src={`https://arweave.net/${stamp.renderWith}/?tx=${stamp.asset}`}
+          src={`https://${host}/${stamp.renderWith}/?tx=${stamp.asset}`}
           alt={stamp.title}
         />
       {:else if stamp.renderWith !== ""}
@@ -359,12 +337,12 @@
         />
       {:else if stamp.type === "video"}
         <video class="mt-4 w-full md:w-[600px] h-[350px]" controls>
-          <source src={"https://arweave.net/" + stamp.asset} />
+          <source src={`https://${host}/${stamp.asset}`} />
         </video>
       {:else}
         <iframe
           class="mt-4 w-full md:w-[600px] h-[350px]"
-          src={"https://arweave.net/" + stamp.asset}
+          src={`https://${host}/` + stamp.asset}
           alt={stamp.title}
         />
       {/if}

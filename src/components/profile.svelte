@@ -1,9 +1,11 @@
 <script>
+  import { getHost } from "../lib/utils.js";
+
+  const host = getHost(globalThis.location.hostname);
+
   export let name;
-  export let avatar =
-    "https://tgbcqufuppegmlhigt2zosiv2q55qty4t4rg2gebmfm4vpvf.arweave.net/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0";
-  export let background =
-    "https://arweave.net/T2Kh2uOv3myw8L6BPE6kySs2QXjh8R3B1KolcW_MFQA/background.svg";
+  export let avatar = `https://${host}/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0`;
+  export let background = `https://${host}/T2Kh2uOv3myw8L6BPE6kySs2QXjh8R3B1KolcW_MFQA/background.svg`;
 </script>
 
 <div>
@@ -11,7 +13,7 @@
     <img
       class="h-32 w-full object-cover lg:h-48"
       src={background ||
-        "https://arweave.net/T2Kh2uOv3myw8L6BPE6kySs2QXjh8R3B1KolcW_MFQA/background.svg"}
+        `https://${host}/T2Kh2uOv3myw8L6BPE6kySs2QXjh8R3B1KolcW_MFQA/background.svg`}
       alt="background"
     />
   </div>

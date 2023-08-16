@@ -37,6 +37,10 @@
   import { assets, profile, collectors } from "../store.js";
   import { find, propEq, mergeRight } from "ramda";
 
+  import { getHost } from "../lib/utils.js";
+
+  const host = getHost(globalThis.location.hostname);
+
   let connectRequestFrom = { type: "none" };
   let profileAR = 0;
   let view = "hot";
@@ -78,8 +82,7 @@
   let showPreview = false;
   let previewData = {};
 
-  let defaultAvatarUrl =
-    "https://tgbcqufuppegmlhigt2zosiv2q55qty4t4rg2gebmfm4vpvf.arweave.net/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0";
+  let defaultAvatarUrl = `https://${host}/mYIoULR7yGYs_6DT1_l0kV1DvYTxyfIm0YgWFZyr6l0`;
 
   let buyQty = 0;
 
@@ -401,14 +404,14 @@
 
   function createPurchaseText(name, id) {
     return encodeURI(`I just purchased an Atomic Asset - "${name}", 
-go to  https://arweave.net/${id} to 🪧 STAMP!
+go to  https://${host}/${id} to 🪧 STAMP!
         
     `);
   }
 
   function createSellText(name, id) {
     return encodeURI(`👋🏻 Hey, I just listed my Tradeable Atomic Asset - "${name}" for sale on now.arweave.dev!
-If you like my asset: arweave.net/${id} - go to now and consider purchasing or STAMPing 🪧.
+If you like my asset: ${host}/${id} - go to now and consider purchasing or STAMPing 🪧.
 
 Powered by the Permaweb 🐘
 `);

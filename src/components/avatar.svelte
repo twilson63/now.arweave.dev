@@ -1,7 +1,10 @@
 <script>
   import { take, toUpper } from "ramda";
-  export let avatar =
-    "https://arweave.net/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA";
+  import { getHost } from "../lib/utils.js";
+
+  const host = getHost(globalThis.location.hostname);
+
+  export let avatar = `https://${host}/yCZMJWHprkdOHTtep2Y_uXzc_c9bmSpPvBzb8KyObWA`;
   export let name = "mrzzzzz";
 
   const colors = [

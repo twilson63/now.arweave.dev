@@ -4,12 +4,15 @@
   import { stampers } from "../store";
   import { getProfile, listStampers, getTitle } from "../lib/app.js";
   import { find, propEq, prop, map } from "ramda";
+  import { getHost } from "../lib/utils.js";
+
+  const host = getHost(globalThis.location.hostname);
 
   export let id;
 
   let profile = {
     name: "Unknown",
-    avatar: "https://arweave.net/yZ64EcoLWgY4jGZp6RIxR4O6wKGUuHVNu8JidQf4nFo",
+    avatar: `https://${host}/yZ64EcoLWgY4jGZp6RIxR4O6wKGUuHVNu8JidQf4nFo`,
   };
 
   async function loadData() {

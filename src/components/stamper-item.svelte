@@ -1,5 +1,8 @@
 <script>
   import { getProfile } from "../lib/app.js";
+  import { getHost } from "../lib/utils.js";
+
+  const host = getHost(globalThis.location.hostname);
   export let stamper;
 </script>
 
@@ -26,7 +29,7 @@
             <img
               class="w-[64px] mask mask-circle"
               src={profile.avatar ||
-                "https://arweave.net/yZ64EcoLWgY4jGZp6RIxR4O6wKGUuHVNu8JidQf4nFo"}
+                `https://${host}/yZ64EcoLWgY4jGZp6RIxR4O6wKGUuHVNu8JidQf4nFo`}
               alt="avatar"
             />
             <h2 class="text-2xl font-medium">

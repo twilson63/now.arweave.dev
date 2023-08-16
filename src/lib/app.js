@@ -23,15 +23,15 @@ const options = {
   internalWrites: true,
   unsafeClient: 'skip',
   remoteStateSyncEnabled: true,
-  remoteStateSyncSource: 'https://dre-5.warp.cc/contract'
+  remoteStateSyncSource: 'https://dre-u.warp.cc/contract'
 }
 
 const { WarpFactory, LoggerFactory } = window.warp;
 LoggerFactory.INST.logLevel("fatal");
 
-const CACHE = 'https://cache.permapages.app'
+const CACHE = 'https://dre-u.warp.cc'
 const GATEWAY = 'https://gateway.warp.cc'
-const DRE = 'https://dre-1.warp.cc'
+const DRE = 'https://dre-u.warp.cc'
 //const BAR = 'KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw';
 const BAR = __BAR_CONTRACT__;
 const STAMPCOIN = __STAMP_CONTRACT__;
@@ -76,10 +76,10 @@ export const isVouched = (addr) => Stamper.isVouched(addr).runWith({ arweave }).
 
 export const addPair = (contract, pair) =>
   warp.contract(contract).connect('use_wallet')
-  .setEvaluationOptions(options).writeInteraction({
-    function: 'addPair',
-    pair: BAR
-  })
+    .setEvaluationOptions(options).writeInteraction({
+      function: 'addPair',
+      pair: BAR
+    })
 
 export const createOrder = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const allowOrder = (contract, target, qty) => Flex.allow(contract, target, qty).runWith({ warp }).toPromise()
@@ -93,7 +93,7 @@ export const readState = (contract) => {
 
 export const dry = (data) => Flex.createOrder(data).runWith({ warp }).toPromise()
 export const readBar = () => warp.contract(BAR).setEvaluationOptions(options).readState()
-  .then(({cachedValue}) => cachedValue.state )
+  .then(({ cachedValue }) => cachedValue.state)
 
 //export const sellAsset = (contract, qty, price) => Flex.sell({ contract, BAR, qty, price }).runWith({ warp }).toPromise()
 export const sellAsset = async (contract, qty, price) => {
@@ -112,7 +112,7 @@ export const sellAsset = async (contract, qty, price) => {
       qty,
       price: Math.floor(price) > 1 ? Math.floor(price) : 1
     }, { strict: true })
-    .then(_ => c))
+      .then(_ => c))
     .then(c => c.readState().then(({ cachedValue }) => cachedValue.state))
 }
 //Flex.sell2({ contract, BAR, qty, price }).runWith({ arweave }).toPromise()
